@@ -1,0 +1,45 @@
+.cont-port-serial {
+    width: 100%;
+}
+.lista-puertos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.lista-puertos  button {
+    width: min-content;
+ } 
+ .cont-list-port {
+    display: flex;
+    width: 100%;
+ }
+ .cont-list-port strong {
+    font-size: 20px;
+ }
+ .cont-list-port hr {
+    width: 95%;
+ }
+ .cont-list-port > hr {
+   width: auto;
+ }
+ .cont-list-port > div{
+    width: 50%;
+ }
+ .cont-list-port > div:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ }
+
+ .btn-serial {
+    border: 1px solid transparent;
+    padding: 0.2em .5em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    margin: 3px;
+    color: white;
+ }

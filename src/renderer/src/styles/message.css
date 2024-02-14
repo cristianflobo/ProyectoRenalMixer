@@ -1,0 +1,32 @@
+.conteiner-message {
+  position: absolute;
+  height: 75px;
+  width: 60%;
+  padding: 0px 2px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  /* From https://css.glass */
+  background: rgba(137, 118, 118, 0.71);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16.7px);
+  -webkit-backdrop-filter: blur(16.7px);
+  border: 1px solid rgba(137, 118, 118, 0.3);
+  left: 50%;
+  
+  bottom: 10px;
+  font-size: 16px;
+  animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+}

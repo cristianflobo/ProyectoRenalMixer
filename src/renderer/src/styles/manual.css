@@ -1,0 +1,22 @@
+.cont-manual {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #242424;
+}
+
+.cont-manual > div:first-child {
+  display: grid;
+  width: auto;
+  height: auto;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0px;
+}
+.cont-manual > div:nth-child(2) {
+  position: absolute;
+    bottom: 0px ;
+}
