@@ -11,8 +11,8 @@
 
 .cont-manual > div:first-child {
   display: grid;
-  width: auto;
-  height: auto;
+  width: 50%;
+  height: 50%;
   grid-template-columns: repeat(3, 1fr);
   gap: 0px;
 }
