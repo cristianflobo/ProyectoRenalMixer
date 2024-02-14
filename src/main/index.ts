@@ -23,8 +23,8 @@ let serialPortArray: (typeof SerialPort)[] = []
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 600,
-    height: 350,
+    width: 1024,
+    height: 600,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),

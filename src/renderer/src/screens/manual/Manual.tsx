@@ -8,7 +8,7 @@ export function Manual({ closeWindows }) {
       <div>
         {selectIo?.map((item: TioPeripheral, i: number) => (
           <button
-            style={item.estado === 0 ? { backgroundColor: 'black' } : { backgroundColor: 'green' }}
+            style={item.estado === 0 ? { backgroundColor: 'grey' } : { backgroundColor: 'green' }}
             onClick={(event) => changeIo(event)}
             key={i}
             value={item.nombre}

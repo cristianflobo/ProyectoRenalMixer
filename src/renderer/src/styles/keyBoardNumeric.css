@@ -15,11 +15,11 @@
   font-size: 25px;
 }
 .key-board-numeric {
-    display: grid;
-    width: 160px;
-    height: 207px;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0px;
+  display: grid;
+  width: 170px;
+  height: 247px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0px;
 }
 .key-board-numeric > button {
   color: white;

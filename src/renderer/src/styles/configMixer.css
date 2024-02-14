@@ -10,6 +10,9 @@
 }
 .datos-key {
     display: flex;
+}.datos-key select{
+    height: 20px;
+    width: 50px;
 }
 .datos-key > div:first-child{
     width:60% ;
