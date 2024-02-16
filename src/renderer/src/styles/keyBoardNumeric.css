@@ -11,20 +11,23 @@
 }
 .cont-key-board-numeric > input {
   height: 30px;
-  width: 150px;
+  width: 170px;
   font-size: 25px;
 }
 .key-board-numeric {
   display: grid;
-  width: 170px;
+  width: 185px;
   height: 247px;
   grid-template-columns: repeat(3, 1fr);
   gap: 0px;
 }
 .key-board-numeric > button {
+  display: flex;
+  justify-content: center;
   color: white;
   margin: 1px;
   height: 50px;
   width: 50px;
+  font-zise:16px;
   background-color: #3e5760;
 }
