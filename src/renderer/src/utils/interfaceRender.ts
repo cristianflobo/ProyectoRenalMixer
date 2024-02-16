@@ -4,33 +4,35 @@ interface infoMenu {
   component: JSX.Element
 }
 interface objDataPort {
-    path: string
-    baudRate: number
-  }
+  path: string
+  baudRate: number
+}
 interface Idatakey {
-  value:number | string
+  value: number | string
 }
 interface IMenssageG {
-  view:boolean,
-  data:string
+  view: boolean
+  data: string
 }
 type GlobalContentMessage = {
   mensajeGeneral: IMenssageG
-  setmensajeGeneral:(c: IMenssageG) => void
+  setmensajeGeneral: (c: IMenssageG) => void
 }
-type SelectBaudios ={
-  baudio:number
+type SelectBaudios = {
+  baudio: number
 }
 type TioPeripheral = {
-  nombre: string,
+  nombre: string
   estado: number
 }
 type TselectScreen = {
-  manual: boolean,
+  manual: boolean
   config: boolean
 }
 type TdataConfig = {
-  title: string,
-  dato: number,
-  time:boolean
+  title: string
+  dato: number
+  hora1: number
+  minu2: number
+  time: boolean
 }

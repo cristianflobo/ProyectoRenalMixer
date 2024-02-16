@@ -15,6 +15,7 @@
     height: 30px;
     width: 50px;
     font-size: 20px;
+    margin-left: 7px;    
 }
 .datos-key > div:first-child{
     width:60% ;
@@ -38,6 +39,9 @@
     user-select: none;
     font-size: 25px;
 }
+.div-map label {
+    font-size: 15px;
+}
 .div-map:focus { 
         border-color: #646cff;   
 }
@@ -46,4 +50,10 @@
 }
 .div-map > span:first-child {
     width: 90%;
+}
+.label-select {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

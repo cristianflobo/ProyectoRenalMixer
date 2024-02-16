@@ -49,11 +49,11 @@ const useManual = () => {
 
   const changeIo = (event: React.MouseEvent<HTMLButtonElement>) => {
     let ioSelect = event.currentTarget.value
-    let pru = selectIo?.map((item: TioPeripheral)=>{
+    let change = selectIo?.map((item: TioPeripheral)=>{
         if(ioSelect === item.nombre) item.estado === 0 ? (item.estado = 1) : (item.estado = 0)
         return item
     })
-    setSelectIo(pru)
+    setSelectIo(change)
   }
   const setIoOff = () => {
     ioPeripheral.forEach((element:TioPeripheral) => {

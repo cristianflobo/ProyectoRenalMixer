@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 const useConfigMixer = () => {
   const [datosConfig, setDatosConfig] = useState<TdataConfig[] | null>()
@@ -31,12 +31,14 @@ const useConfigMixer = () => {
           },
           {
             title: 'HORA INICIO DISTRIBUCIÓN',
-            dato: 0,
+            hora1: 0, 
+            minu2: 0,
             time: true
           },
           {
             title: 'HORA FINAL DISTRIBUCIÓN',
-            dato: 0,
+            hora1: 0, 
+            minu2: 0,
             time: true
           },
           {
@@ -51,6 +53,7 @@ const useConfigMixer = () => {
     }
     return () => {}
   }, [])
+
   useEffect(() => {
     let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
     if (onOnchangeViewKeyBoardNumeric.data !== '' && !onOnchangeViewKeyBoardNumeric.view) {
@@ -60,20 +63,36 @@ const useConfigMixer = () => {
         return item
       })
       localStorage.setItem('configDatos', JSON.stringify(dataKeyTermporal))
-      console.log(configDatos, dataKeyTermporal)
+
       setDatosConfig(dataKeyTermporal)
     } else {
       setDatosConfig(configDatos)
     }
     return () => {}
   }, [onOnchangeViewKeyBoardNumeric.view])
+
   const activeKeyBoardNumeric = (posicion: number) => {
     setposicionDataConfig(posicion)
     setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })
   }
+  const selectChange = (event: ChangeEvent<HTMLSelectElement>, id: number, fieldName: string) => {
+    const { value } = event.target
+    let changeValue = datosConfig?.map((item, i) => {
+      if (id == i) {
+        item[fieldName] = value
+      }
+      return item
+    })
+    localStorage.setItem(
+      'configDatos',
+      JSON.stringify(changeValue)
+    )
+    setDatosConfig(changeValue)
+  }
   return {
     setOnOnchangeViewKeyBoardNumeric,
     activeKeyBoardNumeric,
+    selectChange,
     onOnchangeViewKeyBoardNumeric,
     datosConfig,
     minutos,

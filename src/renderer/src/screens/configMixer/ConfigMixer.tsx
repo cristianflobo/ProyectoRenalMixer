@@ -4,9 +4,11 @@ import { KeyBoardNumeric } from '@renderer/components/keyBoardNumeric/KeyBoardNu
 
 export function ConfigMixer({ closeWindows }) {
   const {
-    activeKeyBoardNumeric,
     setOnOnchangeViewKeyBoardNumeric,
+    activeKeyBoardNumeric,
+    selectChange,
     onOnchangeViewKeyBoardNumeric,
+    //selectedValue,
     datosConfig,
     minutos,
     hora
@@ -20,17 +22,31 @@ export function ConfigMixer({ closeWindows }) {
             return item.time ? (
               <div className="div-map" key={i}>
                 <span>{item.title}</span>
-                <select >
-                  {hora.map((item: number) => (
-                    <option value={item}>{item}</option>
-                  ))}
-                </select>
-                <span>:</span>
-                <select >
-                  {minutos.map((item: number) => (
-                    <option value={item}>{item}</option>
-                  ))}
-                </select>
+                <div style={{ display: 'flex' }}>
+                  <div className="label-select">
+                    <label>Hora</label>
+                    <select
+                      value={item.hora1}
+                      onChange={(event) => selectChange(event, i, 'hora1')}
+                    >
+                      {hora.map((item: number) => (
+                        <option value={item}>{item}</option>
+                      ))}
+                    </select>
+                  </div>
+      
+                  <div className="label-select">
+                    <label>Minu</label>
+                    <select
+                      value={item.minu2}
+                      onChange={(event) => selectChange(event, i, 'minu2')}
+                    >
+                      {minutos.map((item: number) => (
+                        <option value={item}>{item}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="div-map" onClick={() => activeKeyBoardNumeric(i)} key={i}>

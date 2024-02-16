@@ -2,6 +2,8 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 const { SerialPort, ReadlineParser } = require('serialport')
+const cron = require('node-cron')
+
 import icon from '../../resources/icon.png?asset'
 
 interface objDataPort {
@@ -23,8 +25,8 @@ let serialPortArray: (typeof SerialPort)[] = []
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 600,
+    width: 900,
+    height: 500,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -65,8 +67,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  //---------------------------------------------------------------------componente serial Conexion serial
+  //---------------------------------------------------------------------Componente serial Conexion serial
+  //#region Serial
   //let serialport:typeof SerialPort[] = []
+
   ipcMain.on('buscarPuertos', async (event, _message) => {
     const ports: serialPortList[] = await SerialPort.list()
     if (ports.length > 0) {
@@ -91,7 +95,7 @@ app.whenReady().then(() => {
           if (error) {
             console.error(`Error al abrir el puerto ${puerto}:`, error.message)
             event.reply('menssageFromMain', error.message)
-            
+
             reject(error)
           } else {
             console.log(`El puerto ${puerto} se ha abierto correctamente.`)
@@ -135,10 +139,24 @@ app.whenReady().then(() => {
       return { path: item.path, baudRate: item.baudRate }
     })
   }
+  //#endregion
+  
+  //---------------------------------------------------------------------Tareas programadas cron
+  //#region Tareas programadas cron
+  const tareasProgramadas = () => {
 
-  //-------------------------------------------------------------------------------------
+    cron.schedule('58 * * * *', () => {
+      console.log('Cron job executed at:', new Date().toLocaleString())
+    })
+    cron.schedule('59 * * * *', () => {
+      console.log('Cron job executed at:', new Date().toLocaleString())
+    })
+
+  }
+
+  //#endregion
+  
   createWindow()
-
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
