@@ -3,9 +3,20 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 const { SerialPort, ReadlineParser } = require('serialport')
 const cron = require('node-cron')
-
 import icon from '../../resources/icon.png?asset'
+const { exec } = require('child_process');
 
+//---------------------------------------------------------
+exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
+    if (error) {
+        console.error(`Error al ejecutar el comando: ${error}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+	console.log(new Date())
+});
+//----------------------------------------------
 interface objDataPort {
   path: string
   baudRate: number
@@ -143,16 +154,16 @@ app.whenReady().then(() => {
   
   //---------------------------------------------------------------------Tareas programadas cron
   //#region Tareas programadas cron
-  const tareasProgramadas = () => {
+  //const tareasProgramadas = () => {
 
-    cron.schedule('58 * * * *', () => {
+    cron.schedule('3 1 * * *', () => {
       console.log('Cron job executed at:', new Date().toLocaleString())
     })
-    cron.schedule('59 * * * *', () => {
-      console.log('Cron job executed at:', new Date().toLocaleString())
-    })
+    //cron.schedule('59 * * * *', () => {
+      //console.log('Cron job executed at:', new Date().toLocaleString())
+    //})
 
-  }
+  //}
 
   //#endregion
   
