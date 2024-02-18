@@ -5,6 +5,7 @@ const { SerialPort, ReadlineParser } = require('serialport')
 const cron = require('node-cron')
 import icon from '../../resources/icon.png?asset'
 const { exec } = require('child_process');
+import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 
 //---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
@@ -167,6 +168,13 @@ app.whenReady().then(() => {
 
   //#endregion
   
+  //---------------------------------------------------------------------LLamado proceso pines
+  //#region  proceso pines 
+  ipcMain.on("procesoPinesSalida", async (_event, message) => {
+     procesoActualPines(message)
+    console.log(message)
+  });
+  //#endregion
   createWindow()
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

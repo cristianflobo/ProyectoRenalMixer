@@ -36,3 +36,4 @@ type TdataConfig = {
   minu2: number
   time: boolean
 }
+
