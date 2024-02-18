@@ -8,7 +8,6 @@ export function ConfigMixer({ closeWindows }) {
     activeKeyBoardNumeric,
     selectChange,
     onOnchangeViewKeyBoardNumeric,
-    //selectedValue,
     datosConfig,
     minutos,
     hora
@@ -24,7 +23,7 @@ export function ConfigMixer({ closeWindows }) {
                 <span>{item.title}</span>
                 <div style={{ display: 'flex' }}>
                   <div className="label-select">
-                    <label>Hora</label>
+                    <label>HH</label>
                     <select
                       value={item.hora1}
                       onChange={(event) => selectChange(event, i, 'hora1')}
@@ -36,7 +35,7 @@ export function ConfigMixer({ closeWindows }) {
                   </div>
       
                   <div className="label-select">
-                    <label>Minu</label>
+                    <label>MM</label>
                     <select
                       value={item.minu2}
                       onChange={(event) => selectChange(event, i, 'minu2')}

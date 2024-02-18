@@ -1,3 +1,4 @@
+import { ClockTime } from './components/clockTime/Clock'
 import { KeyBoardNumeric } from './components/keyBoardNumeric/KeyBoardNumeric'
 import { Message } from './components/message/Message'
 import useApp from './hooks/useApp'
@@ -15,32 +16,25 @@ function App(): JSX.Element {
     mensajeGeneral,
     selectScreen
   } = useApp()
-console.log(selectScreen)
+  console.log(selectScreen)
   return (
-    <MenssageGeneralContext.Provider value={{mensajeGeneral, setmensajeGeneral}}>
+    <MenssageGeneralContext.Provider value={{ mensajeGeneral, setmensajeGeneral }}>
       <div className="conteiner">
-        <img  src={config}></img>
+        <ClockTime/>
+        <img src={config}></img>
         <button>AUTOMATICO</button>
-        <button onClick={() => setSelectScreen({manual:true, config:false})}>MANUAL</button>
-        <button onClick={() => setSelectScreen({manual:false, config:true})}>CONFIGURACION</button>
-        <img  src={sola}></img>
+        <button onClick={() => setSelectScreen({ manual: true, config: false })}>MANUAL</button>
+        <button onClick={() => setSelectScreen({ manual: false, config: true })}>
+          CONFIGURACION
+        </button>
+        <img src={sola}></img>
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
         {selectScreen.manual ? <Manual closeWindows={setSelectScreen} /> : null}
-        {/* <p
-          style={{ height: '50px', width: '100px' }}
-          onClick={() =>
-            setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })
-          }
-        >
-          {onOnchangeViewKeyBoardNumeric.data}
-        </p> */}
         {onOnchangeViewKeyBoardNumeric.view ? (
           <KeyBoardNumeric setKey={setOnOnchangeViewKeyBoardNumeric} />
         ) : null}
-        
-        {
-          mensajeGeneral.view?<Message/>:null
-        }
+
+        {mensajeGeneral.view ? <Message /> : null}
       </div>
     </MenssageGeneralContext.Provider>
   )
