@@ -7,7 +7,7 @@ import icon from '../../resources/icon.png?asset'
 const { exec } = require('child_process');
 import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 
-//---------------------------------------------------------
+/*/---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
     if (error) {
         console.error(`Error al ejecutar el comando: ${error}`);
@@ -18,6 +18,7 @@ exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
 	console.log(new Date())
 });
 //----------------------------------------------
+*/
 interface objDataPort {
   path: string
   baudRate: number
@@ -90,7 +91,7 @@ app.whenReady().then(() => {
       let filter = ports.filter(
         (item: serialPortList) =>
           !portConnected.some((item2: serialPortList) => item2.path === item.path)
-      )
+      )	
       event.reply('puertosEncontrados', filter)
     }
   })
