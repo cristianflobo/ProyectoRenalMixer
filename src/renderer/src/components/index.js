@@ -3,5 +3,6 @@ export  { EscanerSerial } from './escanerSerial/EscanerSerial'
 export  { KeyBoardNumeric } from './keyBoardNumeric/KeyBoardNumeric' 
 export  { InputData } from './inputData/InputData' 
 export  { ClockTime } from './clockTime/Clock' 
+export  { ProcesoAuto } from './procesoAuto/procesoAuto' 
 
 

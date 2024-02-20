@@ -28,6 +28,7 @@ type TioPeripheral = {
 type TselectScreen = {
   manual: boolean
   config: boolean
+  auto:boolean
 }
 type TdataConfig = {
   title: string
@@ -36,4 +37,7 @@ type TdataConfig = {
   minu2: number
   time: boolean
 }
-
+type TdataRenderAuto = {
+  title: string
+  dato: number
+}
