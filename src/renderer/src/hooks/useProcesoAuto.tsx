@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import useHookShared from './useHookShared'
 
 const useProcesoAuto = () => {
+  const { eviarProcesoPines } = useHookShared()
     const [pasosProcesos, setPasosProcesos] = useState<any>()
     const [litrosSerial, setLitrosSerial] = useState({s1:0, s2:0})
     useEffect(() => {
@@ -28,9 +30,91 @@ const useProcesoAuto = () => {
         window.electron.ipcRenderer.removeAllListeners('dataSerial2')
       }
     }, [])
+    const prenderApagar = (dat) =>{
+      if(dat === 'p' ) {
+        eviarProcesoPines([
+          {
+            nombre: 'valvula 1',
+            estado: 1
+          },
+          {
+            nombre: 'valvula 2',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 3',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 4',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 5',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 6',
+            estado: 0
+          },
+          {
+            nombre: 'bomba 1',
+            estado: 0
+          },
+          {
+            nombre: 'bomba 2',
+            estado: 0
+          },
+          {
+            nombre: 'bomba 3',
+            estado: 0
+          }
+        ])
+      }else {
+        eviarProcesoPines([
+          {
+            nombre: 'valvula 1',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 2',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 3',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 4',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 5',
+            estado: 0
+          },
+          {
+            nombre: 'valvula 6',
+            estado: 0
+          },
+          {
+            nombre: 'bomba 1',
+            estado: 0
+          },
+          {
+            nombre: 'bomba 2',
+            estado: 0
+          },
+          {
+            nombre: 'bomba 3',
+            estado: 0
+          }
+        ])
+      }
+    }
   return {
     pasosProcesos,
-    litrosSerial
+    litrosSerial,
+    prenderApagar
   }
 }
 

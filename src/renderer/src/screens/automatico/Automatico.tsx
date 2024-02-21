@@ -30,9 +30,10 @@ export function Automatico({ closeWindows }) {
           ) : null}
         </div>
       </div>
-      <button onClick={()=>setActiveProceso(true)} className='boton-abajo'>INICIO</button>
+      <button onClick={()=>setActiveProceso(!activeProceso)} className='boton-abajo'>INICIO</button>
+      <button onClick={() => closeWindows({ manual: false, config: false, auto: false })} className='boton-abajo'>ATRAS</button>
       {
-        activeProceso?<ProcesoAuto/>:null
+        activeProceso?<ProcesoAuto />:null
       }
     </div>
   )
