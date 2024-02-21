@@ -5,7 +5,7 @@ const { SerialPort, ReadlineParser } = require('serialport')
 const cron = require('node-cron')
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
-//import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
+import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 
 /*/---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
@@ -82,9 +82,10 @@ app.whenReady().then(() => {
 
   //---------------------------------------------------------------------Componente serial Conexion serial
   //#region Serial
+  //'/dev/ttyACM0'
   //let serialport:typeof SerialPort[] = []
 
-  ipcMain.on('buscarPuertos', async (event, _message) => {
+  const buscarPuertos = async() => {
     const ports: serialPortList[] = await SerialPort.list()
     if (ports.length > 0) {
       let portConnected = extractInfoPort(serialPortArray)
@@ -92,9 +93,8 @@ app.whenReady().then(() => {
         (item: serialPortList) =>
           !portConnected.some((item2: serialPortList) => item2.path === item.path)
       )	
-      event.reply('puertosEncontrados', filter)
     }
-  })
+  }
 
   ipcMain.on('conectarSerial', async (event, puerto) => {
     let serialPort = new SerialPort({
