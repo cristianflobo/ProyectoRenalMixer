@@ -1,14 +1,7 @@
-import useProcesoAuto from "@renderer/hooks/useProcesoAuto"
+import useProcesoAuto from '@renderer/hooks/useProcesoAuto'
 
-export function ProcesoAuto(): JSX.Element  {
-   const { prenderApagar,pasosProcesos, litrosSerial} = useProcesoAuto()
-      return (
-        <div className="cont-proceso-auto" >
-            <h1>s1 {litrosSerial.s1}</h1>
-            <h1>s1 {litrosSerial.s2}</h1>
-          <button onClick={()=>prenderApagar("p")}>PRENDER</button>
-          <button onClick={()=>prenderApagar("a")}>APAGAR</button>
-        </div>      
-      )
-      
-  }
+export function ProcesoAuto({ datos, returnHome }): JSX.Element {
+  const { pasosProcesos, litrosSerial, ciclo } = useProcesoAuto(datos, returnHome)
+  console.log(pasosProcesos[0].html)
+  return <div className="cont-proceso-auto">{pasosProcesos[ciclo].html}</div>
+}

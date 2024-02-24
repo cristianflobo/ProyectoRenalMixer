@@ -22,7 +22,6 @@ export function Automatico({ closeWindows }) {
               <span>{item.dato}</span>
             </div>
           ))}
-         
         </div>
         <div className="calc-auto">
           {onOnchangeViewKeyBoardNumeric.view ? (
@@ -30,11 +29,19 @@ export function Automatico({ closeWindows }) {
           ) : null}
         </div>
       </div>
-      <button onClick={()=>setActiveProceso(!activeProceso)} className='boton-abajo'>INICIO</button>
-      <button onClick={() => closeWindows({ manual: false, config: false, auto: false })} className='boton-abajo'>ATRAS</button>
-      {
-        activeProceso?<ProcesoAuto />:null
-      }
+      <div className="boton-abajo">
+        <button onClick={() => setActiveProceso(!activeProceso)}>
+          INICIO
+        </button>
+        <button
+          onClick={() => closeWindows({ manual: false, config: false, auto: false })}
+          
+        >
+          ATRAS
+        </button>
+      </div>
+
+      {activeProceso ? <ProcesoAuto  datos={renderData} returnHome={closeWindows}/> : null}
     </div>
   )
 }
