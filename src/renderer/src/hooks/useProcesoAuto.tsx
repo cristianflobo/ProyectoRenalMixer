@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 let configDatos: TdataConfig[]
-const useProcesoAuto = (datos, returnHome) => {
+let cicloGlobal = 0
+const useProcesoAuto = (datos: TdataRenderAuto[], returnHome: ({}) => void) => {
   const { eviarProcesoPines } = useHookShared()
   const [litrosSerial, setLitrosSerial] = useState({ s1: 0, s2: 0 })
   const [ciclo, setCiclo] = useState(0)
-  const [pasosProcesos, setPasosProcesos] = useState<any>([
+  let pasosProcesos = [
     {
       id: 0,
       html: (
@@ -79,7 +80,8 @@ const useProcesoAuto = (datos, returnHome) => {
             Home
           </button>
         </div>
-      )
+      ),
+      procesoGpio: []
     },
     {
       id: 7,
@@ -91,7 +93,8 @@ const useProcesoAuto = (datos, returnHome) => {
             Home
           </button>
         </div>
-      )
+      ),
+      procesoGpio: []
     },
     {
       id: 8,
@@ -103,28 +106,29 @@ const useProcesoAuto = (datos, returnHome) => {
             Home
           </button>
         </div>
-      )
+      ),
+      procesoGpio: []
     }
-  ])
+  ]
 
   useEffect(() => {
     configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-    window.electron.ipcRenderer.send('conectarSerial', { path: '/dev/ttyACM0', baud: 9600 })
+    // window.electron.ipcRenderer.send('conectarSerial', { path: '/dev/ttyACM0', baud: 9600 })
+    window.electron.ipcRenderer.send('conectarSerial', { path: 'COM4', baud: 9600 })
     window.electron.ipcRenderer.on('dataSerial1', (_event, data) => {
-      console.log('dataSerial1', data)
-      if (ciclo === 0) {
-        if (litrosSerial.s1 === datos[0].dato) {
+      setLitrosSerial({ ...litrosSerial, s1: data })
+      if (cicloGlobal === 0) {
+        if (data >= datos[0].dato) {
           // eviarProcesoPines(['buzzer'])
           setCiclo(1)
         }
       }
-      if (ciclo === 2) {
-        if (litrosSerial.s1 === datos[1].dato) {
+      if (cicloGlobal === 2) {
+        if (data >= datos[1].dato) {
           // eviarProcesoPines(['buzzer'])
           setCiclo(3)
         }
       }
-      setLitrosSerial({ ...litrosSerial, s1: data })
     })
     window.electron.ipcRenderer.on('dataSerial2', (_event, data) => {
       console.log('dataSerial2', data)
@@ -137,9 +141,11 @@ const useProcesoAuto = (datos, returnHome) => {
   }, [])
 
   useEffect(() => {
+    cicloGlobal = ciclo;
     switch (ciclo) {
       case 1:
         eviarProcesoPines(pasosProcesos[ciclo].procesoGpio)
+
         break
 
       case 2:
@@ -153,11 +159,13 @@ const useProcesoAuto = (datos, returnHome) => {
       case 4:
         let tiempoMezclado = configDatos.find((item) => item.title === 'TIEMPO DE MEZCLADO')
         eviarProcesoPines(pasosProcesos[ciclo].procesoGpio)
-        setTimeout(() => {
-          setCiclo(5)
-        }, tiempoMezclado?.dato)
+        if (tiempoMezclado) {
+          setTimeout(() => {
+            setCiclo(5)
+          }, tiempoMezclado?.dato * 1000)
+        }
         break
-        
+
       case 5:
         eviarProcesoPines(pasosProcesos[ciclo].procesoGpio)
         break
