@@ -10,11 +10,17 @@ const useApp = () => {
     view: false,
     data: ''
   })
+  const [activarMenuWifi, setActivarMenuWifi] = useState(false)
   eviarProcesoPines([])
+  const menuWifiConfig = ():void => {
+    setActivarMenuWifi((pre)=>!pre)
+  }
   return {
     setOnOnchangeViewKeyBoardNumeric,
     setmensajeGeneral,
-    setSelectScreen,
+    setSelectScreen, 
+    menuWifiConfig,   
+    activarMenuWifi, 
     selectScreen,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,

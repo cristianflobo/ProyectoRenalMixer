@@ -1,8 +1,9 @@
 import useConfigMixer from '@renderer/hooks/useConfigMixer'
 import '../../styles/configMixer.css'
 import { KeyBoardNumeric } from '@renderer/components/keyBoardNumeric/KeyBoardNumeric'
+import { NavBa } from '@renderer/components'
 
-export function ConfigMixer({ closeWindows }) {
+export function ConfigMixer({ closeWindows }):JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
     activeKeyBoardNumeric,
@@ -15,6 +16,7 @@ export function ConfigMixer({ closeWindows }) {
 
   return (
     <div className="cont-config-mixer">
+      <NavBa/>
       <div className="datos-key">
         <div>
           {datosConfig?.map((item: TdataConfig, i: number) => {
@@ -28,8 +30,8 @@ export function ConfigMixer({ closeWindows }) {
                       value={item.hora1}
                       onChange={(event) => selectChange(event, i, 'hora1')}
                     >
-                      {hora.map((item: number) => (
-                        <option value={item}>{item}</option>
+                      {hora.map((item: number, i:number) => (
+                        <option key={i} value={item}>{item}</option>
                       ))}
                     </select>
                   </div>
@@ -40,8 +42,8 @@ export function ConfigMixer({ closeWindows }) {
                       value={item.minu2}
                       onChange={(event) => selectChange(event, i, 'minu2')}
                     >
-                      {minutos.map((item: number) => (
-                        <option value={item}>{item}</option>
+                      {minutos.map((item: number, i:number) => (
+                        <option key={i} value={item}>{item}</option>
                       ))}
                     </select>
                   </div>
@@ -62,7 +64,7 @@ export function ConfigMixer({ closeWindows }) {
         </div>
       </div>
       <div>
-        <button onClick={() => closeWindows({ manua: false, config: false })}>ATRAS</button>
+        <button className="btn-back" onClick={() => closeWindows({ manua: false, config: false })}>ATRAS</button>
       </div>
     </div>
   )

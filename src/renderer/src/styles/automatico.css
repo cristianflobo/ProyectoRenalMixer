@@ -6,16 +6,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #242424;
-}
-.cont-automatico >div:first-child {
-    display: flex;
-    width: 80%;
-    height: 80%;
-}
-.cont-automatico >div:first-child >div:first-child {
-    width: 70%;
-    height: 90%;
+  background-color:white;
 }
 .calc-auto {
     height: 142px;
@@ -59,3 +50,32 @@
     animation:l4 1s infinite steps(10);
   }
   @keyframes l4 {to{transform: rotate(1turn)}}
+
+  .padre-auto{
+    display: flex;
+    width: 90%;
+    height: 80%;
+  }
+  .padre-auto > div{
+    display: flex;
+   justify-content: center;
+  }
+  .padre-auto > div:first-child{
+    width: 18%;
+    height: 100%;
+  }
+   .padre-auto > div:nth-child(2){
+  
+    width: 16%;
+    height: 100%;
+  }
+  .padre-auto > div:nth-child(3){
+    
+    width: 33%;
+    height: 100%;
+  }
+  .padre-auto > div:nth-child(4){
+
+    width: 33%;
+    height: 100%;
+  }

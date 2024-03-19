@@ -1,0 +1,12 @@
+.navBar {
+    display: flex;
+    width: 100%;
+    height: 20%;
+    border-bottom: 8px solid rgb(0, 187, 255);
+    color: purple;
+}
+.navBar > div { 
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}

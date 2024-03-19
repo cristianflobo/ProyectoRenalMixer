@@ -1,0 +1,13 @@
+.menu-wifi {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    background: grey;
+    animation: mover 2s ease;
+}
+@keyframes mover {
+    from {height: 0px;}
+    to {height: 100%;}
+  }

@@ -1,14 +1,16 @@
 import useManual from '@renderer/hooks/useManual'
 import '../../styles/manual.css'
+import { NavBa } from '@renderer/components'
 
-export function Manual({ closeWindows }) {
+export function Manual({ closeWindows }): JSX.Element {
   const { changeIo, selectIo } = useManual()
   return (
     <div className="cont-manual">
-      <div>
+      <NavBa/>
+      <div className='cont-btn-manual'>
         {selectIo?.map((item: TioPeripheral, i: number) => (
           <button
-            style={item.estado === 0 ? { backgroundColor: 'grey' } : { backgroundColor: 'green' }}
+            style={item.estado === 0 ? { backgroundColor: '#0491d7' } : { backgroundColor: 'green' }}
             onClick={(event) => changeIo(event)}
             key={i}
             value={item.nombre}

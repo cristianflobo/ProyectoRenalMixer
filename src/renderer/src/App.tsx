@@ -1,17 +1,18 @@
-import { ClockTime } from './components/clockTime/Clock'
-import { KeyBoardNumeric } from './components/keyBoardNumeric/KeyBoardNumeric'
-import { Message } from './components/message/Message'
+import { MenuWifi, KeyBoardNumeric, Message, NavBa, FullKeyBoard } from './components/'
 import useApp from './hooks/useApp'
-import { config, sola } from './images/'
 import { Automatico } from './screens/automatico/Automatico'
 import { ConfigMixer } from './screens/configMixer/ConfigMixer'
 import { Manual } from './screens/manual/Manual'
+import wifi from './images/wifi.svg'
+import x from './images/x.svg'
 
 function App(): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
     setmensajeGeneral,
     setSelectScreen,
+    menuWifiConfig,
+    activarMenuWifi,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
     mensajeGeneral,
@@ -21,18 +22,30 @@ function App(): JSX.Element {
   return (
     <MenssageGeneralContext.Provider value={{ mensajeGeneral, setmensajeGeneral }}>
       <div className="conteiner">
-        <ClockTime />
-        <img src={config}></img>
-        <button onClick={() => setSelectScreen({ manual: false, config: false, auto: true })}>
-          AUTOMATICO
-        </button>
-        <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
-          MANUAL
-        </button>
-        <button onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
-          CONFIGURACION
-        </button>
-        <img src={sola}></img>
+        
+        <NavBa/>
+        
+        <div className='btn-principal'>
+          <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+            MANUAL
+          </button>
+          <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+            LAVADO
+          </button>
+          <button onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
+            RECIRCULACION
+          </button>
+          <button onClick={() => setSelectScreen({ manual: false, config: false, auto: true })}>
+            MEZCLADO
+          </button>
+          <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+            TRASPASO
+          </button>
+          <button onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
+            CONFIGURACION
+          </button>
+        </div>
+     
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
         {selectScreen.manual ? <Manual closeWindows={setSelectScreen} /> : null}
         {selectScreen.auto ? <Automatico closeWindows={setSelectScreen} /> : null}
@@ -42,6 +55,11 @@ function App(): JSX.Element {
 
         {mensajeGeneral.view ? <Message /> : null}
       </div>
+      {activarMenuWifi ? <MenuWifi /> : null}
+      <div>
+        <img onClick={() => menuWifiConfig()} className="img-wifi" src={wifi}></img>
+      </div>
+      {/* <FullKeyBoard/> */}
     </MenssageGeneralContext.Provider>
   )
 }

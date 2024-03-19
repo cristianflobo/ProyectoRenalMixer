@@ -6,17 +6,18 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: #242424;
+  background-color: white;
 }
 
-.cont-manual > div:first-child {
+.cont-btn-manual {
   display: grid;
   width: 70%;
-  height: 70%;
+  height: 60%;
   grid-template-columns: repeat(3, 1fr);
   gap: 0px;
 }
-.cont-manual > div:nth-child(2) {
-  position: absolute;
-    bottom: 0px ;
+.cont-btn-manual > button {
+  height: 80px;
+  padding: 0em 1em;
 }
+
