@@ -9,6 +9,7 @@ import x from './images/x.svg'
 function App(): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
+    setNombreWifiConectada,
     setmensajeGeneral,
     setSelectScreen,
     menuWifiConfig,
@@ -16,7 +17,8 @@ function App(): JSX.Element {
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
     mensajeGeneral,
-    selectScreen
+    selectScreen,
+    nombreWifiConectada
   } = useApp()
   console.log(selectScreen)
   return (
@@ -55,9 +57,10 @@ function App(): JSX.Element {
 
         {mensajeGeneral.view ? <Message /> : null}
       </div>
-      {activarMenuWifi ? <MenuWifi /> : null}
-      <div>
-        <img onClick={() => menuWifiConfig()} className="img-wifi" src={wifi}></img>
+      {activarMenuWifi ? <MenuWifi nombreWifiConect ={setNombreWifiConectada} /> : null}
+      <div className="img-wifi">
+        <span>{nombreWifiConectada}</span>
+        <img onClick={() => menuWifiConfig()}  src={wifi}></img>
       </div>
       {/* <FullKeyBoard/> */}
     </MenssageGeneralContext.Provider>

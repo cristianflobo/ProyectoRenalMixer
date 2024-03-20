@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 let configDatos: TdataConfig[]
 let cicloGlobal = 0
-const useProcesoAuto = (datos: TdataRenderAuto[], returnHome: ({}) => void) => {
+const useProcesoAuto = (datos: TdataRenderAuto[], returnHome: () => void):void => {
   const { eviarProcesoPines } = useHookShared()
   const [litrosSerial, setLitrosSerial] = useState({ s1: 0, s2: 0 })
   const [ciclo, setCiclo] = useState(0)
-  let pasosProcesos = [
+  const pasosProcesos = [
     {
       id: 0,
       html: (
@@ -134,14 +134,15 @@ const useProcesoAuto = (datos: TdataRenderAuto[], returnHome: ({}) => void) => {
       console.log('dataSerial2', data)
       setLitrosSerial({ ...litrosSerial, s2: data })
     })
-    return () => {
+    return ():void => {
       window.electron.ipcRenderer.removeAllListeners('dataSerial1')
       window.electron.ipcRenderer.removeAllListeners('dataSerial2')
     }
   }, [])
 
   useEffect(() => {
-    cicloGlobal = ciclo;
+    cicloGlobal = ciclo
+    let tiempoMezclado: TdataConfig | undefined;
     switch (ciclo) {
       case 1:
         eviarProcesoPines(pasosProcesos[ciclo].procesoGpio)
@@ -157,7 +158,7 @@ const useProcesoAuto = (datos: TdataRenderAuto[], returnHome: ({}) => void) => {
         break
 
       case 4:
-        let tiempoMezclado = configDatos.find((item) => item.title === 'TIEMPO DE MEZCLADO')
+        tiempoMezclado = configDatos.find((item:TdataConfig) => item.title === 'TIEMPO DE MEZCLADO')
         eviarProcesoPines(pasosProcesos[ciclo].procesoGpio)
         if (tiempoMezclado) {
           setTimeout(() => {
@@ -173,7 +174,7 @@ const useProcesoAuto = (datos: TdataRenderAuto[], returnHome: ({}) => void) => {
       default:
         break
     }
-    return () => {}
+    return (): void => {}
   }, [ciclo])
 
   return {

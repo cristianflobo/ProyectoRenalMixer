@@ -22,7 +22,7 @@ export function ConfigMixer({ closeWindows }):JSX.Element {
           {datosConfig?.map((item: TdataConfig, i: number) => {
             return item.time ? (
               <div className="div-map" key={i}>
-                <span>{item.title}</span>
+                <span style={{fontSize:"20px"}}>{item.title}</span>
                 <div style={{ display: 'flex' }}>
                   <div className="label-select">
                     <label>HH</label>
@@ -51,7 +51,7 @@ export function ConfigMixer({ closeWindows }):JSX.Element {
               </div>
             ) : (
               <div className="div-map" onClick={() => activeKeyBoardNumeric(i)} key={i}>
-                <span>{item.title}</span>
+                <span style={{fontSize:"20px"}}>{item.title}</span>
                 <span>{item.dato}</span>
               </div>
             )

@@ -7,16 +7,16 @@ const useConfigMixer = () => {
     view: false,
     data: ''
   })
-  let hora: number[] = []
+  const hora: number[] = []
   for (let i = 0; i < 24; i++) {
     hora.push(i)
   }
-  let minutos: number[] = []
+  const minutos: number[] = []
   for (let i = 0; i < 60; i++) {
     minutos.push(i)
   }
   useEffect(() => {
-    let configDatos = localStorage.getItem('configDatos')
+    const configDatos = localStorage.getItem('configDatos')
     if (configDatos) {
       console.log(configDatos)
       setDatosConfig(JSON.parse(configDatos))
@@ -48,17 +48,17 @@ const useConfigMixer = () => {
           }
         ])
       )
-      let data = localStorage.getItem('configDatos')
+      const data = localStorage.getItem('configDatos')
       setDatosConfig(JSON.parse(data!))
     }
-    return () => {}
+    return ():void => {}
   }, [])
 
   useEffect(() => {
     let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
     if (onOnchangeViewKeyBoardNumeric.data !== '' && !onOnchangeViewKeyBoardNumeric.view) {
       configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-      let dataKeyTermporal = configDatos?.map((item: TdataConfig, i: number) => {
+      const dataKeyTermporal = configDatos?.map((item: TdataConfig, i: number) => {
         if (i === posicionDataConfig) return { ...item, dato: onOnchangeViewKeyBoardNumeric.data }
         return item
       })
@@ -68,7 +68,7 @@ const useConfigMixer = () => {
     } else {
       setDatosConfig(configDatos)
     }
-    return () => {}
+    return ():void => {}
   }, [onOnchangeViewKeyBoardNumeric.view])
 
   const activeKeyBoardNumeric = (posicion: number) => {
@@ -77,7 +77,7 @@ const useConfigMixer = () => {
   }
   const selectChange = (event: ChangeEvent<HTMLSelectElement>, id: number, fieldName: string) => {
     const { value } = event.target
-    let changeValue = datosConfig?.map((item, i) => {
+    const changeValue = datosConfig?.map((item, i) => {
       if (id == i) {
         item[fieldName] = value
       }

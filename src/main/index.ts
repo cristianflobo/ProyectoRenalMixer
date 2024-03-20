@@ -3,9 +3,11 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 const { SerialPort, ReadlineParser } = require('serialport')
 const cron = require('node-cron')
+const wifi = require('node-wifi');
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
 //import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
+import { Twifi } from '../renderer/src/utils/interfaceMain';
 
 /*/---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
@@ -71,21 +73,6 @@ app.whenReady().then(() => {
   })
 
   //---------------------------------------------------------------------Componente serial Conexion serial
-  //#region Serial
-  //'/dev/ttyACM0'
-  //let serialport:typeof SerialPort[] = []
-
-  // const buscarPuertos = async() => {
-  //   const ports: serialPortList[] = await SerialPort.list()
-  //   if (ports.length > 0) {
-  //     let portConnected = extractInfoPort(serialPortArray)
-  //     let filter = ports.filter(
-  //       (item: serialPortList) =>
-  //         !portConnected.some((item2: serialPortList) => item2.path === item.path)
-  //     )	
-  //   }
-  // }
-
   ipcMain.on('conectarSerial', async (event, puerto) => {
     const serialPort = new SerialPort({
       path: puerto.path,
@@ -137,6 +124,35 @@ app.whenReady().then(() => {
     serialPortArray = serialPortArray.filter((item: typeof SerialPort) => item.path !== path)
     event.reply('verificarConexionWeb', extractInfoPort(serialPortArray))
   })
+
+  ipcMain.on('listarWifi', async (event) => {
+    wifi.init({
+      iface: null
+    });
+    wifi.scan((error, networks) => {
+      if (error) {
+        console.log(error);
+      } else {
+        //console.log(networks);
+        event.reply('listaWifi', networks)
+      }
+    }); 
+  })
+  ipcMain.on('conectarWifi', async (event, datos) => {
+    wifi.scan((error, networks) => {
+      if (error) {
+        console.log(error);
+      } else {
+        const filtrarWifi = networks.find((item:Twifi)=>item.ssid == datos.ssid )
+        wifi.connect({ ssid: filtrarWifi, password: datos.contrasena }, () => {
+          console.log('Connected');
+          event.reply('conexionCompleta', filtrarWifi) 
+        });
+      }
+    }); 
+   
+  })
+
   const extractInfoPort = (info: typeof SerialPort):void => {
     return info.map((item: typeof SerialPort) => {
       return { path: item.path, baudRate: item.baudRate }

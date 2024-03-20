@@ -1,13 +1,28 @@
 .menu-wifi {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 150px;
-    height: 100%;
-    background: grey;
-    animation: mover 2s ease;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  background: grey;
+  animation: mover 2s ease;
+  overflow: auto;
 }
 @keyframes mover {
-    from {height: 0px;}
-    to {height: 100%;}
+  from {
+    height: 0px;
   }
+  to {
+    height: 100%;
+  }
+}
+
+.menu-wifi > div{
+  padding-top: 30px;
+  font-size: 20px;
+}
+
+.menu-wifi > div > div{
+  display: flex;
+  flex-direction: column;
+}

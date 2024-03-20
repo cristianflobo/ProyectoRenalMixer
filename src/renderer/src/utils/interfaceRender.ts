@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 interface infoMenu {
   title: string
   view: boolean
   component: JSX.Element
 }
+
 interface objDataPort {
   path: string
   baudRate: number
@@ -16,8 +19,8 @@ interface IMenssageG {
 }
 
 interface PropsProcesoAuto {
-  datos: TdataRenderAuto[];
-  returnHome: () => void;
+  datos: TdataRenderAuto[]
+  returnHome: () => void
 }
 type GlobalContentMessage = {
   mensajeGeneral: IMenssageG
@@ -33,7 +36,7 @@ type TioPeripheral = {
 type TselectScreen = {
   manual: boolean
   config: boolean
-  auto:boolean
+  auto: boolean
 }
 type TdataConfig = {
   title: string
@@ -45,4 +48,17 @@ type TdataConfig = {
 type TdataRenderAuto = {
   title: string
   dato: number
+}
+
+type Twifi = {
+  bssid: string
+  channel: number
+  frequency: number
+  mac: string
+  mode: string
+  quality: number
+  security: string
+  security_flags: string
+  signal_level: number
+  ssid: string
 }

@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: purple;
+  color: black;
   background-color: white;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -68,7 +68,7 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
   margin: 7px;
-  color: purple;
+  color: black;
 }
 button:hover {
   border-color: #646cff;
@@ -84,7 +84,7 @@ button:focus-visible {
 
 .clock-time {
   position: absolute;
-  color: purple;
+  color: black;
   font-size: 30px;
   top: 0;
   left: 50%;
@@ -93,8 +93,13 @@ button:focus-visible {
 }
 .img-wifi {
   position: absolute;
+  display: flex;
   top: 4px;
   right: 5px;
+  height: 30px;
+  width: 100px;
+}
+.img-wifi > img {
   height: 30px;
   width: 30px;
 }
@@ -104,5 +109,4 @@ button:focus-visible {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-content: center;
-  grid-gap: 10px px;
 }
