@@ -19,6 +19,8 @@
 }
 .datos-key > div:first-child{
     width:70% ;
+    height: 80%;
+    overflow: auto;
 }
 .datos-key {
    width: 90%;

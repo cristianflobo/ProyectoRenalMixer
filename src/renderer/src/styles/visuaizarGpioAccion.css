@@ -1,0 +1,14 @@
+.cont-visual-gpio {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px; /* Espacio entre elementos */
+    margin: 5px;
+}
+.cont-visual-gpio span{
+    font-size: 14px;
+}
+.cont-visual-gpio > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -9,13 +9,11 @@ export function MenuWifi({nombreWifiConect}): JSX.Element {
       <div>
         {listaWifi!.map((item: Twifi, i: number) => (
           <div key={i}>
-            <span onClick={() => ingresarDatos()}>{item.ssid}</span>
-            {activarInput ? (
+            <span onClick={() => ingresarDatos(item.ssid)}>{item.ssid}</span>
+            {activarInput.activar && activarInput.ssid === item.ssid ? (
               <div>
-                <input value={contrasena} onChange={(e)=>setContrasena(e.target.value)} placeholder="contrasena">
-                  {' '}
-                  <button onClick={() => conectarWifi(item.ssid)}>Conectar</button>
-                </input>
+                <input value={contrasena} onChange={(e)=>setContrasena(e.target.value)} placeholder="contrasena"></input>
+                <button className='btn-wifi' onClick={() => conectarWifi(item.ssid)}>Conectar</button>
               </div>
             ) : null}
           </div>

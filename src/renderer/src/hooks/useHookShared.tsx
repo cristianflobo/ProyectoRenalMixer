@@ -1,4 +1,12 @@
-const useHookShared = () => {
+type TuseHookShared = {
+  eviarProcesoPines: (procesoIO: string[]) => void;
+  datosGpio: {
+      nombre: string;
+      estado: number;
+  }[];
+}
+
+const useHookShared = ():TuseHookShared => {
   const datosGpio = [
     {
       nombre: 'valvula 1',
@@ -41,9 +49,9 @@ const useHookShared = () => {
       estado: 0
     }
   ]
-  const eviarProcesoPines = (procesoIO: string[]) => {
-    let envioGpioFinal = datosGpio.map((item: TioPeripheral) => {
-      let buscar = procesoIO.find((item2) => item2 === item.nombre)
+  const eviarProcesoPines = (procesoIO: string[]):void => {
+    const envioGpioFinal = datosGpio.map((item: TioPeripheral) => {
+      const buscar = procesoIO.find((item2) => item2 === item.nombre)
       if (buscar === undefined) {
         item.estado = 0
       } else {
@@ -54,7 +62,7 @@ const useHookShared = () => {
     console.log(envioGpioFinal)
     window.electron.ipcRenderer.send('procesoPinesSalida', envioGpioFinal)
   }
-  return { eviarProcesoPines }
+  return { eviarProcesoPines, datosGpio }
 }
 
 export default useHookShared

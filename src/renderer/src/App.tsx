@@ -1,68 +1,76 @@
-import { MenuWifi, KeyBoardNumeric, Message, NavBa, FullKeyBoard } from './components/'
+import { MenuWifi, KeyBoardNumeric, Message, NavBa, FullKeyBoard, ProcesoAuto } from './components/'
 import useApp from './hooks/useApp'
 import { Automatico } from './screens/automatico/Automatico'
 import { ConfigMixer } from './screens/configMixer/ConfigMixer'
 import { Manual } from './screens/manual/Manual'
 import wifi from './images/wifi.svg'
-import x from './images/x.svg'
+import { reiniciarFlujometros } from './utils/metodosCompartidos/metodosCompartidos'
 
 function App(): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
     setNombreWifiConectada,
     setmensajeGeneral,
+    setActiveProceso,
     setSelectScreen,
     menuWifiConfig,
+    setCiclo,
     activarMenuWifi,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
+    nombreWifiConectada,
     mensajeGeneral,
+    activeProceso,
     selectScreen,
-    nombreWifiConectada
+    datosSerial,
+    procesos,
+    ciclo
   } = useApp()
-  console.log(selectScreen)
   return (
     <MenssageGeneralContext.Provider value={{ mensajeGeneral, setmensajeGeneral }}>
       <div className="conteiner">
-        
-        <NavBa/>
-        
-        <div className='btn-principal'>
-          <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+        <NavBa />
+
+        <div className="btn-principal">
+          <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
             MANUAL
           </button>
-          <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+          <button disabled={activeProceso.activar} onClick={() => {setActiveProceso({ activar: true, proceso: 'lavado' }); setCiclo(0) }}>
             LAVADO
           </button>
-          <button onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
+          <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
             RECIRCULACION
           </button>
-          <button onClick={() => setSelectScreen({ manual: false, config: false, auto: true })}>
+          <button disabled={activeProceso.activar} onClick={() => {setSelectScreen({ manual: false, config: false, auto: true }); reiniciarFlujometros()}}>
             MEZCLADO
           </button>
-          <button onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
-            TRASPASO
+          <button disabled={activeProceso.activar}  onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+            TRANSFERIR
           </button>
-          <button onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
+          <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
             CONFIGURACION
           </button>
         </div>
-     
+
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
         {selectScreen.manual ? <Manual closeWindows={setSelectScreen} /> : null}
-        {selectScreen.auto ? <Automatico closeWindows={setSelectScreen} /> : null}
+        {selectScreen.auto ? (
+          <Automatico datosSerial={datosSerial} closeWindows={setSelectScreen} />
+        ) : null}
         {onOnchangeViewKeyBoardNumeric.view ? (
           <KeyBoardNumeric setKey={setOnOnchangeViewKeyBoardNumeric} />
         ) : null}
 
         {mensajeGeneral.view ? <Message /> : null}
       </div>
-      {activarMenuWifi ? <MenuWifi nombreWifiConect ={setNombreWifiConectada} /> : null}
+      {activarMenuWifi ? <MenuWifi nombreWifiConect={setNombreWifiConectada} /> : null}
       <div className="img-wifi">
         <span>{nombreWifiConectada}</span>
-        <img onClick={() => menuWifiConfig()}  src={wifi}></img>
+        <img onClick={() => menuWifiConfig()} src={wifi}></img>
       </div>
-      {/* <FullKeyBoard/> */}
+      {activeProceso.activar ? (
+        <div className="cont-proceso-auto">{procesos[activeProceso.proceso][ciclo].html}</div>
+      ) : null}
     </MenssageGeneralContext.Provider>
   )
 }

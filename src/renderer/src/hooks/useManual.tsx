@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
-let ioPeripheral = [
+const ioPeripheral = [
   {
     nombre: 'valvula 1',
     estado: 0
@@ -44,26 +44,30 @@ const useManual = () => {
   const [selectIo, setSelectIo] = useState<TioPeripheral[]>()
 
   useEffect(() => {
-    let aux = setIoOff()
+    const aux = setIoOff()
     setSelectIo(aux)
-    eviarProcesoPines(aux)
-    return () => {
-      eviarProcesoPines(setIoOff())
+    eviarProcesoPines([])
+    return (): void => {
+      eviarProcesoPines([])
     }
   }, [])
 
-  const changeIo = (event: React.MouseEvent<HTMLButtonElement>) => {
-    let ioSelect = event.currentTarget.value
-    let change = selectIo?.map((item: TioPeripheral) => {
+  const changeIo = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    const ioSelect = event.currentTarget.value
+    const change = selectIo?.map((item: TioPeripheral) => {
       if (ioSelect === item.nombre) item.estado === 0 ? (item.estado = 1) : (item.estado = 0)
       return item
     })
     if (change !== undefined) {
-      eviarProcesoPines(change)
+      const auxArray: string[] = []
+      change.forEach((item) => {
+        if (item.estado === 1) auxArray.push(item.nombre)
+      })
+      eviarProcesoPines(auxArray)
       setSelectIo(change)
     }
   }
-  const setIoOff = () => {
+  const setIoOff = (): TioPeripheral[] => {
     ioPeripheral.forEach((element: TioPeripheral) => {
       element.estado = 0
     })

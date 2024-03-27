@@ -45,6 +45,21 @@ const useConfigMixer = () => {
             title: 'FACTOR DE CALIBRACION',
             dato: 0,
             time: false
+          },
+          {
+            title: 'TIEMPO LAVADO',
+            dato: 0,
+            time: false
+          },
+          {
+            title: 'CANTIDAD DE AGUA LAVADO 1',
+            dato: 0,
+            time: false
+          },
+          {
+            title: 'CANTIDAD DE AGUA LAVADO 2',
+            dato: 0,
+            time: false
           }
         ])
       )
@@ -75,7 +90,8 @@ const useConfigMixer = () => {
     setposicionDataConfig(posicion)
     setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })
   }
-  const selectChange = (event: ChangeEvent<HTMLSelectElement>, id: number, fieldName: string) => {
+  const selectChange = (event: ChangeEvent<HTMLSelectElement>, id: number, fieldName: string):void => {
+    console.log(id)
     const { value } = event.target
     const changeValue = datosConfig?.map((item, i) => {
       if (id == i) {
@@ -88,6 +104,7 @@ const useConfigMixer = () => {
       JSON.stringify(changeValue)
     )
     setDatosConfig(changeValue)
+    window.electron.ipcRenderer.send('configDistribucionDiaria', {id,datos:changeValue![id]})
   }
   return {
     setOnOnchangeViewKeyBoardNumeric,

@@ -94,6 +94,13 @@ const configPines = [
     argEntrada: "none",
     instancia: "",
   },
+  {
+    nombre: "buzzer",
+    pin: 259,
+    accion: "out",
+    argEntrada: "none",
+    instancia: "",
+  },
 ];
 
 //configuracion de pines e instansiacion

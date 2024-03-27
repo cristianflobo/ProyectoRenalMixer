@@ -8,6 +8,7 @@
   border: 1px solid white;
   border-radius: 7px;
   background-color: black;
+  right: 400px;
 }
 .cont-key-board-numeric > input {
   height: 30px;
@@ -17,17 +18,21 @@
 .key-board-numeric {
   display: grid;
   width: 185px;
-  height: 247px;
+  height: 260px;
   grid-template-columns: repeat(3, 1fr);
   gap: 0px;
 }
 .key-board-numeric > button {
   display: flex;
   justify-content: center;
+  align-items: center;
   color: white;
   margin: 1px;
   height: 50px;
   width: 50px;
-  font-zise:16px;
   background-color: #3e5760;
+}
+.key-board-numeric > button:nth-child(13) {
+ grid-column: 2 / 3; 
+  justify-self: center;
 }

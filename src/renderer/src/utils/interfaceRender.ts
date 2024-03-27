@@ -18,10 +18,6 @@ interface IMenssageG {
   data: string
 }
 
-interface PropsProcesoAuto {
-  datos: TdataRenderAuto[]
-  returnHome: () => void
-}
 type GlobalContentMessage = {
   mensajeGeneral: IMenssageG
   setmensajeGeneral: (c: IMenssageG) => void

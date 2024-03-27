@@ -3,11 +3,11 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 const { SerialPort, ReadlineParser } = require('serialport')
 const cron = require('node-cron')
-const wifi = require('node-wifi');
+const wifi = require('node-wifi')
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
 //import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
-import { Twifi } from '../renderer/src/utils/interfaceMain';
+import { Twifi } from '../renderer/src/utils/interfaceMain'
 
 /*/---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
@@ -125,62 +125,88 @@ app.whenReady().then(() => {
     event.reply('verificarConexionWeb', extractInfoPort(serialPortArray))
   })
 
+  ipcMain.on('reiniciarFlujometros', async () => {
+    const dato = Buffer.from([0])
+    try {
+      serialPortArray.forEach((element) => {
+        element.write(dato)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
   ipcMain.on('listarWifi', async (event) => {
     wifi.init({
       iface: null
-    });
+    })
     wifi.scan((error, networks) => {
       if (error) {
-        console.log(error);
+        console.log(error)
       } else {
         //console.log(networks);
         event.reply('listaWifi', networks)
       }
-    }); 
+    })
   })
   ipcMain.on('conectarWifi', async (event, datos) => {
     wifi.scan((error, networks) => {
       if (error) {
-        console.log(error);
+        console.log(error)
       } else {
-        const filtrarWifi = networks.find((item:Twifi)=>item.ssid == datos.ssid )
-        wifi.connect({ ssid: filtrarWifi, password: datos.contrasena }, () => {
-          console.log('Connected');
-          event.reply('conexionCompleta', filtrarWifi) 
-        });
+        const filtrarWifi = networks.find((item: Twifi) => item.ssid === datos.ssid)
+        if (filtrarWifi) {
+          console.log(filtrarWifi, datos.ssid, datos.contrasena)
+          wifi.connect({ ssid: datos.ssid, password: datos.contrasena }, () => {
+            console.log('Connected')
+            event.reply('conexionCompleta', datos.ssid)
+          })
+        } else {
+          event.reply('conexionCompleta', 'no Connected')
+        }
       }
-    }); 
-   
+    })
   })
 
-  const extractInfoPort = (info: typeof SerialPort):void => {
+  const extractInfoPort = (info: typeof SerialPort): void => {
     return info.map((item: typeof SerialPort) => {
       return { path: item.path, baudRate: item.baudRate }
     })
   }
   //#endregion
-  
+
   //---------------------------------------------------------------------Tareas programadas cron
   //#region Tareas programadas cron
   //const tareasProgramadas = () => {
+  ipcMain.on('configDistribucionDiaria', async (_event, data) => {
+    console.log(data)
+    if (data.id === 1) {
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
+        console.log('tarea inicio bomba')
+        //  procesoActualPines(message)
+      })
+    }else {
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
+        console.log('tarea final bomba')
+        //  procesoActualPines(message)
+      })
+    }
+  })
 
-    cron.schedule('3 1 * * *', () => {
-      console.log('Cron job executed at:', new Date().toLocaleString())
-    })
-    //cron.schedule('59 * * * *', () => {
-      //console.log('Cron job executed at:', new Date().toLocaleString())
-    //})
+  //cron.schedule('59 * * * *', () => {
+  //console.log('Cron job executed at:', new Date().toLocaleString())
+  //})
 
   //}
 
   //#endregion
-  
+
   //---------------------------------------------------------------------LLamado proceso pines
-  //#region  proceso pines 
-  ipcMain.on("procesoPinesSalida", async (_event, message) => {
-   //  procesoActualPines(message)
+  //#region  proceso pines
+  ipcMain.on('procesoPinesSalida', async (_event, message) => {
+    //  procesoActualPines(message)
     console.log(message)
-  });
+  })
   //#endregion
   createWindow()
   app.on('activate', function () {

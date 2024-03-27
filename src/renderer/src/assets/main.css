@@ -94,10 +94,12 @@ button:focus-visible {
 .img-wifi {
   position: absolute;
   display: flex;
-  top: 4px;
-  right: 5px;
-  height: 30px;
-  width: 100px;
+  justify-content: end;
+  top: 0px;
+  right: 0px;
+  max-height: 30px;
+  width: 200px;
+  background-color: white;
 }
 .img-wifi > img {
   height: 30px;

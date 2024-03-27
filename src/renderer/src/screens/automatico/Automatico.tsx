@@ -1,29 +1,37 @@
 import { KeyBoardNumeric } from '@renderer/components/keyBoardNumeric/KeyBoardNumeric'
 import useAutomatico from '@renderer/hooks/useAutomatico'
 import '../../styles/automatico.css'
-import { ProcesoAuto } from '@renderer/components/procesoAuto/procesoAuto'
-import { NavBa } from '@renderer/components'
+import { NavBa, VisuaizarGpioAccion } from '@renderer/components'
 
-export function Automatico({ closeWindows }: () => void): JSX.Element {
+export function Automatico({datosSerial, closeWindows }): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
     activeKeyBoardNumeric,
     setActiveProceso,
     onOnchangeViewKeyBoardNumeric,
+    procesoAutomatico,
     activeProceso,
-    renderData
-  } = useAutomatico()
+    botonAtras,
+    renderData,
+    ciclo
+  } = useAutomatico(datosSerial, closeWindows)
   return (
     <div className="cont-automatico">
       <NavBa />
       <div className="padre-auto">
         <div>
-          <button className="btn-back" onClick={() => setActiveProceso(!activeProceso)}>
-            INICIO
+          <button disabled={activeProceso} className="btn-back" onClick={() => setActiveProceso(!activeProceso)}>
+            INICIAR
           </button>
         </div>
-        <div>Litros</div>
-        <div>Valvulas</div>
+        <div className='litros-tanque'>
+          <div>
+            <span>{datosSerial.dataSerial1}L</span>    
+            <div style={{ backgroundColor:"blue",width:"100%", height:`${(datosSerial.dataSerial1*255)/500}px`}}>
+            </div>
+          </div>
+        </div>
+        <div><VisuaizarGpioAccion gpioActivos={procesoAutomatico[ciclo].procesoGpio}/></div>
         <div>
           <div>
             {renderData.map((item, i: number) => (
@@ -43,12 +51,12 @@ export function Automatico({ closeWindows }: () => void): JSX.Element {
       <div className="boton-abajo">
         <button
           className="btn-back"
-          onClick={() => closeWindows({ manual: false, config: false, auto: false })}
+          onClick={() => botonAtras()}
         >
           ATRAS
         </button>
       </div>
-      {activeProceso ? <ProcesoAuto datos={renderData} returnHome={closeWindows} /> : null}
+      {activeProceso ? <div className="cont-proceso-auto" style={{display:`${procesoAutomatico[ciclo].display}`}}>{procesoAutomatico[ciclo].html}</div>: null}
     </div>
   )
 }

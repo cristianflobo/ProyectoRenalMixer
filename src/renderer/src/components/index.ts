@@ -7,5 +7,6 @@ export  { MenuWifi } from './menuWifi/MenuWifi'
 export  { Message } from './message/Message' 
 export  { NavBa } from './navBar/NavBar' 
 export  { FullKeyBoard } from './fullKeyboard/FullKeyBoard' 
+export  { VisuaizarGpioAccion } from './visuaizarGpioAccion/VisuaizarGpioAccion' 
 
 
