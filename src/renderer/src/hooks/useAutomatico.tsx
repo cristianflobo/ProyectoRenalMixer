@@ -5,6 +5,7 @@ import { mensajeOkCancel } from '@renderer/utils/sweetalert2'
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
+  const [configDatos, setconfigDatos] = useState<TdataConfig[]>([])
   const [onOnchangeViewKeyBoardNumeric, setOnOnchangeViewKeyBoardNumeric] = useState({
     view: false,
     data: ''
@@ -14,8 +15,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
     { title: '', dato: 0 }
   ])
   const [activeProceso, setActiveProceso] = useState(false)
-  const [ciclo, setCiclo] = useState(0)
+  const [ciclo, setCiclo] = useState(-1)
   useEffect(() => {
+    const configDatos = localStorage.getItem('configDatos')
+    setconfigDatos(JSON.parse(configDatos!))
     const datosAutomatico = localStorage.getItem('datosAutomatico')
     if (datosAutomatico) {
       setrenderData(JSON.parse(datosAutomatico))
@@ -55,9 +58,15 @@ const useAutomatico = (datosSerial, closeWindows) => {
   useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
     switch (ciclo) {
-      case 1:
+      case 0:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
 
+        break
+      case 1:
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        setTimeout(() => {
+          eviarProcesoPines( ['bomba 1', 'valvula 2'])
+        }, 30000)
         break
 
       case 2:
@@ -65,19 +74,27 @@ const useAutomatico = (datosSerial, closeWindows) => {
         break
 
       case 3:
-        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        break
-
-      case 4:
         tiempoMezclado = configDatos.find(
           (item: TdataConfig) => item.title === 'TIEMPO DE MEZCLADO'
         )
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoMezclado) {
-          setTimeout(() => {
-            setCiclo(5)
-          }, tiempoMezclado?.dato * 1000)
+          setTimeout(
+            () => {
+              setCiclo(4)
+            },
+            tiempoMezclado?.dato * 1000 * 60
+          )
         }
+        setTimeout(() => {
+          eviarProcesoPines(['bomba 1', 'valvula 2'])
+        }, 30000)
+        break
+
+      case 4:
+        setTimeout(() => {
+          eviarProcesoPines([])
+        }, 30000)
         break
 
       case 5:
@@ -92,6 +109,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
   useEffect(() => {
     if (ciclo === 0 && renderData[0].dato < datosSerial.dataSerial1) setCiclo(1)
+    if (ciclo === 2 && renderData[1].dato < datosSerial.dataSerial1) setCiclo(3)
 
     return (): void => {
       renderData[0].dato
@@ -114,9 +132,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
           <button onClick={() => setCiclo(2)}>Continuar</button>
         </div>
       ),
-      procesoGpio: ['buzzer']
+      procesoGpio: ['buzzer', 'bomba 1', 'valvula 2']
     },
     {
+      //espera sensor 1 segundo lllenado
       id: 2,
       display: 'none',
       html: <div className="conte-procesos"></div>,
@@ -127,36 +146,39 @@ const useAutomatico = (datosSerial, closeWindows) => {
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>¿Desea iniciar mezclado?</strong>
-          <button onClick={() => setCiclo(4)}>Iniciar</button>
+          <strong>Mesclando ...</strong>
+          <div className="loader"></div>
         </div>
       ),
-      procesoGpio: ['buzzer']
+      procesoGpio: ['buzzer', 'bomba 1', 'valvula 2']
     },
     {
       id: 4,
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>Mezclando la solución</strong>
-          <div className="loader"></div>
+          <strong>Mezcla lista, tome muestra para comprobar calidad</strong>  
+          <div style={{display:"flex"}}>
+          <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>Inicio</button>
+          <button onClick={() => setCiclo(5)}>Tranferir a tanque distribución</button>
+          </div>      
         </div>
       ),
-      procesoGpio: ['valvula 2', 'bomba 1']
+      procesoGpio: ['buzzer']
     },
     {
       id: 5,
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>Mezcla lista, tome muestra para comprobar calidad</strong>
-          <button onClick={() => setCiclo(6)}>llenado tanque de distribución</button>
-          {/* <button onClick={() => returnHome({ manual: false, config: false, auto: false })}>
-            Inicio
-          </button> */}
+          <div style={{display:"flex"}}>
+          <button onClick={() => setCiclo(6)}>Tranferir completo</button>
+          <button onClick={() => setCiclo(5)}>Tranferir a tanque distribución</button>
+          <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>Inicio</button>
+          </div>  
         </div>
       ),
-      procesoGpio: ['buzzer']
+      procesoGpio: []
     },
     {
       id: 6,
@@ -214,7 +236,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         () => closeWindows({ manual: false, config: false, auto: false }),
         ''
       )
-    }else {
+    } else {
       closeWindows({ manual: false, config: false, auto: false })
     }
   }
@@ -227,6 +249,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
     activeProceso,
     renderData,
     botonAtras,
+    setCiclo,
     ciclo
   }
 }

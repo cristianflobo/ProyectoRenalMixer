@@ -52,12 +52,23 @@ const useConfigMixer = () => {
             time: false
           },
           {
-            title: 'CANTIDAD DE AGUA LAVADO 1',
+            title: 'CANTIDAD DE AGUA LAVADO',
             dato: 0,
             time: false
           },
           {
-            title: 'CANTIDAD DE AGUA LAVADO 2',
+            title: 'TIEMPO DRENADO PRELIMINAR',
+            dato: 0,
+            time: false
+          }
+          ,
+          {
+            title: 'TIEMPO DRENADO EN LAVADO',
+            dato: 0,
+            time: false
+          },
+          {
+            title: 'NOMBRE DE LA CLINICA',
             dato: 0,
             time: false
           }

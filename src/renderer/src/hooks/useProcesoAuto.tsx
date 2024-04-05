@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 let configDatos: TdataConfig[]
-let cicloGlobal = 0
-const useProcesoAuto = (nombreProceso:string, returnHome: () => void) => {
+
+const useProcesoAuto = (nombreProceso:string, returnHome) => {
   const { eviarProcesoPines } = useHookShared()
   const [litrosSerial, setLitrosSerial] = useState({ s1: 0, s2: 0 })
   const [ciclo, setCiclo] = useState(0)

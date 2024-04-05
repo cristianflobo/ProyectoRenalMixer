@@ -27,107 +27,111 @@
 +------+-----+----------+--------+---+  ZERO2W  +---+--------+----------+-----+------+
 */
 
-const Gpio = require("onoff").Gpio;
-
+const Gpio = require('onoff').Gpio
 
 const configPines = [
   {
-    nombre: "valvula 1",
+    nombre: 'valvula 1',
     pin: 257,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "valvula 2",
+    nombre: 'valvula 2',
     pin: 228,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "valvula 3",
+    nombre: 'valvula 3',
     pin: 262,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "valvula 4",
+    nombre: 'valvula 4',
     pin: 229,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "valvula 5",
+    nombre: 'valvula 5',
     pin: 233,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "valvula 6",
+    nombre: 'valvula 6',
     pin: 265,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "bomba 1",
+    nombre: 'bomba 1',
     pin: 267,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "bomba 2",
+    nombre: 'bomba 2',
     pin: 76,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "bomba 3",
+    nombre: 'bomba 3',
     pin: 260,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
   },
   {
-    nombre: "buzzer",
+    nombre: 'buzzer',
     pin: 259,
-    accion: "out",
-    argEntrada: "none",
-    instancia: "",
-  },
-];
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
+  }
+]
 
 //configuracion de pines e instansiacion
 configPines.forEach((item) => {
-  item.instancia = new Gpio(item.pin, `${item.accion}`, `${item.argEntrada}`);
-});
+  item.instancia = new Gpio(item.pin, `${item.accion}`, `${item.argEntrada}`)
+})
 
-const pinesSalidas = configPines.filter((item) => item.accion === "out");
-const pinesEntradass = configPines.filter((item) => item.accion !== "out");
+const pinesSalidas = configPines.filter((item) => item.accion === 'out')
+const pinesEntradass = configPines.filter((item) => item.accion !== 'out')
 
 //Iniciar pines en 0
 pinesSalidas.forEach((item) => {
-  item.instancia.writeSync(0);
-});
+  item.instancia.writeSync(0)
+})
 
 export const procesoActualPines = (proceso) => {
   for (let i = 0; i < proceso.length; i++) {
     let cambioEstadoPin = pinesSalidas.find((item) => item.nombre === proceso[i].nombre)
-    if(cambioEstadoPin !== undefined) cambioEstadoPin.instancia.writeSync(proceso[i].estado)   
+    if (cambioEstadoPin !== undefined) cambioEstadoPin.instancia.writeSync(proceso[i].estado)
   }
 }
 
-// Manejador de eventos para asegurar que el LED se apague correctamente al salir del programa
-process.on("SIGINT", () => {
-  configPines.forEach((item) => {
-    item.instancia.unexport();
-  });
-  process.exit();
-});
+export const leerProcesoActualPines = () => {
+  return configPines.map((item) => {
+    return { nombre: item.nombre, estado: item.instancia.readSync() }
+  })
+}
 
+// Manejador de eventos para asegurar que el LED se apague correctamente al salir del programa
+process.on('SIGINT', () => {
+  configPines.forEach((item) => {
+    item.instancia.unexport()
+  })
+  process.exit()
+})

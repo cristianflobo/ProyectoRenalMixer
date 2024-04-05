@@ -40,15 +40,16 @@ const ioPeripheral = [
 ]
 
 const useManual = () => {
-  const { eviarProcesoPines } = useHookShared()
+  const { eviarProcesoPinesConBombaDistribuicion } = useHookShared()
   const [selectIo, setSelectIo] = useState<TioPeripheral[]>()
 
   useEffect(() => {
-    const aux = setIoOff()
-    setSelectIo(aux)
-    eviarProcesoPines([])
+    window.electron.ipcRenderer.send('leerPinesSalidaMain')
+    window.electron.ipcRenderer.on('leerPinesSalidaRender', (_event, data) => {
+      setSelectIo(data)
+    })
     return (): void => {
-      eviarProcesoPines([])
+      window.electron.ipcRenderer.removeAllListeners('leerPinesSalidaRender')
     }
   }, [])
 
@@ -63,15 +64,9 @@ const useManual = () => {
       change.forEach((item) => {
         if (item.estado === 1) auxArray.push(item.nombre)
       })
-      eviarProcesoPines(auxArray)
+      eviarProcesoPinesConBombaDistribuicion(auxArray)
       setSelectIo(change)
     }
-  }
-  const setIoOff = (): TioPeripheral[] => {
-    ioPeripheral.forEach((element: TioPeripheral) => {
-      element.estado = 0
-    })
-    return ioPeripheral
   }
   return { changeIo, selectIo }
 }

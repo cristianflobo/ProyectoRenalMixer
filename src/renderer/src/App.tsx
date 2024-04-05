@@ -1,4 +1,4 @@
-import { MenuWifi, KeyBoardNumeric, Message, NavBa, FullKeyBoard, ProcesoAuto } from './components/'
+import { MenuWifi, KeyBoardNumeric, Message, NavBa } from './components/'
 import useApp from './hooks/useApp'
 import { Automatico } from './screens/automatico/Automatico'
 import { ConfigMixer } from './screens/configMixer/ConfigMixer'

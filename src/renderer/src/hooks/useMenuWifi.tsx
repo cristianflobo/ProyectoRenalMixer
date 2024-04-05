@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const useMenuWifi = (nombreWifiConect: (c) => void): object => {
+const useMenuWifi = (nombreWifiConect: (c) => void) => {
   const [listaWifi, setListaWifi] = useState([])
   const [activarInput, setActivarInput] = useState({activar:false, ssid:""})
   const [contrasena, setContrasena] = useState('')

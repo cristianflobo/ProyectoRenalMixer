@@ -6,7 +6,7 @@ const cron = require('node-cron')
 const wifi = require('node-wifi')
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
-//import { procesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
+//import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 import { Twifi } from '../renderer/src/utils/interfaceMain'
 
 /*/---------------------------------------------------------
@@ -21,10 +21,6 @@ exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
 });
 //----------------------------------------------
 */
-interface objDataPort {
-  path: string
-  baudRate: number
-}
 
 let serialPortArray: (typeof SerialPort)[] = []
 function createWindow(): void {
@@ -106,14 +102,6 @@ app.whenReady().then(() => {
         console.log('Error desconocido capturado:', error)
       }
     }
-  })
-
-  ipcMain.on('verificarConexionMain', async (event) => {
-    let listPortInfoSend: objDataPort[] = []
-    if (serialPortArray.length > 0) {
-      listPortInfoSend = extractInfoPort(serialPortArray)
-    }
-    event.reply('verificarConexionWeb', listPortInfoSend)
   })
 
   ipcMain.on('desconectarSerial', async (event, path) => {
@@ -206,6 +194,10 @@ app.whenReady().then(() => {
   ipcMain.on('procesoPinesSalida', async (_event, message) => {
     //  procesoActualPines(message)
     console.log(message)
+  })
+  ipcMain.on('leerPinesSalidaMain', async (event, _message) => {
+    //leerProcesoActualPines()
+   // event.reply('leerPinesSalidaRender', leerProcesoActualPines())
   })
   //#endregion
   createWindow()
