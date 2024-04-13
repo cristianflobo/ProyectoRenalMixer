@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { mensajeOkCancel } from '@renderer/utils/sweetalert2'
+import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
@@ -16,6 +17,8 @@ const useAutomatico = (datosSerial, closeWindows) => {
   ])
   const [activeProceso, setActiveProceso] = useState(false)
   const [ciclo, setCiclo] = useState(-1)
+  const [numeroCicloLavados, setNumeroCicloLavados] = useState(1)
+
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
     setconfigDatos(JSON.parse(configDatos!))
@@ -56,7 +59,51 @@ const useAutomatico = (datosSerial, closeWindows) => {
   }, [onOnchangeViewKeyBoardNumeric.view])
 
   useEffect(() => {
+    if (ciclo === 0 && renderData[0].dato < datosSerial.dataSerial1) setCiclo(1)
+    if (ciclo === 2 && renderData[1].dato < datosSerial.dataSerial1) setCiclo(3)
+    if (ciclo === 6 && renderData[0].dato + renderData[1].dato < datosSerial.dataSerial2)
+      setCiclo(7)
+    const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
+      (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO'
+    )
+    const tiempoLavado: Tdrenado | undefined = configDatos.find(
+      (item: TdataConfig) => item.title === 'TIEMPO LAVADO'
+    )
+    const tiempoDrenadoLavado: Tdrenado | undefined = configDatos.find(
+      (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO'
+    )
+
+    if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
+      if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato < datosSerial.dataSerial1) {
+        eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+        setTimeout(
+          () => {
+            eviarProcesoPines(['valvula 5'])
+            setTimeout(
+              () => {
+                if (numeroCicloLavados === 1) {
+                  setCiclo(8)
+                  setNumeroCicloLavados(2)
+                } else {
+                  setCiclo(9)
+                }
+              },
+              tiempoDrenadoLavado.dato * 1000 * 60
+            )
+          },
+          tiempoLavado.dato * 1000 * 60
+        )
+      }
+    }
+
+    return (): void => {
+      renderData[0].dato
+    }
+  }, [datosSerial])
+
+  useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
+    let tiempoDrenado: Tdrenado | undefined
     switch (ciclo) {
       case 0:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
@@ -65,7 +112,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       case 1:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         setTimeout(() => {
-          eviarProcesoPines( ['bomba 1', 'valvula 2'])
+          eviarProcesoPines(['bomba 1', 'valvula 2'])
         }, 30000)
         break
 
@@ -92,6 +139,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         break
 
       case 4:
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         setTimeout(() => {
           eviarProcesoPines([])
         }, 30000)
@@ -101,20 +149,55 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         break
 
+      case 6:
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        break
+
+      case 7: //lavado
+        tiempoDrenado = configDatos.find(
+          (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR'
+        )
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        setNumeroCicloLavados(1)
+        if (tiempoDrenado) {
+          setTimeout(() => {
+            reiniciarFlujometros()
+            eviarProcesoPines(['valvula 1'])
+          }, tiempoDrenado.dato * 1000)
+        }
+        setTimeout(() => {
+          eviarProcesoPines(['valvula 5'])
+        }, 30000)
+        break
+
+      case 8: //lavado
+        tiempoDrenado = configDatos.find(
+          (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR'
+        )
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        if (tiempoDrenado) {
+          setTimeout(() => {
+            reiniciarFlujometros()
+            eviarProcesoPines(['valvula 1'])
+          }, tiempoDrenado.dato * 1000)
+        }
+        setTimeout(() => {
+          eviarProcesoPines(['valvula 5'])
+        }, 30000)
+        break
+
+      case 9: //termina lavado
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        setTimeout(() => {
+          eviarProcesoPines([])
+        }, 30000)
+        break
+
       default:
         break
     }
     return (): void => {}
   }, [ciclo])
-
-  useEffect(() => {
-    if (ciclo === 0 && renderData[0].dato < datosSerial.dataSerial1) setCiclo(1)
-    if (ciclo === 2 && renderData[1].dato < datosSerial.dataSerial1) setCiclo(3)
-
-    return (): void => {
-      renderData[0].dato
-    }
-  }, [datosSerial])
 
   const procesoAutomatico = [
     {
@@ -135,7 +218,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       procesoGpio: ['buzzer', 'bomba 1', 'valvula 2']
     },
     {
-      //espera sensor 1 segundo lllenado
+      //espera sensor 1 segundo llenado
       id: 2,
       display: 'none',
       html: <div className="conte-procesos"></div>,
@@ -157,11 +240,13 @@ const useAutomatico = (datosSerial, closeWindows) => {
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>Mezcla lista, tome muestra para comprobar calidad</strong>  
-          <div style={{display:"flex"}}>
-          <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>Inicio</button>
-          <button onClick={() => setCiclo(5)}>Tranferir a tanque distribución</button>
-          </div>      
+          <strong>Mezcla lista, tome muestra para comprobar calidad</strong>
+          <div style={{ display: 'flex' }}>
+            <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+              Inicio
+            </button>
+            <button onClick={() => setCiclo(5)}>Tranferir a tanque distribución</button>
+          </div>
         </div>
       ),
       procesoGpio: ['buzzer']
@@ -171,11 +256,13 @@ const useAutomatico = (datosSerial, closeWindows) => {
       display: '',
       html: (
         <div className="conte-procesos">
-          <div style={{display:"flex"}}>
-          <button onClick={() => setCiclo(6)}>Tranferir completo</button>
-          <button onClick={() => setCiclo(5)}>Tranferir a tanque distribución</button>
-          <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>Inicio</button>
-          </div>  
+          <div style={{ display: 'flex' }}>
+            <button onClick={() => setCiclo(6)}>Tranferir completo</button>
+            <button onClick={() => setCiclo(5)}>Volumen a transferir</button>
+            <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+              Inicio
+            </button>
+          </div>
         </div>
       ),
       procesoGpio: []
@@ -185,42 +272,60 @@ const useAutomatico = (datosSerial, closeWindows) => {
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>Llenando tanque distribucion</strong>
-          <h2>litrosSerial.s1 L</h2>
-          {/* <button onClick={() => returnHome({ manual: false, config: false, auto: false })}>
-            Home
-          </button> */}
+          <strong>Transfiriendo completo...</strong>
+          <div className="loader"></div>
         </div>
       ),
-      procesoGpio: []
+      procesoGpio: ['bomba 1', 'valvula 4']
     },
     {
       id: 7,
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>¿Desea iniciar lavado de tanque?</strong>
-          <button onClick={() => setCiclo(7)}>ok</button>
-          {/* <button onClick={() => returnHome({ manual: false, config: false, auto: false })}>
-            Home
-          </button> */}
+          <strong>Transferencia completa</strong>
+          <strong>Lavando tanque</strong>
         </div>
       ),
-      procesoGpio: []
+      procesoGpio: ['buzzer', 'valvula 5']
     },
     {
       id: 8,
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>¿Desea iniciar lavado de tanque?</strong>
-          <button onClick={() => setCiclo(2)}>ok</button>
-          {/* <button onClick={() => returnHome({ manual: false, config: false, auto: false })}>
-            Home
-          </button> */}
+          <strong>Transferencia completa</strong>
+          <strong>Lavando tanque</strong>
+        </div>
+      ),
+      procesoGpio: ['valvula 5']
+    },
+    {
+      id: 9,  //se termina lavado
+      display: '',
+      html: (
+        <div className="conte-procesos">
+          <div className="conte-procesos">
+            <strong>TANQUE LAVADO</strong>
+            <strong>VERIFIQUE QUE EL TANQUE DE MEZCLADO ESTÉ VACÍO Y PRESIONE INICIO</strong>
+            <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+              Inicio
+            </button>
+          </div>
         </div>
       ),
       procesoGpio: []
+    },
+    {
+      id: 10,
+      display: '',
+      html: (
+        <div className="conte-procesos">
+          <strong>Transferencia completa</strong>
+          <strong>Lavando tanque</strong>
+        </div>
+      ),
+      procesoGpio: ['buzzer']
     }
   ]
 

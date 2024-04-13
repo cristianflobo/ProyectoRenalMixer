@@ -58,3 +58,8 @@ type Twifi = {
   signal_level: number
   ssid: string
 }
+type Tdrenado = { 
+dato:number
+time:boolean
+title:string
+}
