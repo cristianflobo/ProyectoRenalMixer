@@ -29,6 +29,8 @@
 
 const Gpio = require('onoff').Gpio
 
+const pinInicio = new Gpio(265, 'out', 'none')
+
 const configPines = [
   {
     nombre: 'valvula 1',
@@ -110,6 +112,7 @@ configPines.forEach((item) => {
 const pinesSalidas = configPines.filter((item) => item.accion === 'out')
 const pinesEntradass = configPines.filter((item) => item.accion !== 'out')
 
+pinInicio.writeSync(1);
 //Iniciar pines en 0
 pinesSalidas.forEach((item) => {
   item.instancia.writeSync(0)
@@ -133,5 +136,6 @@ process.on('SIGINT', () => {
   configPines.forEach((item) => {
     item.instancia.unexport()
   })
+  pinInicio.unexport()
   process.exit()
 })
