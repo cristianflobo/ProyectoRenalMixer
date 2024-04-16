@@ -32,70 +32,70 @@ const Gpio = require('onoff').Gpio
 const configPines = [
   {
     nombre: 'valvula 1',
-    pin: 257,
+    pin: 269,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 2',
-    pin: 228,
+    pin: 226,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 3',
-    pin: 262,
+    pin: 257,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 4',
-    pin: 229,
+    pin: 227,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 5',
-    pin: 233,
+    pin: 261,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 6',
-    pin: 265,
+    pin: 270,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 1',
-    pin: 267,
+    pin: 228,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 2',
-    pin: 76,
+    pin: 231,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 3',
-    pin: 260,
+    pin: 232,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'buzzer',
-    pin: 259,
+    pin: 262,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
