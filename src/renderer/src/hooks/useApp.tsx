@@ -23,8 +23,8 @@ const useApp = () => {
   })
 
   useEffect(() => {
-    if (activeProceso.proceso) {
-      if(datosSerial.dataSerial1 >= configDatos[4].dato) setCiclo(1)
+    if (activeProceso.proceso === 'lavado') {
+      if(datosSerial.dataSerial1 >= configDatos[4].dato) setCiclo(-1)
     }
     return ():void => {
     }
@@ -102,30 +102,50 @@ const useApp = () => {
                 resetProcesos()
               }}
             >
-              CERRAR
+              Parar
             </button>
           </div>
         ),
         procesoGpio: ['valvula 1', 'bomba 1']
       },
-      {
-        id: 1,
-        html: (
-          <div className="conte-procesos">
-            <strong>Lavando </strong>
-            <button
-              style={{ marginTop: '50px' }}
-              onClick={() => {
-                resetProcesos()
-              }}
-            >
-              CERRAR
-            </button>
-          </div>
-        ),
-        procesoGpio: ['valvula 1', 'bomba 1']
-      }
-    ]
+     
+    ],
+    recirculacion:
+    [{ //BOTON RECIRCULACION
+      id: 0,
+      html: (
+        <div className="conte-procesos">
+          <strong>Recirculando ... </strong>
+          <button
+            style={{ marginTop: '50px' }}
+            onClick={() => {
+              resetProcesos()
+            }}
+          >
+            Parar
+          </button>
+        </div>
+      ),
+      procesoGpio: ['valvula 2', 'valvula 3', 'bomba 1']
+    }], 
+    transferir:
+   [ { //BOTON TRANSFERIR
+      id: 0,
+      html: (
+        <div className="conte-procesos">
+          <strong>Tranfiriendo solucion ...</strong>
+          <button
+            style={{ marginTop: '50px' }}
+            onClick={() => {
+              resetProcesos()
+            }}
+          >
+            Parar
+          </button>
+        </div>
+      ),
+      procesoGpio: ['valvula 4', 'bomba 1']
+    }]
   }
 
   const resetProcesos = ():void => {

@@ -38,13 +38,13 @@ function App(): JSX.Element {
           <button disabled={activeProceso.activar} onClick={() => {setActiveProceso({ activar: true, proceso: 'lavado' }); setCiclo(0) }}>
             LAVADO
           </button>
-          <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
+          <button disabled={activeProceso.activar} onClick={() => {setActiveProceso({ activar: true, proceso: 'recirculacion' }); setCiclo(0) }}>
             RECIRCULACION
           </button>
           <button disabled={activeProceso.activar} onClick={() => {setSelectScreen({ manual: false, config: false, auto: true }); reiniciarFlujometros()}}>
             MEZCLADO
           </button>
-          <button disabled={activeProceso.activar}  onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
+          <button disabled={activeProceso.activar}  onClick={() => {setActiveProceso({ activar: true, proceso: 'transferir' }); setCiclo(0) }}>
             TRANSFERIR
           </button>
           <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>

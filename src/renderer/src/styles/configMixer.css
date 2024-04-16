@@ -10,6 +10,8 @@
 }
 .datos-key {
     display: flex;
+    width: 90%;
+    height: 78%;
 
 }.datos-key select{
     height: 25px;
@@ -22,10 +24,7 @@
     height: 80%;
     overflow: auto;
 }
-.datos-key {
-   width: 90%;
-   height: 80%;
-}
+  
 .cont-config-mixer > div:nth-child(3) {
     position: absolute;
     bottom: 0;
