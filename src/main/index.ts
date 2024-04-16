@@ -6,7 +6,7 @@ const cron = require('node-cron')
 const wifi = require('node-wifi')
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
-//import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
+import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 import { Twifi } from '../renderer/src/utils/interfaceMain'
 
 /*/---------------------------------------------------------
@@ -192,12 +192,12 @@ app.whenReady().then(() => {
   //---------------------------------------------------------------------LLamado proceso pines
   //#region  proceso pines
   ipcMain.on('procesoPinesSalida', async (_event, message) => {
-    //  procesoActualPines(message)
+      procesoActualPines(message)
     console.log(message)
   })
   ipcMain.on('leerPinesSalidaMain', async (event, _message) => {
-    //leerProcesoActualPines()
-   // event.reply('leerPinesSalidaRender', leerProcesoActualPines())
+    leerProcesoActualPines()
+    event.reply('leerPinesSalidaRender', leerProcesoActualPines())
   })
   //#endregion
   createWindow()
