@@ -29,8 +29,6 @@
 
 const Gpio = require('onoff').Gpio
 
-let pinInicio = new Gpio(265, 'out', 'none')
-pinInicio.writeSync(1);
 const configPines = [
   {
     nombre: 'valvula 1',
@@ -135,6 +133,5 @@ process.on('SIGINT', () => {
   configPines.forEach((item) => {
     item.instancia.unexport()
   })
-  pinInicio.unexport()
   process.exit()
 })
