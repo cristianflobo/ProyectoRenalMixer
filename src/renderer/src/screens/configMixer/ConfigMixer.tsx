@@ -1,14 +1,19 @@
 import useConfigMixer from '@renderer/hooks/useConfigMixer'
 import '../../styles/configMixer.css'
 import { KeyBoardNumeric } from '@renderer/components/keyBoardNumeric/KeyBoardNumeric'
-import { NavBa } from '@renderer/components'
+import { MenuWifi, NavBa } from '@renderer/components'
+import wifi from '../../images/wifi.svg'
 
 export function ConfigMixer({ closeWindows }):JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
+    setNombreWifiConectada,
     activeKeyBoardNumeric,
+    menuWifiConfig,
     selectChange,
     onOnchangeViewKeyBoardNumeric,
+    nombreWifiConectada,
+    activarMenuWifi,
     datosConfig,
     minutos,
     hora
@@ -57,6 +62,11 @@ export function ConfigMixer({ closeWindows }):JSX.Element {
             )
           })}
         </div>
+        {activarMenuWifi ? <MenuWifi nombreWifiConect={setNombreWifiConectada} /> : null}
+      <div className="img-wifi">
+        <span>{nombreWifiConectada}</span>
+        <img onClick={() => menuWifiConfig()} src={wifi}></img>
+      </div>
         <div>
           {onOnchangeViewKeyBoardNumeric.view ? (
             <KeyBoardNumeric setKey={setOnOnchangeViewKeyBoardNumeric} />

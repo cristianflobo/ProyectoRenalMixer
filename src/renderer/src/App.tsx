@@ -1,24 +1,19 @@
-import { MenuWifi, KeyBoardNumeric, Message, NavBa } from './components/'
+import { KeyBoardNumeric, Message, NavBa } from './components/'
 import useApp from './hooks/useApp'
 import { Automatico } from './screens/automatico/Automatico'
 import { ConfigMixer } from './screens/configMixer/ConfigMixer'
 import { Manual } from './screens/manual/Manual'
-import wifi from './images/wifi.svg'
 import { reiniciarFlujometros } from './utils/metodosCompartidos/metodosCompartidos'
 
 function App(): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
-    setNombreWifiConectada,
     setmensajeGeneral,
     setActiveProceso,
     setSelectScreen,
-    menuWifiConfig,
     setCiclo,
-    activarMenuWifi,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
-    nombreWifiConectada,
     mensajeGeneral,
     activeProceso,
     selectScreen,
@@ -62,11 +57,6 @@ function App(): JSX.Element {
         ) : null}
 
         {mensajeGeneral.view ? <Message /> : null}
-      </div>
-      {activarMenuWifi ? <MenuWifi nombreWifiConect={setNombreWifiConectada} /> : null}
-      <div className="img-wifi">
-        <span>{nombreWifiConectada}</span>
-        <img onClick={() => menuWifiConfig()} src={wifi}></img>
       </div>
       {activeProceso.activar ? (
         <div className="cont-proceso-auto">{procesos[activeProceso.proceso][ciclo].html}</div>

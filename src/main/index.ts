@@ -171,12 +171,12 @@ app.whenReady().then(() => {
     if (data.id === 1) {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
         console.log('tarea inicio bomba')
-        //  procesoActualPines(message)
+          procesoActualPines(["bomba 3"])
       })
     }else {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
         console.log('tarea final bomba')
-        //  procesoActualPines(message)
+         procesoActualPines(["bomba 3"])
       })
     }
   })

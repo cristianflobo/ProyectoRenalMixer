@@ -3,6 +3,8 @@ import { ChangeEvent, useEffect, useState } from 'react'
 const useConfigMixer = () => {
   const [datosConfig, setDatosConfig] = useState<TdataConfig[] | null>()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
+  const [activarMenuWifi, setActivarMenuWifi] = useState(false)
+  const [nombreWifiConectada, setNombreWifiConectada] = useState('no Connected')
   const [onOnchangeViewKeyBoardNumeric, setOnOnchangeViewKeyBoardNumeric] = useState({
     view: false,
     data: ''
@@ -117,11 +119,20 @@ const useConfigMixer = () => {
     setDatosConfig(changeValue)
     window.electron.ipcRenderer.send('configDistribucionDiaria', {id,datos:changeValue![id]})
   }
+
+  const menuWifiConfig = (): void => {
+    setActivarMenuWifi((pre) => !pre)
+  }
+
   return {
     setOnOnchangeViewKeyBoardNumeric,
+    setNombreWifiConectada,
     activeKeyBoardNumeric,
+    menuWifiConfig,
     selectChange,
     onOnchangeViewKeyBoardNumeric,
+    nombreWifiConectada,
+    activarMenuWifi,
     datosConfig,
     minutos,
     hora

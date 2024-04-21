@@ -7,8 +7,6 @@ const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
-  const [activarMenuWifi, setActivarMenuWifi] = useState(false)
-  const [nombreWifiConectada, setNombreWifiConectada] = useState('no Connected')
   const [datosSerial, setDatosSerial] = useState({ dataSerial1: '0', dataSerial2: '0' })
   const [ciclo, setCiclo] = useState(-1)
   const [selectScreen, setSelectScreen] = useState<TselectScreen>({
@@ -84,9 +82,6 @@ const useApp = () => {
     }
     return (): void => {}
   }, [ciclo])
-  const menuWifiConfig = (): void => {
-    setActivarMenuWifi((pre) => !pre)
-  }
 
   const procesos = {
     procesoAutomatico: [],
@@ -156,14 +151,10 @@ const useApp = () => {
   }
   return {
     setOnOnchangeViewKeyBoardNumeric,
-    setNombreWifiConectada,
     setmensajeGeneral,
     setActiveProceso,
     setSelectScreen,
-    menuWifiConfig,
     setCiclo,
-    nombreWifiConectada,
-    activarMenuWifi,
     selectScreen,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
