@@ -14,7 +14,9 @@ function App(): JSX.Element {
     setCiclo,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
+    activarMensajesModal,
     mensajeGeneral,
+    mensajesModal,
     activeProceso,
     selectScreen,
     datosSerial,
@@ -61,6 +63,10 @@ function App(): JSX.Element {
       {activeProceso.activar ? (
         <div className="cont-proceso-auto">{procesos[activeProceso.proceso][ciclo].html}</div>
       ) : null}
+      {activarMensajesModal ? (
+        <div className="cont-proceso-auto">{mensajesModal.mesnsajeSensores.html}</div>
+      ) : null}
+      
     </MenssageGeneralContext.Provider>
   )
 }

@@ -20,7 +20,6 @@ const useConfigMixer = () => {
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
     if (configDatos) {
-      console.log(configDatos)
       setDatosConfig(JSON.parse(configDatos))
     } else {
       localStorage.setItem(
@@ -70,7 +69,12 @@ const useConfigMixer = () => {
             time: false
           },
           {
-            title: 'NOMBRE DE LA CLINICA',
+            title: 'productId FLUJOMETRO 1',
+            dato: 0,
+            time: false
+          } ,
+          {
+            title: 'productId FLUJOMETRO 2',
             dato: 0,
             time: false
           }

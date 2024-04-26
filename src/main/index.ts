@@ -70,14 +70,23 @@ app.whenReady().then(() => {
 
   //---------------------------------------------------------------------Componente serial Conexion serial
   ipcMain.on('conectarSerial', async (event, puerto) => {
-    const serialPort = new SerialPort({
-      path: puerto.path,
-      baudRate: puerto.baud,
-      autoOpen: false
-    })
+    let serialPort2:(typeof SerialPort);
+    const bucarPuertoFlujometro = await SerialPort.list()
+    bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
+      if(item.productId){
+        if(item.productId.includes(puerto.toString())){  
+          serialPort2 = new SerialPort({
+            path: item.path,
+            baudRate: 9600,
+            autoOpen: false
+          })
+        }
+      }
+    });
+
     try {
       await new Promise<void>((resolve, reject) => {
-        serialPort.open((error: Error | null) => {
+        serialPort2.open((error: Error | null) => {
           if (error) {
             console.error(`Error al abrir el puerto ${puerto}:`, error.message)
             event.reply('menssageFromMain', error.message)
@@ -89,8 +98,8 @@ app.whenReady().then(() => {
           }
         })
       })
-      serialPortArray.push(serialPort)
-      const parser = serialPort.pipe(new ReadlineParser({ delimiter: '\n' }))
+      serialPortArray.push(serialPort2)
+      const parser = serialPort2.pipe(new ReadlineParser({ delimiter: '\n' }))
       const listenerPortRender = `dataSerial${serialPortArray.length}`
       parser.on('data', function (data: string) {
         event.reply(`${listenerPortRender}`, data)
@@ -123,7 +132,18 @@ app.whenReady().then(() => {
       console.log(error)
     }
   })
+  ipcMain.on('buscarPuertos', async (_event, _message) => {
+   // console.log(await SerialPort.list()) 
+  
+  })
+  ipcMain.on('verificarConexionSensoresMain', async (event, _message) => {
+    setTimeout(() => {
+      event.reply('verificarConexionSensoresRender', serialPortArray.length)
+    }, 2000);
+   
+  })
 
+//-------------------------------------------------------------wifi
   ipcMain.on('listarWifi', async (event) => {
     wifi.init({
       iface: null

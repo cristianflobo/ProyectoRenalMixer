@@ -4,9 +4,12 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
+
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
+  const [activarMensajesModal, setActivarMensajesModal] = useState(false)
+  const [cantidadSensoresFlujo, setCantidadSensoresFlujo] = useState(0)
   const [datosSerial, setDatosSerial] = useState({ dataSerial1: '0', dataSerial2: '0' })
   const [ciclo, setCiclo] = useState(-1)
   const [selectScreen, setSelectScreen] = useState<TselectScreen>({
@@ -30,9 +33,18 @@ const useApp = () => {
   
 
   useEffect(() => {
-    // window.electron.ipcRenderer.send('conectarSerial', { path: '/dev/ttyACM0', baud: 9600 })
-    window.electron.ipcRenderer.send('conectarSerial', { path: 'COM4', baud: 9600 })
+    configDatos.find((item: { title: string })=> item.title === 'productId FLUJOMETRO 1')
+    console.log(configDatos.dato)
+    window.electron.ipcRenderer.send('conectarSerial', configDatos.dato)
+    configDatos.find((item: { title: string })=> item.title === 'productId FLUJOMETRO 2')
+    window.electron.ipcRenderer.send('conectarSerial', configDatos.dato)
+    window.electron.ipcRenderer.send('buscarPuertos')
     window.electron.ipcRenderer.send('reiniciarFlujometros')
+    window.electron.ipcRenderer.send('verificarConexionSensoresMain')
+    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {
+      setCantidadSensoresFlujo(data)
+      setActivarMensajesModal(true)
+    })
     window.electron.ipcRenderer.on('dataSerial1', (_event, data) => {
       setDatosSerial((prev) => ({ ...prev, dataSerial1: data }))
     })
@@ -44,6 +56,7 @@ const useApp = () => {
       window.electron.ipcRenderer.removeAllListeners('dataSerial2')
     }
   }, [])
+
   useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
     switch (ciclo) {
@@ -143,6 +156,44 @@ const useApp = () => {
     }]
   }
 
+  const mensajesModal = {
+    mesnsajeSensores:
+      {
+        id: 0,
+        html: (
+          <div className="conte-procesos">
+            <strong>comprovando conexion flujometros</strong>
+            <div>
+            <strong style={{marginRight:"20px"}}>s1 {datosSerial.dataSerial1} L </strong>
+            <strong>s2 {datosSerial.dataSerial2} L </strong>
+            </div>
+            <div  style={{display:"flex"}}>
+            <button
+              style={{ marginTop: '50px' }}
+              onClick={() => {
+                eviarProcesoPines(['valvula 1', 'bomba 1'])
+                setTimeout(() => {
+                  resetProcesos()
+                }, 5000);
+              }}
+            >
+              Probar S1
+            </button>
+            <button
+              style={{ marginTop: '50px' }}
+              onClick={() => {
+                setActivarMensajesModal(false)
+                resetProcesos()
+              }}
+            >
+             Cerrar
+            </button>
+            </div>
+          </div>
+        )
+      },
+  }
+
   const resetProcesos = ():void => {
     setActiveProceso({ activar: false, proceso: '' })
     setCiclo(-1)
@@ -158,7 +209,9 @@ const useApp = () => {
     selectScreen,
     onOnchangeViewKeyBoardNumeric,
     MenssageGeneralContext,
+    activarMensajesModal,
     mensajeGeneral,
+    mensajesModal,
     activeProceso,
     datosSerial,
     procesos,
