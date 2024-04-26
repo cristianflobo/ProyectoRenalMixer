@@ -67,16 +67,6 @@ const useConfigMixer = () => {
             title: 'TIEMPO DRENADO EN LAVADO',
             dato: 0,
             time: false
-          },
-          {
-            title: 'productId FLUJOMETRO 1',
-            dato: 0,
-            time: false
-          } ,
-          {
-            title: 'productId FLUJOMETRO 2',
-            dato: 0,
-            time: false
           }
         ])
       )
@@ -91,6 +81,8 @@ const useConfigMixer = () => {
     if (onOnchangeViewKeyBoardNumeric.data !== '' && !onOnchangeViewKeyBoardNumeric.view) {
       configDatos = JSON.parse(localStorage.getItem('configDatos')!)
       const dataKeyTermporal = configDatos?.map((item: TdataConfig, i: number) => {
+        if(configDatos[posicionDataConfig].title === 'FACTOR DE CALIBRACION') 
+          {window.electron.ipcRenderer.send('enviarFactorK', onOnchangeViewKeyBoardNumeric.data)}
         if (i === posicionDataConfig) return { ...item, dato: onOnchangeViewKeyBoardNumeric.data }
         return item
       })

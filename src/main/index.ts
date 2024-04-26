@@ -73,15 +73,13 @@ app.whenReady().then(() => {
     let serialPort2:(typeof SerialPort);
     const bucarPuertoFlujometro = await SerialPort.list()
     bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
-      if(item.productId){
-        if(item.productId.includes(puerto.toString())){  
+        if(item.productId === puerto){  
           serialPort2 = new SerialPort({
             path: item.path,
             baudRate: 9600,
             autoOpen: false
           })
         }
-      }
     });
 
     try {
@@ -124,6 +122,17 @@ app.whenReady().then(() => {
 
   ipcMain.on('reiniciarFlujometros', async () => {
     const dato = Buffer.from([0])
+    try {
+      serialPortArray.forEach((element) => {
+        element.write(dato)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  ipcMain.on('enviarFactorK', async (_event, factorK) => {
+    const factorKInt = parseFloat(factorK)
+    const dato = Buffer.from([factorKInt])
     try {
       serialPortArray.forEach((element) => {
         element.write(dato)

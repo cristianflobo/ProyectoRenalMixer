@@ -9,7 +9,6 @@ const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
   const [activarMensajesModal, setActivarMensajesModal] = useState(false)
-  const [cantidadSensoresFlujo, setCantidadSensoresFlujo] = useState(0)
   const [datosSerial, setDatosSerial] = useState({ dataSerial1: '0', dataSerial2: '0' })
   const [ciclo, setCiclo] = useState(-1)
   const [selectScreen, setSelectScreen] = useState<TselectScreen>({
@@ -33,16 +32,11 @@ const useApp = () => {
   
 
   useEffect(() => {
-    configDatos.find((item: { title: string })=> item.title === 'productId FLUJOMETRO 1')
-    console.log(configDatos.dato)
-    window.electron.ipcRenderer.send('conectarSerial', configDatos.dato)
-    configDatos.find((item: { title: string })=> item.title === 'productId FLUJOMETRO 2')
-    window.electron.ipcRenderer.send('conectarSerial', configDatos.dato)
-    window.electron.ipcRenderer.send('buscarPuertos')
+    window.electron.ipcRenderer.send('conectarSerial', '0043')
+    window.electron.ipcRenderer.send('conectarSerial', '0042')
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
-    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {
-      setCantidadSensoresFlujo(data)
+    window.electron.ipcRenderer.on('verificarConexionSensoresRender',() => {
       setActivarMensajesModal(true)
     })
     window.electron.ipcRenderer.on('dataSerial1', (_event, data) => {
@@ -54,6 +48,7 @@ const useApp = () => {
     return (): void => {
       window.electron.ipcRenderer.removeAllListeners('dataSerial1')
       window.electron.ipcRenderer.removeAllListeners('dataSerial2')
+      window.electron.ipcRenderer.removeAllListeners('verificarConexionSensoresRender')
     }
   }, [])
 
