@@ -243,7 +243,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
             <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
               Inicio
             </button>
-            <button onClick={() => setCiclo(5)}>Tranferir a tanque distribución</button>
+            <button onClick={() => setCiclo(5)}>Transferir a tanque distribución</button>
           </div>
         </div>
       ),
