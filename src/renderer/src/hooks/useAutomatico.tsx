@@ -227,7 +227,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       display: '',
       html: (
         <div className="conte-procesos">
-          <strong>Mesclando ...</strong>
+          <strong>Mezclando ...</strong>
           <div className="loader"></div>
         </div>
       ),

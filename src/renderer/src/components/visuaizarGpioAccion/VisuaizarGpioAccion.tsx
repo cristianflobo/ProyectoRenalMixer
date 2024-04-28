@@ -5,12 +5,10 @@ import '../../styles/visuaizarGpioAccion.css'
 
 export function VisuaizarGpioAccion({ gpioActivos }): JSX.Element {
   const { datosGpio } = useHookShared()
-  console.log("llegagpio", gpioActivos)
   return (
     <div className='cont-visual-gpio'>
       {datosGpio.map((item, i: number) => {gpioActivos
         const buscar = gpioActivos.find((item2) => item.nombre == item2.nombre)
-        console.log("buscar",buscar,gpioActivos[0])
         if (buscar === undefined) {
           return (
             <div key={i}>
