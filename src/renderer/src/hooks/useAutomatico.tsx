@@ -95,7 +95,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
               tiempoDrenadoLavado.dato * 1000 
             )
           },
-          tiempoLavado.dato * 1000 
+          tiempoLavado.dato * 1000 * 60
         )
       }
     }
