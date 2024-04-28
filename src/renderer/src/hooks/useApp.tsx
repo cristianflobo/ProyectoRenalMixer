@@ -4,7 +4,7 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-const serialNumberFlujometros:string[] = ['24238313136351706120', '0042']
+const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
 
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
@@ -202,8 +202,10 @@ const useApp = () => {
     window.electron.ipcRenderer.send('desconectarSerial')
     setTimeout(() => {
       window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
+    }, 500);
+    setTimeout(() => { 
       window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
-    }, 1000);
+    }, 500);
   }
   
   const resetProcesos = ():void => {
