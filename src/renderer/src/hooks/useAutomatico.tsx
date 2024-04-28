@@ -64,13 +64,13 @@ const useAutomatico = (datosSerial, closeWindows) => {
     if (ciclo === 6 && renderData[0].dato + renderData[1].dato < datosSerial.dataSerial2)
       setCiclo(7)
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
-      (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO'
+      (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
     )
     const tiempoLavado: Tdrenado | undefined = configDatos.find(
-      (item: TdataConfig) => item.title === 'TIEMPO LAVADO'
+      (item: TdataConfig) => item.title === 'TIEMPO LAVADO (MIN)'
     )
     const tiempoDrenadoLavado: Tdrenado | undefined = configDatos.find(
-      (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO'
+      (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
     )
 
     if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
@@ -122,7 +122,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 3:
         tiempoMezclado = configDatos.find(
-          (item: TdataConfig) => item.title === 'TIEMPO DE MEZCLADO'
+          (item: TdataConfig) => item.title === 'TIEMPO DE MEZCLADO (MIN)'
         )
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoMezclado) {
@@ -155,7 +155,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 7: //lavado
         tiempoDrenado = configDatos.find(
-          (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR'
+          (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
         )
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         setNumeroCicloLavados(1)
@@ -172,7 +172,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 8: //lavado
         tiempoDrenado = configDatos.find(
-          (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR'
+          (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
         )
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoDrenado) {
