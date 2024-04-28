@@ -83,21 +83,21 @@ const configPines = [
   },
   {
     nombre: 'bomba 2',
-    pin: 231,
+    pin: 76,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 3',
-    pin: 232,
+    pin: 260,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'buzzer',
-    pin: 262,
+    pin: 259,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
