@@ -9,7 +9,7 @@ export function MenuWifi({nombreWifiConect}): JSX.Element {
       <div>
         {listaWifi!.map((item: Twifi, i: number) => (
           <div key={i}>
-            <span onClick={() => ingresarDatos(item.ssid)}>{item.ssid}</span>
+            <span onClick={() => ingresarDatos(item.ssid)}>{item.ssid} {item.frequency > 3000? "5Hz":"2.4Hz"}</span>
             {activarInput.activar && activarInput.ssid === item.ssid ? (
               <div>
                 <input value={contrasena} onChange={(e)=>setContrasena(e.target.value)} placeholder="contrasena"></input>
