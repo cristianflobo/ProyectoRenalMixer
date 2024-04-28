@@ -26,7 +26,7 @@ const useConfigMixer = () => {
         'configDatos',
         JSON.stringify([
           {
-            title: 'TIEMPO DE MEZCLADO',
+            title: 'TIEMPO DE MEZCLADO (MIN)',
             dato: 0,
             time: false
           },
@@ -48,23 +48,23 @@ const useConfigMixer = () => {
             time: false
           },
           {
-            title: 'TIEMPO LAVADO',
+            title: 'TIEMPO LAVADO (MIN)',
             dato: 0,
             time: false
           },
           {
-            title: 'CANTIDAD DE AGUA LAVADO',
+            title: 'CANTIDAD DE AGUA LAVADO (L)',
             dato: 0,
             time: false
           },
           {
-            title: 'TIEMPO DRENADO PRELIMINAR',
+            title: 'TIEMPO DRENADO PRELIMINAR (SEG)',
             dato: 0,
             time: false
           }
           ,
           {
-            title: 'TIEMPO DRENADO EN LAVADO',
+            title: 'TIEMPO DRENADO EN LAVADO (SEG)',
             dato: 0,
             time: false
           }

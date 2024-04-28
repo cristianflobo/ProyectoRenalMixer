@@ -59,7 +59,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
   }, [onOnchangeViewKeyBoardNumeric.view])
 
   useEffect(() => {
-    if (ciclo === 0 && (renderData[0].dato - renderData[1].dato) <= datosSerial.dataSerial1) setCiclo(1)
+    if (ciclo === 0 && renderData[1].dato <= datosSerial.dataSerial1) setCiclo(1)
     if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
     if (ciclo === 6 && renderData[0].dato + renderData[1].dato < datosSerial.dataSerial2)
       setCiclo(7)
