@@ -75,7 +75,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
     if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
       if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
-        //eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+        eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
         setTimeout(
           () => {
             eviarProcesoPines(['valvula 5'])
