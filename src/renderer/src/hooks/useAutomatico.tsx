@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
-import { mensajeOkCancel } from '@renderer/utils/sweetalert2'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
+import Swal from 'sweetalert2'
 
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
@@ -59,8 +59,8 @@ const useAutomatico = (datosSerial, closeWindows) => {
   }, [onOnchangeViewKeyBoardNumeric.view])
 
   useEffect(() => {
-    if (ciclo === 0 && renderData[0].dato < datosSerial.dataSerial1) setCiclo(1)
-    if (ciclo === 2 && renderData[1].dato < datosSerial.dataSerial1) setCiclo(3)
+    if (ciclo === 0 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(1)
+    if (ciclo === 2 && (renderData[0].dato + renderData[1].dato) <= datosSerial.dataSerial1) setCiclo(3)
     if (ciclo === 6 && renderData[0].dato + renderData[1].dato < datosSerial.dataSerial2)
       setCiclo(7)
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
@@ -258,7 +258,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <div style={{ display: 'flex' }}>
             <button onClick={() => setCiclo(6)}>Tranferir completo</button>
-            <button onClick={() => setCiclo(5)}>Volumen a transferir</button>
             <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
               Inicio
             </button>
@@ -336,11 +335,18 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
   const botonAtras = (): void => {
     if (activeProceso) {
-      mensajeOkCancel(
-        'Desea salir al inicio',
-        () => closeWindows({ manual: false, config: false, auto: false }),
-        ''
-      )
+      Swal.fire({
+        title: 'Desea salir al inicio',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          closeWindows({ manual: false, config: false, auto: false })
+          eviarProcesoPines([])
+        }
+      })
     } else {
       closeWindows({ manual: false, config: false, auto: false })
     }

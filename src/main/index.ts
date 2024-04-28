@@ -73,7 +73,7 @@ app.whenReady().then(() => {
     let serialPort2:(typeof SerialPort);
     const bucarPuertoFlujometro = await SerialPort.list()
     bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
-        if(item.productId === puerto){  
+        if(item.serialNumber === puerto){  
           serialPort2 = new SerialPort({
             path: item.path,
             baudRate: 9600,
@@ -110,15 +110,23 @@ app.whenReady().then(() => {
       }
     }
   })
-
-  ipcMain.on('desconectarSerial', async (event, path) => {
-    const port = serialPortArray.find((item: typeof SerialPort) => item.path === path)
-    port.close((error: string) => {
-      return console.log(error)
-    })
-    serialPortArray = serialPortArray.filter((item: typeof SerialPort) => item.path !== path)
-    event.reply('verificarConexionWeb', extractInfoPort(serialPortArray))
+  ipcMain.on('desconectarSerial', async () => {
+    serialPortArray.forEach(element => {
+      element.close((error: string) => {
+        return console.log(error)
+      })
+    });
+    serialPortArray = []
   })
+
+  // ipcMain.on('desconectarSerial', async (event, path) => {
+  //   const port = serialPortArray.find((item: typeof SerialPort) => item.path === path)
+  //   port.close((error: string) => {
+  //     return console.log(error)
+  //   })
+  //   serialPortArray = serialPortArray.filter((item: typeof SerialPort) => item.path !== path)
+  //   event.reply('verificarConexionWeb', extractInfoPort(serialPortArray))
+  // })
 
   ipcMain.on('reiniciarFlujometros', async () => {
     const dato = Buffer.from([0])
@@ -185,11 +193,11 @@ app.whenReady().then(() => {
     })
   })
 
-  const extractInfoPort = (info: typeof SerialPort): void => {
-    return info.map((item: typeof SerialPort) => {
-      return { path: item.path, baudRate: item.baudRate }
-    })
-  }
+  // const extractInfoPort = (info: typeof SerialPort): void => {
+  //   return info.map((item: typeof SerialPort) => {
+  //     return { path: item.path, baudRate: item.baudRate }
+  //   })
+  // }
   //#endregion
 
   //---------------------------------------------------------------------Tareas programadas cron

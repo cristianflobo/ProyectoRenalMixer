@@ -4,11 +4,13 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
+const serialNumberFlujometros:string[] = ['24238313136351706120', '0042']
 
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
-  const [activarMensajesModal, setActivarMensajesModal] = useState(false)
+  const [cantidadFlujometro, setCantidadFlujometro] = useState(0)
+  const [activarMensajesModal, setActivarMensajesModal] = useState({activar:false,ventana:"mesnsajeSensores"})
   const [datosSerial, setDatosSerial] = useState({ dataSerial1: '0', dataSerial2: '0' })
   const [ciclo, setCiclo] = useState(-1)
   const [selectScreen, setSelectScreen] = useState<TselectScreen>({
@@ -32,12 +34,13 @@ const useApp = () => {
   
 
   useEffect(() => {
-    window.electron.ipcRenderer.send('conectarSerial', '0043')
-    window.electron.ipcRenderer.send('conectarSerial', '0042')
+    window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
+    window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
-    window.electron.ipcRenderer.on('verificarConexionSensoresRender',() => {
-      setActivarMensajesModal(true)
+    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {
+      setCantidadFlujometro(data)
+      setActivarMensajesModal((prev)=> ({...prev, activar:true}))
     })
     window.electron.ipcRenderer.on('dataSerial1', (_event, data) => {
       setDatosSerial((prev) => ({ ...prev, dataSerial1: data }))
@@ -157,7 +160,7 @@ const useApp = () => {
         id: 0,
         html: (
           <div className="conte-procesos">
-            <strong>comprovando conexion flujometros</strong>
+            <strong>Conexion flujometros, {cantidadFlujometro} sensor</strong>
             <div>
             <strong style={{marginRight:"20px"}}>s1 {datosSerial.dataSerial1} L </strong>
             <strong>s2 {datosSerial.dataSerial2} L </strong>
@@ -166,7 +169,7 @@ const useApp = () => {
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
-                eviarProcesoPines(['valvula 1', 'bomba 1'])
+                eviarProcesoPines(['valvula 1'])
                 setTimeout(() => {
                   resetProcesos()
                 }, 5000);
@@ -176,8 +179,14 @@ const useApp = () => {
             </button>
             <button
               style={{ marginTop: '50px' }}
+              onClick={() => cambiarPosicionFujometros()}
+            >
+              cambiar
+            </button>
+            <button
+              style={{ marginTop: '50px' }}
               onClick={() => {
-                setActivarMensajesModal(false)
+                setActivarMensajesModal((prev)=> ({...prev, activar:false}))
                 resetProcesos()
               }}
             >
@@ -189,6 +198,14 @@ const useApp = () => {
       },
   }
 
+  const cambiarPosicionFujometros = ():void => {
+    window.electron.ipcRenderer.send('desconectarSerial')
+    setTimeout(() => {
+      window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
+      window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
+    }, 1000);
+  }
+  
   const resetProcesos = ():void => {
     setActiveProceso({ activar: false, proceso: '' })
     setCiclo(-1)

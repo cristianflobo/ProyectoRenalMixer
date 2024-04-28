@@ -1,5 +1,4 @@
 import { sola } from '@renderer/images/index'
-import { ClockTime } from '../clockTime/Clock'
 import '../../styles/navBar.css'
 import { useEffect, useState } from 'react'
 
@@ -8,8 +7,6 @@ export function NavBa(): JSX.Element {
 
   useEffect(() => {
     const nombrePlantaStorage = localStorage.getItem('nombrePlanta')
-    const casa = localStorage.getItem('casa')
-    console.log(casa)
     if(nombrePlantaStorage === null){
       localStorage.setItem('nombrePlanta', 'Nombre')
     }else {
@@ -31,7 +28,6 @@ export function NavBa(): JSX.Element {
   }
   return (
     <div className="navBar">
-      <ClockTime />
       <div className='sola'>
         <img style={{ width: '200px', height: '100px' }} src={sola}></img>
       </div>

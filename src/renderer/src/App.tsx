@@ -1,4 +1,4 @@
-import { KeyBoardNumeric, Message, NavBa } from './components/'
+import { ClockTime, KeyBoardNumeric, Message, NavBa } from './components/'
 import useApp from './hooks/useApp'
 import { Automatico } from './screens/automatico/Automatico'
 import { ConfigMixer } from './screens/configMixer/ConfigMixer'
@@ -27,7 +27,7 @@ function App(): JSX.Element {
     <MenssageGeneralContext.Provider value={{ mensajeGeneral, setmensajeGeneral }}>
       <div className="conteiner">
         <NavBa />
-
+        <ClockTime />
         <div className="btn-principal">
           <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: true, config: false, auto: false })}>
             MANUAL
@@ -63,8 +63,8 @@ function App(): JSX.Element {
       {activeProceso.activar ? (
         <div className="cont-proceso-auto">{procesos[activeProceso.proceso][ciclo].html}</div>
       ) : null}
-      {activarMensajesModal ? (
-        <div className="cont-proceso-auto">{mensajesModal.mesnsajeSensores.html}</div>
+      {activarMensajesModal.activar ? (
+        <div className="cont-proceso-auto">{mensajesModal[activarMensajesModal.ventana].html}</div>
       ) : null}
       
     </MenssageGeneralContext.Provider>
