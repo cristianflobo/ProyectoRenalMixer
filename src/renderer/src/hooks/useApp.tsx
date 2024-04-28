@@ -216,6 +216,7 @@ const useApp = () => {
   }
   return {
     setOnOnchangeViewKeyBoardNumeric,
+    setActivarMensajesModal,
     setmensajeGeneral,
     setActiveProceso,
     setSelectScreen,

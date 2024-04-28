@@ -8,6 +8,7 @@ import { reiniciarFlujometros } from './utils/metodosCompartidos/metodosComparti
 function App(): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
+    setActivarMensajesModal,
     setmensajeGeneral,
     setActiveProceso,
     setSelectScreen,
@@ -48,7 +49,9 @@ function App(): JSX.Element {
             CONFIGURACION
           </button>
         </div>
-
+        <button onClick={() =>  setActivarMensajesModal((prev)=> ({...prev, activar:true}))}>
+            PROBAR SENSORES
+          </button>
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
         {selectScreen.manual ? <Manual closeWindows={setSelectScreen} /> : null}
         {selectScreen.auto ? (
