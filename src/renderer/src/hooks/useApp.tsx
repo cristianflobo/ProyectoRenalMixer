@@ -200,12 +200,17 @@ const useApp = () => {
 
   const cambiarPosicionFujometros = ():void => {
     window.electron.ipcRenderer.send('desconectarSerial')
+    serialNumberFlujometros[0], serialNumberFlujometros[1] = 
+    serialNumberFlujometros[1], serialNumberFlujometros[0]
     setTimeout(() => {
-      window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
+      setTimeout(() => {
+        window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
+      }, 500);
+      setTimeout(() => { 
+        window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
+      }, 500);
     }, 500);
-    setTimeout(() => { 
-      window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
-    }, 500);
+    
   }
   
   const resetProcesos = ():void => {
