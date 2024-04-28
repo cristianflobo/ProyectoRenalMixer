@@ -34,70 +34,70 @@ const pinInicio = new Gpio(265, 'out', 'none')
 const configPines = [
   {
     nombre: 'valvula 1',
-    pin: 269,
+    pin: 259,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 2',
-    pin: 226,
+    pin: 260,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 3',
-    pin: 257,
+    pin: 272,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 4',
-    pin: 227,
+    pin: 76,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 5',
-    pin: 261,
+    pin: 258,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'valvula 6',
-    pin: 270,
+    pin: 268,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 1',
-    pin: 228,
+    pin: 267,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 2',
-    pin: 231,
+    pin: 271,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'bomba 3',
-    pin: 232,
+    pin: 256,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
   },
   {
     nombre: 'buzzer',
-    pin: 262,
+    pin: 265,
     accion: 'out',
     argEntrada: 'none',
     instancia: ''
