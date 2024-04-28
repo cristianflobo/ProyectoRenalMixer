@@ -74,8 +74,8 @@ const useAutomatico = (datosSerial, closeWindows) => {
     )
 
     if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
-      if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato < datosSerial.dataSerial1) {
-        eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+      if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
+        //eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
         setTimeout(
           () => {
             eviarProcesoPines(['valvula 5'])
@@ -165,9 +165,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
             eviarProcesoPines(['valvula 1'])
           }, tiempoDrenado.dato * 1000)
         }
-        setTimeout(() => {
-          eviarProcesoPines(['valvula 5'])
-        }, 30000)
         break
 
       case 8: //lavado
@@ -181,9 +178,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
             eviarProcesoPines(['valvula 1'])
           }, tiempoDrenado.dato * 1000)
         }
-        setTimeout(() => {
-          eviarProcesoPines(['valvula 5'])
-        }, 30000)
         break
 
       case 9: //termina lavado
@@ -286,7 +280,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
           <strong>Lavando tanque</strong>
         </div>
       ),
-      procesoGpio: ['buzzer', 'valvula 5']
+      procesoGpio: ['valvula 5']
     },
     {
       id: 8,
