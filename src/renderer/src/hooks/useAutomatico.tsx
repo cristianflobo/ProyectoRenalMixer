@@ -3,6 +3,7 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 import Swal from 'sweetalert2'
 
+let contadorMezcladoLavado = 0
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
@@ -75,7 +76,8 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
     if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
       if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
-        eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+        contadorMezcladoLavado ++ 
+        if(contadorMezcladoLavado === 1) eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
         setTimeout(
           () => {
             eviarProcesoPines(['valvula 5'])
@@ -83,8 +85,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
               () => {
                 if (numeroCicloLavados === 1) {
                   setCiclo(8)
+                  contadorMezcladoLavado = 0
                   setNumeroCicloLavados(2)
                 } else {
+                  contadorMezcladoLavado = 0
                   setCiclo(9)
                 }
               },
