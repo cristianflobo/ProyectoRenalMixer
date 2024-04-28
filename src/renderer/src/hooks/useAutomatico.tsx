@@ -61,7 +61,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
   useEffect(() => {
     if (ciclo === 0 && renderData[1].dato <= datosSerial.dataSerial1) setCiclo(1)
     if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
-    if (ciclo === 6 && renderData[0].dato + renderData[1].dato < datosSerial.dataSerial2)
+    if (ciclo === 6 && renderData[0].dato  < datosSerial.dataSerial2)
       setCiclo(7)
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
       (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
@@ -88,10 +88,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
                   setCiclo(9)
                 }
               },
-              tiempoDrenadoLavado.dato * 1000 * 60
+              tiempoDrenadoLavado.dato * 1000 
             )
           },
-          tiempoLavado.dato * 1000 * 60
+          tiempoLavado.dato * 1000 
         )
       }
     }
