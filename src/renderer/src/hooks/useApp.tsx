@@ -4,9 +4,9 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
-//const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
-
+//const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
+const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
+let contadorEntradaCicloLavado = 0
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
@@ -40,7 +40,9 @@ const useApp = () => {
 
     if (activeProceso.proceso === 'lavado') {
       if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
-        if (cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
+        if (cantidadAguaLvado.dato <= datosSerial.dataSerial1 && contadorEntradaCicloLavado === 0) {
+            contadorEntradaCicloLavado = 1
+            reiniciarFlujometros()
             eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
             setTimeout(
               () => {
@@ -48,12 +50,12 @@ const useApp = () => {
                 setTimeout(
                   () => {
                     if(numeroCicloLavados === 1) {
+                      contadorEntradaCicloLavado = 0
                       reiniciarFlujometros()
                       eviarProcesoPines(['valvula 1'])
                       setNumeroCicloLavados(0)
                    }else {
-                    setCiclo(-1)
-                    eviarProcesoPines([])
+                    resetProcesos()
                     setlavadoTerminado(true)
                    }
                   },
