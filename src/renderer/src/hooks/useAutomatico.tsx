@@ -4,6 +4,7 @@ import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodos
 import Swal from 'sweetalert2'
 
 let contadorMezcladoLavado = 0
+let cancelarSetimeout:ReturnType<typeof setTimeout>;
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
@@ -79,24 +80,25 @@ const useAutomatico = (datosSerial, closeWindows) => {
         if(contadorMezcladoLavado === 1) {
           eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
           contadorMezcladoLavado = 0
+          setTimeout(
+            () => {
+              eviarProcesoPines(['valvula 5'])
+              setTimeout(
+                () => {
+                  if (numeroCicloLavados === 1) {
+                    setCiclo(8)
+                    setNumeroCicloLavados(2)
+                  } else {
+                    setCiclo(9)
+                  }
+                },
+                tiempoDrenadoLavado.dato * 1000
+              )
+            },
+            tiempoLavado.dato * 1000 * 60
+          )
         }
-        setTimeout(
-          () => {
-            eviarProcesoPines(['valvula 5'])
-            setTimeout(
-              () => {
-                if (numeroCicloLavados === 1) {
-                  setCiclo(8)
-                  setNumeroCicloLavados(2)
-                } else {
-                  setCiclo(9)
-                }
-              },
-              tiempoDrenadoLavado.dato * 1000
-            )
-          },
-          tiempoLavado.dato * 1000 * 60
-        )
+      
       }
     }
 
@@ -144,12 +146,14 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 4:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        setTimeout(() => {
+        cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines([])
         }, 30000)
+        
         break
 
       case 5:
+        clearTimeout(cancelarSetimeout)
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         break
 
@@ -285,6 +289,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <strong>Transferencia completa</strong>
           <strong>Lavando tanque</strong>
+          <div className="loader"></div>
         </div>
       ),
       procesoGpio: ['valvula 5']
