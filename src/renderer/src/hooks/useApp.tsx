@@ -7,6 +7,7 @@ const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
 //const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
 let contadorEntradaCicloLavado = 0
+let cancelarSetimeout:ReturnType<typeof setTimeout>[];
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
@@ -44,10 +45,10 @@ const useApp = () => {
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
             eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
-            setTimeout(
+            cancelarSetimeout.push(setTimeout(
               () => {
                 eviarProcesoPines(['valvula 5'])
-                setTimeout(
+                cancelarSetimeout.push(setTimeout(
                   () => {
                     if(numeroCicloLavados === 1) {
                       contadorEntradaCicloLavado = 0
@@ -60,10 +61,10 @@ const useApp = () => {
                    }
                   },
                   tiempoDrenadoLavado.dato * 1000
-                )
+                ))
               },
               tiempoLavado.dato * 1000 * 60
-            )
+            ))
           }
         }
     }
@@ -100,15 +101,16 @@ const useApp = () => {
       case 0:
         eviarProcesoPines(procesos[activeProceso.proceso][ciclo].procesoGpio)
         if (activeProceso.proceso === 'lavado') {
+          setlavadoTerminado(false)
           setNumeroCicloLavados(1)
           const tiempoDrenado = configDatos.find(
             (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
           )
           if (tiempoDrenado) {
-            setTimeout(() => {
+            cancelarSetimeout.push(setTimeout(() => {
               reiniciarFlujometros()
               eviarProcesoPines(['valvula 1'])
-            }, tiempoDrenado.dato * 1000)
+            }, tiempoDrenado.dato * 1000))
           }
         }
         break
@@ -222,7 +224,7 @@ const useApp = () => {
                 eviarProcesoPines(['valvula 1'])
                 setTimeout(() => {
                   resetProcesos()
-                }, 5000);
+                }, 3000);
               }}
             >
               Probar S1
@@ -264,6 +266,9 @@ const useApp = () => {
   }
 
   const resetProcesos = ():void => {
+    cancelarSetimeout.forEach(element => {
+      clearTimeout(element)
+    });
     setActiveProceso({ activar: false, proceso: '' })
     setCiclo(-1)
     eviarProcesoPines([])
