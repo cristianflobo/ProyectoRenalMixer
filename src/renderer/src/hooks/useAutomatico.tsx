@@ -76,8 +76,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
     if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
       if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
-        contadorMezcladoLavado ++ 
-        if(contadorMezcladoLavado === 1) eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+        if(contadorMezcladoLavado === 1) {
+          eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+          contadorMezcladoLavado = 0
+        }
         setTimeout(
           () => {
             eviarProcesoPines(['valvula 5'])
@@ -85,14 +87,12 @@ const useAutomatico = (datosSerial, closeWindows) => {
               () => {
                 if (numeroCicloLavados === 1) {
                   setCiclo(8)
-                  contadorMezcladoLavado = 0
                   setNumeroCicloLavados(2)
                 } else {
-                  contadorMezcladoLavado = 0
                   setCiclo(9)
                 }
               },
-              tiempoDrenadoLavado.dato * 1000 
+              tiempoDrenadoLavado.dato * 1000
             )
           },
           tiempoLavado.dato * 1000 * 60
@@ -161,6 +161,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         tiempoDrenado = configDatos.find(
           (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
         )
+        contadorMezcladoLavado = 1
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         setNumeroCicloLavados(1)
         if (tiempoDrenado) {
@@ -175,6 +176,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         tiempoDrenado = configDatos.find(
           (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
         )
+        contadorMezcladoLavado = 1
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoDrenado) {
           setTimeout(() => {
@@ -186,6 +188,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 9: //termina lavado
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        contadorMezcladoLavado = 0
         setTimeout(() => {
           eviarProcesoPines([])
         }, 30000)
