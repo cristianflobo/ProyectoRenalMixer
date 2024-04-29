@@ -4,8 +4,8 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-//const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
-const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
+const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
+//const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
 let contadorEntradaCicloLavado = 0
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
