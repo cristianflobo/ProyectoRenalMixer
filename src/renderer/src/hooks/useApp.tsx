@@ -7,7 +7,6 @@ const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
 //const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
 
-
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
@@ -25,15 +24,51 @@ const useApp = () => {
     view: false,
     data: ''
   })
+  const [numeroCicloLavados, setNumeroCicloLavados] = useState(0)
+  const [lavadoTerminado, setlavadoTerminado] = useState(false)
 
   useEffect(() => {
+    const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
+      (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
+    )
+    const tiempoLavado: Tdrenado | undefined = configDatos.find(
+      (item: TdataConfig) => item.title === 'TIEMPO LAVADO (MIN)'
+    )
+    const tiempoDrenadoLavado: Tdrenado | undefined = configDatos.find(
+      (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
+    )
+
     if (activeProceso.proceso === 'lavado') {
-      if(datosSerial.dataSerial1 >= configDatos[4].dato) setCiclo(-1)
+      if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
+        if (cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
+            eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+            setTimeout(
+              () => {
+                eviarProcesoPines(['valvula 5'])
+                setTimeout(
+                  () => {
+                    if(numeroCicloLavados === 1) {
+                      reiniciarFlujometros()
+                      eviarProcesoPines(['valvula 1'])
+                      setNumeroCicloLavados(0)
+                   }else {
+                    setCiclo(-1)
+                    eviarProcesoPines([])
+                    setlavadoTerminado(true)
+                   }
+                  },
+                  tiempoDrenadoLavado.dato * 1000
+                )
+              },
+              tiempoLavado.dato * 1000 * 60
+            )
+          }
+        }
     }
     return ():void => {
     }
   }, [datosSerial])
-  
+
 
   useEffect(() => {
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
@@ -62,7 +97,18 @@ const useApp = () => {
     switch (ciclo) {
       case 0:
         eviarProcesoPines(procesos[activeProceso.proceso][ciclo].procesoGpio)
-
+        if (activeProceso.proceso === 'lavado') {
+          setNumeroCicloLavados(1)
+          const tiempoDrenado = configDatos.find(
+            (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
+          )
+          if (tiempoDrenado) {
+            setTimeout(() => {
+              reiniciarFlujometros()
+              eviarProcesoPines(['valvula 1'])
+            }, tiempoDrenado.dato * 1000)
+          }
+        }
         break
 
       case 1:
@@ -103,7 +149,7 @@ const useApp = () => {
         id: 0,
         html: (
           <div className="conte-procesos">
-            <strong>Lavando </strong>
+            <strong>Lavando {lavadoTerminado?"terminado":null}</strong>
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
@@ -114,9 +160,9 @@ const useApp = () => {
             </button>
           </div>
         ),
-        procesoGpio: ['valvula 1', 'bomba 1']
+        procesoGpio: ['valvula 5']
       },
-     
+
     ],
     recirculacion:
     [{ //BOTON RECIRCULACION
@@ -135,7 +181,7 @@ const useApp = () => {
         </div>
       ),
       procesoGpio: ['valvula 2', 'valvula 3', 'bomba 1']
-    }], 
+    }],
     transferir:
    [ { //BOTON TRANSFERIR
       id: 0,
@@ -202,19 +248,19 @@ const useApp = () => {
 
   const cambiarPosicionFujometros = ():void => {
     window.electron.ipcRenderer.send('desconectarSerial')
-    serialNumberFlujometros[0], serialNumberFlujometros[1] = 
+    serialNumberFlujometros[0], serialNumberFlujometros[1] =
     serialNumberFlujometros[1], serialNumberFlujometros[0]
     setTimeout(() => {
       setTimeout(() => {
         window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
       }, 500);
-      setTimeout(() => { 
+      setTimeout(() => {
         window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
       }, 500);
     }, 500);
-    
+
   }
-  
+
   const resetProcesos = ():void => {
     setActiveProceso({ activar: false, proceso: '' })
     setCiclo(-1)

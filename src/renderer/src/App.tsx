@@ -69,7 +69,7 @@ function App(): JSX.Element {
       {activarMensajesModal.activar ? (
         <div className="cont-proceso-auto">{mensajesModal[activarMensajesModal.ventana].html}</div>
       ) : null}
-      
+
     </MenssageGeneralContext.Provider>
   )
 }
