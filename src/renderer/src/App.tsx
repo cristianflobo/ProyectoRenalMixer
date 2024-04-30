@@ -49,7 +49,9 @@ function App(): JSX.Element {
             CONFIGURACION
           </button>
         </div>
-        <button onClick={() =>  setActivarMensajesModal((prev)=> ({...prev, activar:true}))}>
+        <button onClick={() => { setActivarMensajesModal((prev)=> ({...prev, activar:true}))
+          setActiveProceso({ activar: true, proceso: '' })
+          }}>
             PROBAR SENSORES
           </button>
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
@@ -63,7 +65,7 @@ function App(): JSX.Element {
 
         {mensajeGeneral.view ? <Message /> : null}
       </div>
-      {activeProceso.activar ? (
+      {activeProceso.activar && ciclo !== -1 ? (
         <div className="cont-proceso-auto">{procesos[activeProceso.proceso][ciclo].html}</div>
       ) : null}
       {activarMensajesModal.activar ? (

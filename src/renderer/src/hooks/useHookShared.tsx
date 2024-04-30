@@ -60,7 +60,6 @@ const useHookShared = (): TuseHookShared => {
       }
       return item
     })
-    console.log(envioGpioFinal)
     window.electron.ipcRenderer.send('procesoPinesSalida', envioGpioFinal)
   }
 
@@ -74,7 +73,6 @@ const useHookShared = (): TuseHookShared => {
       }
       return item
     })
-    console.log(envioGpioFinal)
     window.electron.ipcRenderer.send('procesoPinesSalida', envioGpioFinal)
   }
   return { eviarProcesoPinesConBombaDistribuicion, eviarProcesoPines, datosGpio }

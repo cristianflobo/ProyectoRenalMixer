@@ -4,8 +4,8 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
-//const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
+//const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
+const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
 let contadorEntradaCicloLavado = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
 const useApp = () => {
@@ -20,7 +20,7 @@ const useApp = () => {
     config: false,
     auto: false
   })
-  const [activeProceso, setActiveProceso] = useState({ activar: false, proceso: '' })
+  const [activeProceso, setActiveProceso] = useState({ activar: true, proceso: '' })
   const [onOnchangeViewKeyBoardNumeric, setOnOnchangeViewKeyBoardNumeric] = useState({
     view: false,
     data: ''
@@ -41,7 +41,9 @@ const useApp = () => {
 
     if (activeProceso.proceso === 'lavado') {
       if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
+        
         if (cantidadAguaLvado.dato <= datosSerial.dataSerial1 && contadorEntradaCicloLavado === 0) {
+          
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
             eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
@@ -56,7 +58,8 @@ const useApp = () => {
                       eviarProcesoPines(['valvula 1'])
                       setNumeroCicloLavados(0)
                    }else {
-                    resetProcesos()
+                    contadorEntradaCicloLavado = 0
+                    eviarProcesoPines([])
                     setlavadoTerminado(true)
                    }
                   },
@@ -78,7 +81,7 @@ const useApp = () => {
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
-    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {
+    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {  
       setCantidadFlujometro(data)
       setActivarMensajesModal((prev)=> ({...prev, activar:true}))
     })
@@ -153,7 +156,7 @@ const useApp = () => {
         id: 0,
         html: (
           <div className="conte-procesos">
-            <strong>Lavando {lavadoTerminado?"terminado":null}</strong>
+            <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
@@ -225,6 +228,7 @@ const useApp = () => {
                 setTimeout(() => {
                   resetProcesos()
                 }, 3000);
+                setActiveProceso({ activar: false, proceso: '' })
               }}
             >
               Probar S1
