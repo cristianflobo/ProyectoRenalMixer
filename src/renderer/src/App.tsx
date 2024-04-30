@@ -48,12 +48,22 @@ function App(): JSX.Element {
           <button disabled={activeProceso.activar} onClick={() => setSelectScreen({ manual: false, config: true, auto: false })}>
             CONFIGURACION
           </button>
+
         </div>
+        <div>
         <button onClick={() => { setActivarMensajesModal((prev)=> ({...prev, activar:true}))
           setActiveProceso({ activar: true, proceso: '' })
           }}>
             PROBAR SENSORES
           </button>
+          <button disabled={activeProceso.activar} onClick={() => {
+            setActiveProceso({ activar: true, proceso: 'transferirLitros' }) 
+            setCiclo(0) 
+          }        
+          }>
+            TRANSFERIR POR LITROS
+          </button>
+          </div>
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
         {selectScreen.manual ? <Manual closeWindows={setSelectScreen} /> : null}
         {selectScreen.auto ? (

@@ -9,6 +9,7 @@
   border-radius: 7px;
   background-color: black;
   right: 400px;
+  z-index: 1;
 }
 .cont-key-board-numeric > input {
   height: 30px;

@@ -24,6 +24,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
+    const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     setconfigDatos(JSON.parse(configDatos!))
     const datosAutomatico = localStorage.getItem('datosAutomatico')
     if (datosAutomatico) {
@@ -45,6 +46,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
       const data = localStorage.getItem('datosAutomatico')
       setrenderData(JSON.parse(data!))
     }
+    if(!litrosAlmacenados){
+      localStorage.setItem('litrosAlmacenados', "0")
+    }
+
     return (): void => {}
   }, [])
 
@@ -66,6 +71,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
     if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
     if (ciclo === 6 && renderData[0].dato  < datosSerial.dataSerial2)
      { 
+      localStorage.setItem('litrosAlmacenados', "0")
       eviarProcesoPines([])
       setCiclo(10)
     }
@@ -122,12 +128,14 @@ const useAutomatico = (datosSerial, closeWindows) => {
         break
       case 1:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        cancelarTodosSetimeout.push(setTimeout(() => {
+        cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 10000))
+        }, 10000)
+        cancelarTodosSetimeout.push(cancelarSetimeout)
         break
 
       case 2:
+        clearTimeout(cancelarSetimeout)
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         break
 
@@ -277,7 +285,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <div style={{ display: 'flex' }}>
             <button onClick={() => setCiclo(6)}>Tranferir completo</button>
-            <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+            <button onClick={() =>{ 
+              closeWindows({ manual: false, config: false, auto: false })
+              localStorage.setItem('litrosAlmacenados', renderData[0].dato.toString())
+              }}>
               Inicio
             </button>
           </div>
@@ -341,14 +352,13 @@ const useAutomatico = (datosSerial, closeWindows) => {
       html: (
         <div className="conte-procesos">
           <strong>Transferencia completa</strong>
-          <strong>VERIFIQUE QUE EL TANQUE DE MEZCLADO ESTÉ VACÍO Y PRESIONE INICIO</strong>
-          <button onClick={() => {
-            closeWindows({ manual: false, config: false, auto: false })
-            resetProcesos()
-            }}>
-              Inicio
+          <strong>Verifique que el tanque de mezclado este vacio y presione inicio</strong>
+            <button onClick={() => {
+              closeWindows({ manual: false, config: false, auto: false })
+              resetProcesos()
+              }}>
+                Inicio
             </button>
-          {/* <strong>Lavando tanque</strong> */}
         </div>
       ),
       procesoGpio: ['buzzer']

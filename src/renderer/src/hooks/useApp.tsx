@@ -27,8 +27,15 @@ const useApp = () => {
   })
   const [numeroCicloLavados, setNumeroCicloLavados] = useState(0)
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
+  const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
 
   useEffect(() => {
+    if (activeProceso.proceso === 'transferirLitros' ) { 
+      if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
+        eviarProcesoPines([])
+      }
+
+    }
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
       (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
     )
@@ -75,8 +82,13 @@ const useApp = () => {
     }
   }, [datosSerial])
 
-
   useEffect(() => {
+    const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
+    if(litrosAlmacenados) {
+      setlistrosMaximoAlmacenado(litrosAlmacenados)
+    }else {
+      setlistrosMaximoAlmacenado("0")
+    }
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
     window.electron.ipcRenderer.send('reiniciarFlujometros')
@@ -97,6 +109,14 @@ const useApp = () => {
       window.electron.ipcRenderer.removeAllListeners('verificarConexionSensoresRender')
     }
   }, [])
+
+  useEffect(() => {
+    if(onOnchangeViewKeyBoardNumeric.data > listrosMaximoAlmacenado){
+      setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, data: listrosMaximoAlmacenado})
+    }
+    return ():void => {    }
+  }, [onOnchangeViewKeyBoardNumeric])
+  
 
   useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
@@ -206,6 +226,39 @@ const useApp = () => {
         </div>
       ),
       procesoGpio: ['valvula 4', 'bomba 1']
+    }],
+    transferirLitros:
+   [ { //BOTON TRANSFERIR litros
+      id: 0,
+      html: (
+        <div className="conte-procesos">
+          <strong>Litros a transferir maximo {listrosMaximoAlmacenado}</strong>
+          <div>Digite cantidad</div>
+          <div style={{height:"40px", width:"80px", border:"1px solid white", borderRadius:"7px", fontSize:"22px"}} 
+          onClick={()=> setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })}>
+            {onOnchangeViewKeyBoardNumeric.data}
+          </div>
+          <div>    
+            <button disabled = {parseFloat(listrosMaximoAlmacenado) < parseFloat("1")? true:false}
+            style={{ marginTop: '50px' }}
+            onClick={() => {
+              eviarProcesoPines(['valvula 4', 'bomba 1'])
+            }}
+          >
+            Tranferir
+          </button>
+          <button
+            style={{ marginTop: '50px' }}
+            onClick={() => {
+              resetProcesos()
+            }}
+          >
+            Salir
+          </button>
+          </div>
+        </div>
+      ),
+      procesoGpio: []
     }]
   }
 
