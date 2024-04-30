@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 
 let contadorMezcladoLavado = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>;
-let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[];
+let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[] = []
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
@@ -65,7 +65,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
     if (ciclo === 0 && renderData[1].dato <= datosSerial.dataSerial1) setCiclo(1)
     if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
     if (ciclo === 6 && renderData[0].dato  < datosSerial.dataSerial2)
-      setCiclo(7)
+      setCiclo(10)
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
       (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
     )
@@ -329,7 +329,11 @@ const useAutomatico = (datosSerial, closeWindows) => {
       html: (
         <div className="conte-procesos">
           <strong>Transferencia completa</strong>
-          <strong>Lavando tanque</strong>
+          <strong>VERIFIQUE QUE EL TANQUE DE MEZCLADO ESTÉ VACÍO Y PRESIONE INICIO</strong>
+          <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+              Inicio
+            </button>
+          {/* <strong>Lavando tanque</strong> */}
         </div>
       ),
       procesoGpio: ['buzzer']
