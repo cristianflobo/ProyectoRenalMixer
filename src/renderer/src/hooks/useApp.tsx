@@ -7,7 +7,7 @@ const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
 //const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
 let contadorEntradaCicloLavado = 0
-let cancelarSetimeout:ReturnType<typeof setTimeout>[];
+let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
   const [mensajeGeneral, setmensajeGeneral] = useState({ view: false, data: '' })
@@ -269,6 +269,7 @@ const useApp = () => {
     cancelarSetimeout.forEach(element => {
       clearTimeout(element)
     });
+    cancelarSetimeout = []
     setActiveProceso({ activar: false, proceso: '' })
     setCiclo(-1)
     eviarProcesoPines([])

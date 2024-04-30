@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 
 let contadorMezcladoLavado = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>;
+let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[];
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
@@ -80,10 +81,11 @@ const useAutomatico = (datosSerial, closeWindows) => {
         if(contadorMezcladoLavado === 1) {
           eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
           contadorMezcladoLavado = 0
-          setTimeout(
+          cancelarTodosSetimeout.push(
+            setTimeout(
             () => {
               eviarProcesoPines(['valvula 5'])
-              setTimeout(
+              cancelarTodosSetimeout.push(setTimeout(
                 () => {
                   if (numeroCicloLavados === 1) {
                     setCiclo(8)
@@ -93,10 +95,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
                   }
                 },
                 tiempoDrenadoLavado.dato * 1000
-              )
+              ))
             },
             tiempoLavado.dato * 1000 * 60
-          )
+          ))
         }
       
       }
@@ -117,9 +119,9 @@ const useAutomatico = (datosSerial, closeWindows) => {
         break
       case 1:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        setTimeout(() => {
+        cancelarTodosSetimeout.push(setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 30000)
+        }, 30000))
         break
 
       case 2:
