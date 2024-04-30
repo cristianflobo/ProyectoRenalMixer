@@ -65,7 +65,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
     if (ciclo === 0 && renderData[1].dato <= datosSerial.dataSerial1) setCiclo(1)
     if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
     if (ciclo === 6 && renderData[0].dato  < datosSerial.dataSerial2)
+     { 
+      eviarProcesoPines([])
       setCiclo(10)
+    }
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
       (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
     )
@@ -121,7 +124,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         cancelarTodosSetimeout.push(setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 30000))
+        }, 10000))
         break
 
       case 2:
@@ -134,24 +137,25 @@ const useAutomatico = (datosSerial, closeWindows) => {
         )
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoMezclado) {
-          setTimeout(
+          cancelarTodosSetimeout.push(setTimeout(
             () => {
               setCiclo(4)
             },
             tiempoMezclado?.dato * 1000 * 60
-          )
+          ))
         }
-        setTimeout(() => {
+        cancelarTodosSetimeout.push(setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 30000)
+        }, 10000))
         break
 
       case 4:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines([])
-        }, 30000)
-        
+        }, 10000)
+        cancelarTodosSetimeout.push(cancelarSetimeout)
+
         break
 
       case 5:
@@ -171,10 +175,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         setNumeroCicloLavados(1)
         if (tiempoDrenado) {
-          setTimeout(() => {
+          cancelarTodosSetimeout.push(setTimeout(() => {
             reiniciarFlujometros()
             eviarProcesoPines(['valvula 1'])
-          }, tiempoDrenado.dato * 1000)
+          }, tiempoDrenado.dato * 1000))
         }
         break
 
@@ -185,23 +189,26 @@ const useAutomatico = (datosSerial, closeWindows) => {
         contadorMezcladoLavado = 1
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoDrenado) {
-          setTimeout(() => {
+          cancelarTodosSetimeout.push(setTimeout(() => {
             reiniciarFlujometros()
             eviarProcesoPines(['valvula 1'])
-          }, tiempoDrenado.dato * 1000)
+          }, tiempoDrenado.dato * 1000))
         }
         break
 
       case 9: //termina lavado
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         contadorMezcladoLavado = 0
-        setTimeout(() => {
+        cancelarTodosSetimeout.push(setTimeout(() => {
           eviarProcesoPines([])
-        }, 30000)
+        }, 10000))
         break
-        
+
       case 10:
           eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+          cancelarTodosSetimeout.push(setTimeout(() => {
+            eviarProcesoPines([])
+          }, 10000))
   
         break
 
@@ -335,7 +342,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <strong>Transferencia completa</strong>
           <strong>VERIFIQUE QUE EL TANQUE DE MEZCLADO ESTÉ VACÍO Y PRESIONE INICIO</strong>
-          <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+          <button onClick={() => {
+            closeWindows({ manual: false, config: false, auto: false })
+            resetProcesos()
+            }}>
               Inicio
             </button>
           {/* <strong>Lavando tanque</strong> */}
@@ -361,12 +371,21 @@ const useAutomatico = (datosSerial, closeWindows) => {
       }).then((result) => {
         if (result.isConfirmed) {
           closeWindows({ manual: false, config: false, auto: false })
-          eviarProcesoPines([])
+          resetProcesos()
         }
       })
     } else {
       closeWindows({ manual: false, config: false, auto: false })
     }
+  }
+  const resetProcesos = ():void => {
+    cancelarTodosSetimeout.forEach(element => {
+      clearTimeout(element)
+    });
+    cancelarTodosSetimeout = []
+    setCiclo(-1)
+    eviarProcesoPines([])
+    reiniciarFlujometros()
   }
   return {
     setOnOnchangeViewKeyBoardNumeric,
