@@ -199,6 +199,11 @@ const useAutomatico = (datosSerial, closeWindows) => {
           eviarProcesoPines([])
         }, 30000)
         break
+        
+      case 10:
+          eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+  
+        break
 
       default:
         break
