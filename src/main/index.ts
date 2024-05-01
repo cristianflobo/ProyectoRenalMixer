@@ -204,20 +204,19 @@ app.whenReady().then(() => {
   //#region Tareas programadas cron
   //const tareasProgramadas = () => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
-    console.log("----------cron----------------", data)
     if (data.id === 1) {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
-        console.log('tarea inicio bomba')
-          procesoActualPines(["bomba 3"])
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {     
+          procesoActualPines(['bomba 3'])
+          console.log('tarea inicio bomba')
       }, {
         scheduled: true,
         timezone: "America/Bogota"
       });
 
     }else {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
-        console.log('tarea final bomba')
-         procesoActualPines(["bomba 3"])
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {   
+         procesoActualPines([])
+         console.log('tarea final bomba')
       }, {
       scheduled: true,
       timezone: "America/Bogota"
