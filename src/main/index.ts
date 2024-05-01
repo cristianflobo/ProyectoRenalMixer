@@ -206,7 +206,7 @@ app.whenReady().then(() => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
     if (data.id === 1) {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {     
-          procesoActualPines(['bomba 3'])
+          procesoActualPines([{nombre:'bomba 3', estado:1}])
           console.log('tarea inicio bomba')
       }, {
         scheduled: true,
@@ -215,7 +215,7 @@ app.whenReady().then(() => {
 
     }else {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {   
-         procesoActualPines([])
+        procesoActualPines([{nombre:'bomba 3', estado:0}])
          console.log('tarea final bomba')
       }, {
       scheduled: true,
