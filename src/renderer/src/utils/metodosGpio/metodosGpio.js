@@ -96,6 +96,20 @@ const configPines = [
     instancia: ''
   },
   {
+    nombre: 'bomba 4',
+    pin: 233,
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
+  },
+  {
+    nombre: 'bomba 5',
+    pin: 266,
+    accion: 'out',
+    argEntrada: 'none',
+    instancia: ''
+  },
+  {
     nombre: 'buzzer',
     pin: 265,
     accion: 'out',

@@ -203,8 +203,8 @@ app.whenReady().then(() => {
   //---------------------------------------------------------------------Tareas programadas cron
   //#region Tareas programadas cron
   //const tareasProgramadas = () => {
-  ipcMain.on('configDistribucionDiaria', async (_event, data) => {
-    console.log(data)
+  ipcMain.on('configDistribucionDiaria', (_event, data) => {
+    console.log("----------cron----------------")
     if (data.id === 1) {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
         console.log('tarea inicio bomba')
