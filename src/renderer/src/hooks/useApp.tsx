@@ -84,9 +84,7 @@ const useApp = () => {
 
   useEffect(() => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-    if(litrosAlmacenados) {
-      setlistrosMaximoAlmacenado(litrosAlmacenados)
-    }else {
+    if(!litrosAlmacenados) {
       setlistrosMaximoAlmacenado("0")
     }
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
