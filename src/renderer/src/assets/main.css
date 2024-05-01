@@ -108,7 +108,7 @@ button:focus-visible {
 }
 .btn-principal {
   width: 90%;
-  height: 80%;
+  height: 55%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-content: center;
