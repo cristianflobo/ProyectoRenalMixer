@@ -93,7 +93,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
           cancelarTodosSetimeout.push(
             setTimeout(
             () => {
-              eviarProcesoPines(['valvula 5'])
+              eviarProcesoPines(['valvula 5', 'bomba 4'])
               cancelarTodosSetimeout.push(setTimeout(
                 () => {
                   if (numeroCicloLavados === 1) {
@@ -319,7 +319,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
           <div className="loader"></div>
         </div>
       ),
-      procesoGpio: ['valvula 5']
+      procesoGpio: ['valvula 5', 'bomba 4']
     },
     {
       id: 8,
@@ -330,7 +330,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
           <strong>Lavando tanque</strong>
         </div>
       ),
-      procesoGpio: ['valvula 5']
+      procesoGpio: ['valvula 5', 'bomba 4']
     },
     {
       id: 9,  //se termina lavado

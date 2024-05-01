@@ -57,7 +57,7 @@ const useApp = () => {
             eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
             cancelarSetimeout.push(setTimeout(
               () => {
-                eviarProcesoPines(['valvula 5'])
+                eviarProcesoPines(['valvula 5', 'bomba 4'])
                 cancelarSetimeout.push(setTimeout(
                   () => {
                     if(numeroCicloLavados === 1) {
@@ -84,8 +84,9 @@ const useApp = () => {
   }, [datosSerial])
 
   useEffect(() => {
+    console.log("useapp")
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-    if(litrosAlmacenados) {
+    if(parseFloat(litrosAlmacenados) > 0) {
       setlistrosMaximoAlmacenado(litrosAlmacenados)
     }else {
       setlistrosMaximoAlmacenado("0")
@@ -189,7 +190,7 @@ const useApp = () => {
             </button>
           </div>
         ),
-        procesoGpio: ['valvula 5']
+        procesoGpio: ['valvula 5', 'bomba 4']
       },
 
     ],
