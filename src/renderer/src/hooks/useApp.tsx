@@ -36,11 +36,12 @@ const useApp = () => {
           let resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
           localStorage.setItem('litrosAlmacenados', resta.toString())
           setlistrosMaximoAlmacenado(resta.toString())
+        }else { 
+          setlistrosMaximoAlmacenado("0")
         }
         eviarProcesoPines([])
-        setlistrosMaximoAlmacenado("0")
+        
       }
-
     }
     const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
       (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
@@ -125,6 +126,7 @@ const useApp = () => {
     }
     return ():void => {    }
   }, [activeProceso])
+  
   useEffect(() => {
     if(onOnchangeViewKeyBoardNumeric.data > listrosMaximoAlmacenado){
       setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, data: listrosMaximoAlmacenado})
