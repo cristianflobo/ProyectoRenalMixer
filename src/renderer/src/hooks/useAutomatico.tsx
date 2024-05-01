@@ -152,9 +152,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
             tiempoMezclado?.dato * 1000 * 60
           ))
         }
-        cancelarTodosSetimeout.push(setTimeout(() => {
-          eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 10000))
+
         break
 
       case 4:
@@ -260,7 +258,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
           <div className="loader"></div>
         </div>
       ),
-      procesoGpio: ['buzzer', 'bomba 1', 'valvula 2']
+      procesoGpio: ['bomba 1', 'valvula 2']
     },
     {
       id: 4,
