@@ -84,7 +84,6 @@ const useApp = () => {
   }, [datosSerial])
 
   useEffect(() => {
-    console.log("useapp")
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     if(parseFloat(litrosAlmacenados) > 0) {
       setlistrosMaximoAlmacenado(litrosAlmacenados)
@@ -111,7 +110,16 @@ const useApp = () => {
       window.electron.ipcRenderer.removeAllListeners('verificarConexionSensoresRender')
     }
   }, [])
-
+  
+  useEffect(() => {
+    const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
+    if(parseFloat(litrosAlmacenados) > 0) {
+      setlistrosMaximoAlmacenado(litrosAlmacenados)
+    }else {
+      setlistrosMaximoAlmacenado("0")
+    }
+    return ():void => {    }
+  }, [activeProceso])
   useEffect(() => {
     if(onOnchangeViewKeyBoardNumeric.data > listrosMaximoAlmacenado){
       setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, data: listrosMaximoAlmacenado})
