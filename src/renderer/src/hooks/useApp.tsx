@@ -32,6 +32,11 @@ const useApp = () => {
   useEffect(() => {
     if (activeProceso.proceso === 'transferirLitros' ) { 
       if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
+        if(onOnchangeViewKeyBoardNumeric.data < listrosMaximoAlmacenado){
+          let resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
+          localStorage.setItem('litrosAlmacenados', resta.toString())
+          setlistrosMaximoAlmacenado(resta.toString())
+        }
         eviarProcesoPines([])
         setlistrosMaximoAlmacenado("0")
       }
