@@ -51,7 +51,7 @@ const useHookShared = (): TuseHookShared => {
     }
   ]
   const eviarProcesoPines = (procesoIO: string[]): void => {
-    const envioGpioFinal = datosGpio.slice(0, -2).map((item: TioPeripheral) => {
+    const envioGpioFinal = datosGpio.map((item: TioPeripheral) => {
       const buscar = procesoIO.find((item2) => item2 === item.nombre)
       if (buscar === undefined) {
         item.estado = 0

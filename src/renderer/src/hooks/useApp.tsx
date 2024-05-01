@@ -178,6 +178,7 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
+            <div className="loader"></div>
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
@@ -198,6 +199,7 @@ const useApp = () => {
       html: (
         <div className="conte-procesos">
           <strong>Recirculando ... </strong>
+          <div className="loader"></div>
           <button
             style={{ marginTop: '50px' }}
             onClick={() => {
@@ -216,6 +218,8 @@ const useApp = () => {
       html: (
         <div className="conte-procesos">
           <strong>Tranfiriendo solucion ...</strong>
+          <div>{datosSerial.dataSerial2} L</div>
+          <div className="loader"></div>
           <button
             style={{ marginTop: '50px' }}
             onClick={() => {
