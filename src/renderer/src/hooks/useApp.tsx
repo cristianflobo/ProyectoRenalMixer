@@ -33,6 +33,7 @@ const useApp = () => {
     if (activeProceso.proceso === 'transferirLitros' ) { 
       if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
         eviarProcesoPines([])
+        setlistrosMaximoAlmacenado("0")
       }
 
     }
@@ -238,6 +239,7 @@ const useApp = () => {
           onClick={()=> setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })}>
             {onOnchangeViewKeyBoardNumeric.data}
           </div>
+          <div>{datosSerial.dataSerial2} L</div>
           <div>    
             <button disabled = {parseFloat(listrosMaximoAlmacenado) < parseFloat("1")? true:false}
             style={{ marginTop: '50px' }}
@@ -245,7 +247,7 @@ const useApp = () => {
               eviarProcesoPines(['valvula 4', 'bomba 1'])
             }}
           >
-            Tranferir
+            Transferir
           </button>
           <button
             style={{ marginTop: '50px' }}

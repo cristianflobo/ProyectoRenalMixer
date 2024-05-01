@@ -305,6 +305,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       html: (
         <div className="conte-procesos">
           <strong>Transfiriendo completo...</strong>
+          <strong>{datosSerial.dataSerial2} L</strong>
           <div className="loader"></div>
         </div>
       ),
