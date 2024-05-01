@@ -269,7 +269,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <strong>Mezcla lista, tome muestra para comprobar calidad</strong>
           <div style={{ display: 'flex' }}>
-            <button onClick={() => closeWindows({ manual: false, config: false, auto: false })}>
+            <button onClick={() => {
+              closeWindows({ manual: false, config: false, auto: false })
+              localStorage.setItem('litrosAlmacenados', renderData[0].dato.toString())
+              }}>
               Inicio
             </button>
             <button onClick={() => setCiclo(5)}>Transferir a tanque distribución</button>
