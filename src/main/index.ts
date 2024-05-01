@@ -206,12 +206,12 @@ app.whenReady().then(() => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
     console.log("----------cron----------------", data)
     if (data.id === 1) {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1 + 5} * * *`, () => {
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1 + "5"} * * *`, () => {
         console.log('tarea inicio bomba')
           procesoActualPines(["bomba 3"])
       })
     }else {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1 + 5} * * *`, () => {
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1 + "5"} * * *`, () => {
         console.log('tarea final bomba')
          procesoActualPines(["bomba 3"])
       })
