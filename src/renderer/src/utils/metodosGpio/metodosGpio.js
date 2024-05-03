@@ -29,7 +29,7 @@
 
 const Gpio = require('onoff').Gpio
 
-const pinInicio = new Gpio(265, 'out', 'none')
+const pinInicio = new Gpio(229, 'out', 'none')
 
 const configPines = [
   {
