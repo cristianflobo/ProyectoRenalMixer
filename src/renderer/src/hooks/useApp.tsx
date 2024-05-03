@@ -4,9 +4,10 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
-//const serialNumberFlujometros:string[] = ['24238313136351706120', '24238313136351F04182']
+//const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
+const serialNumberFlujometros:string[] = ['24238313136351706120', '55832343538351F02131']
 let contadorEntradaCicloLavado = 0
+let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
 const useApp = () => {
   const { eviarProcesoPines } = useHookShared()
@@ -32,13 +33,14 @@ const useApp = () => {
   useEffect(() => {
     if (activeProceso.proceso === 'transferirLitros' ) { 
       if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
-        if(onOnchangeViewKeyBoardNumeric.data < listrosMaximoAlmacenado){
-          let resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
+        if(contadorEntradaTransferirLitros === 0){
+          const resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
           localStorage.setItem('litrosAlmacenados', resta.toString())
           setlistrosMaximoAlmacenado(resta.toString())
-        }else { 
-          setlistrosMaximoAlmacenado("0")
+          contadorEntradaTransferirLitros = 1
+          reiniciarFlujometros()
         }
+       
         eviarProcesoPines([])
         
       }
@@ -91,7 +93,7 @@ const useApp = () => {
 
   useEffect(() => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-    if(parseFloat(litrosAlmacenados) > 0) {
+    if(litrosAlmacenados) {
       setlistrosMaximoAlmacenado(litrosAlmacenados)
     }else {
       setlistrosMaximoAlmacenado("0")
@@ -119,10 +121,8 @@ const useApp = () => {
   
   useEffect(() => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-    if(parseFloat(litrosAlmacenados) > 0) {
+    if(litrosAlmacenados) {
       setlistrosMaximoAlmacenado(litrosAlmacenados)
-    }else {
-      setlistrosMaximoAlmacenado("0")
     }
     return ():void => {    }
   }, [activeProceso])
@@ -264,6 +264,7 @@ const useApp = () => {
             <button disabled = {parseFloat(listrosMaximoAlmacenado) < parseFloat("1")? true:false}
             style={{ marginTop: '50px' }}
             onClick={() => {
+              contadorEntradaTransferirLitros = 0
               eviarProcesoPines(['valvula 4', 'bomba 1'])
             }}
           >

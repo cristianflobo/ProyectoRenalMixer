@@ -29,7 +29,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-    fullscreen:true,
+   // fullscreen:true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -73,6 +73,7 @@ app.whenReady().then(() => {
   ipcMain.on('conectarSerial', async (event, puerto) => {
     let serialPort2:(typeof SerialPort);
     const bucarPuertoFlujometro = await SerialPort.list()
+    console.log(bucarPuertoFlujometro)
     bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
         if(item.serialNumber === puerto){  
           serialPort2 = new SerialPort({
@@ -150,10 +151,10 @@ app.whenReady().then(() => {
       console.log(error)
     }
   })
-  ipcMain.on('buscarPuertos', async (_event, _message) => {
-   // console.log(await SerialPort.list()) 
+  // ipcMain.on('buscarPuertos', async (_event, _message) => {
+  //  // console.log(await SerialPort.list()) 
   
-  })
+  // })
   ipcMain.on('verificarConexionSensoresMain', async (event, _message) => {
     setTimeout(() => {
       event.reply('verificarConexionSensoresRender', serialPortArray.length)

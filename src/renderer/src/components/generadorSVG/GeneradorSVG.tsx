@@ -10,3 +10,4 @@ export function GeneradorSVG({color}): JSX.Element {
     </div>
   )
 }
+      

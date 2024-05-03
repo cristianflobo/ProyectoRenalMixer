@@ -5,10 +5,15 @@
     margin: 5px;
 }
 .cont-visual-gpio span{
-    font-size: 14px;
+    font-size: 13px;
 }
 .cont-visual-gpio > div {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: fit-content;
+}
+.padre-svg {
+    border: 1px solid black;
+    border-radius: 5px;
 }
