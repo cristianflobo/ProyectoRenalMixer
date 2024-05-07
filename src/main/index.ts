@@ -29,7 +29,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-   // fullscreen:true,
+    fullscreen:true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -75,7 +75,7 @@ app.whenReady().then(() => {
     const bucarPuertoFlujometro = await SerialPort.list()
     console.log(bucarPuertoFlujometro)
     bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
-        if(item.serialNumber === puerto){  
+        if(item.serialNumber === puerto){
           serialPort2 = new SerialPort({
             path: item.path,
             baudRate: 9600,
@@ -152,14 +152,14 @@ app.whenReady().then(() => {
     }
   })
   // ipcMain.on('buscarPuertos', async (_event, _message) => {
-  //  // console.log(await SerialPort.list()) 
-  
+  //  // console.log(await SerialPort.list())
+
   // })
   ipcMain.on('verificarConexionSensoresMain', async (event, _message) => {
     setTimeout(() => {
       event.reply('verificarConexionSensoresRender', serialPortArray.length)
     }, 2000);
-   
+
   })
 
 //-------------------------------------------------------------wifi
@@ -207,7 +207,7 @@ app.whenReady().then(() => {
   //const tareasProgramadas = () => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
     if (data.id === 1) {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {     
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
           procesoActualPines([{nombre:'bomba 3', estado:1}])
           console.log('tarea inicio bomba')
       }, {
@@ -216,7 +216,7 @@ app.whenReady().then(() => {
       });
 
     }else {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {   
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
         procesoActualPines([{nombre:'bomba 3', estado:0}])
          console.log('tarea final bomba')
       }, {
