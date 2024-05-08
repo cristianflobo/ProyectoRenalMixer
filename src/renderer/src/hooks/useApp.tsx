@@ -4,8 +4,8 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-//const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
-const serialNumberFlujometros:string[] = ['24238313136351706120', '55832343538351F02131']
+const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
+//const serialNumberFlujometros:string[] = ['24238313136351706120', '55832343538351F02131']
 let contadorEntradaCicloLavado = 0
 let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
