@@ -121,9 +121,9 @@ const useApp = () => {
   
   useEffect(() => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-    if(litrosAlmacenados) {
-      setlistrosMaximoAlmacenado(litrosAlmacenados)
-    }
+   // if(litrosAlmacenados) {
+      setlistrosMaximoAlmacenado(litrosAlmacenados!)
+    //}
     return ():void => {    }
   }, [activeProceso])
   
