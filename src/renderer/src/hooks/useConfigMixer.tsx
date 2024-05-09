@@ -19,7 +19,8 @@ const useConfigMixer = () => {
   }
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
-    if (configDatos) {
+    const buscar = JSON.parse(configDatos!).find(item => item.title === "TIEMPO DE MEZCLADO (MIN)")
+    if (configDatos && buscar) {
       setDatosConfig(JSON.parse(configDatos))
     } else {
       localStorage.setItem(
