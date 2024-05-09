@@ -19,7 +19,7 @@ const useConfigMixer = () => {
   }
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
-    if (configDatos && configDatos.length < 8 ) {
+    if (configDatos && configDatos.length === 8 ) {
       setDatosConfig(JSON.parse(configDatos))
     } else {
       localStorage.setItem(
