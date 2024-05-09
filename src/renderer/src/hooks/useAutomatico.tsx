@@ -27,7 +27,8 @@ const useAutomatico = (datosSerial, closeWindows) => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     setconfigDatos(JSON.parse(configDatos!))
     const datosAutomatico = localStorage.getItem('datosAutomatico')
-    if (datosAutomatico) {
+    const buscar = JSON.parse(datosAutomatico!).find(item => item.title === 'CANTIDAD DE AGUA FINAL')
+    if (datosAutomatico && buscar) {
       setrenderData(JSON.parse(datosAutomatico))
     } else {
       localStorage.setItem(
