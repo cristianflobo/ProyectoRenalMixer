@@ -58,7 +58,7 @@ const useApp = () => {
     if (activeProceso.proceso === 'lavado') {
       if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
         
-        if (cantidadAguaLvado.dato <= datosSerial.dataSerial1 && contadorEntradaCicloLavado === 0) {
+        if (cantidadAguaLvado.dato.toString() <= datosSerial.dataSerial1 && contadorEntradaCicloLavado === 0) {
           
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()

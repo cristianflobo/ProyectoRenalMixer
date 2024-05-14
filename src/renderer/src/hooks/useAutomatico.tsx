@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
-import Swal from 'sweetalert2'
 
 let contadorMezcladoLavado = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>;
@@ -131,7 +130,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 10000)
+        }, 5000)
         cancelarTodosSetimeout.push(cancelarSetimeout)
         break
 
@@ -160,7 +159,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines([])
-        }, 10000)
+        }, 5000)
         cancelarTodosSetimeout.push(cancelarSetimeout)
 
         break
@@ -208,14 +207,14 @@ const useAutomatico = (datosSerial, closeWindows) => {
         contadorMezcladoLavado = 0
         cancelarTodosSetimeout.push(setTimeout(() => {
           eviarProcesoPines([])
-        }, 10000))
+        }, 5000))
         break
 
       case 10:
           eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
           cancelarTodosSetimeout.push(setTimeout(() => {
             eviarProcesoPines([])
-          }, 10000))
+          }, 5000))
   
         break
 
@@ -271,10 +270,16 @@ const useAutomatico = (datosSerial, closeWindows) => {
             <button onClick={() => {
               closeWindows({ manual: false, config: false, auto: false })
               localStorage.setItem('litrosAlmacenados', renderData[0].dato.toString())
+              eviarProcesoPines([])
+               clearTimeout(cancelarSetimeout)
               }}>
               Inicio
             </button>
-            <button onClick={() => setCiclo(5)}>Transferir a tanque distribución</button>
+            <button onClick={() => {
+              setCiclo(5) 
+              eviarProcesoPines([])
+              clearTimeout(cancelarSetimeout)
+               }}>Transferir a tanque distribución</button>
           </div>
         </div>
       ),
@@ -365,6 +370,30 @@ const useAutomatico = (datosSerial, closeWindows) => {
         </div>
       ),
       procesoGpio: ['buzzer']
+    },
+    { //mensaje boton atras
+      id: 11,
+      display: '',
+      html: (
+        <div className="conte-procesos">
+          <strong>Desea salir al inicio</strong>
+          <div>
+            <button onClick={() => {
+              closeWindows({ manual: false, config: false, auto: false })
+              resetProcesos()
+              }}>
+                Ok
+            </button>
+            <button onClick={() => {
+              resetProcesos()
+              setActiveProceso(false)
+              }}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      ),
+      procesoGpio: []
     }
   ]
 
@@ -374,22 +403,11 @@ const useAutomatico = (datosSerial, closeWindows) => {
   }
 
   const botonAtras = (): void => {
-    if (activeProceso) {
-      Swal.fire({
-        title: 'Desea salir al inicio',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'ok'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          closeWindows({ manual: false, config: false, auto: false })
-          resetProcesos()
-        }
-      })
-    } else {
+    if (ciclo !== -1) {
+      setCiclo(11)
+    }else {
       closeWindows({ manual: false, config: false, auto: false })
-    }
+    } 
   }
   const resetProcesos = ():void => {
     cancelarTodosSetimeout.forEach(element => {

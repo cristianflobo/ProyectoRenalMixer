@@ -46,15 +46,15 @@ const useHookShared = (): TuseHookShared => {
       estado: 0
     },
     {
-      nombre: 'bomba 3',
-      estado: 0
-    },
-    {
       nombre: 'bomba 4',
       estado: 0
     },
     {
       nombre: 'bomba 5',
+      estado: 0
+    },
+      {
+      nombre: 'bomba 3',
       estado: 0
     }
   ]
