@@ -11,11 +11,14 @@ export function Automatico({ datosSerial, closeWindows }): JSX.Element {
     setCiclo,
     onOnchangeViewKeyBoardNumeric,
     procesoAutomatico,
+    mensajesAlertas,
+    mensajeAlerta,
     activeProceso,
     botonAtras,
     renderData,
     ciclo
   } = useAutomatico(datosSerial, closeWindows)
+
   return (
     <div className="cont-automatico">
       <NavBa />
@@ -76,6 +79,13 @@ export function Automatico({ datosSerial, closeWindows }): JSX.Element {
           style={{ display: `${procesoAutomatico[ciclo].display}` }}
         >
           {procesoAutomatico[ciclo].html}
+        </div>
+      ) : null}
+      {mensajeAlerta !== -1 ? (
+        <div
+          className="cont-proceso-auto"
+        >
+          {mensajesAlertas[mensajeAlerta].html}
         </div>
       ) : null}
     </div>

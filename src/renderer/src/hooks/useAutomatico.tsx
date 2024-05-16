@@ -5,6 +5,7 @@ import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodos
 let contadorMezcladoLavado = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>;
 let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[] = []
+let cicloAnterior = -1
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
@@ -20,6 +21,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
   const [activeProceso, setActiveProceso] = useState(false)
   const [ciclo, setCiclo] = useState(-1)
   const [numeroCicloLavados, setNumeroCicloLavados] = useState(1)
+  const [mensajeAlerta, setMensajeAlerta] = useState(-1)
 
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
@@ -371,8 +373,11 @@ const useAutomatico = (datosSerial, closeWindows) => {
       ),
       procesoGpio: ['buzzer']
     },
-    { //mensaje boton atras
-      id: 11,
+  ]
+   
+  const mensajesAlertas = [
+    { 
+      id: 0,
       display: '',
       html: (
         <div className="conte-procesos">
@@ -385,29 +390,26 @@ const useAutomatico = (datosSerial, closeWindows) => {
                 Ok
             </button>
             <button onClick={() => {
-              resetProcesos()
-              setActiveProceso(false)
+              setMensajeAlerta(-1)
               }}>
               Cancelar
             </button>
           </div>
         </div>
       ),
-      procesoGpio: []
     }
   ]
-
   const activeKeyBoardNumeric = (posicion: number): void => {
     setposicionDataConfig(posicion)
     setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })
   }
 
   const botonAtras = (): void => {
-    if (ciclo !== -1) {
-      setCiclo(11)
+    if(ciclo !== -1) {
+      setMensajeAlerta(0)
     }else {
       closeWindows({ manual: false, config: false, auto: false })
-    } 
+    }
   }
   const resetProcesos = ():void => {
     cancelarTodosSetimeout.forEach(element => {
@@ -424,6 +426,8 @@ const useAutomatico = (datosSerial, closeWindows) => {
     setActiveProceso,
     onOnchangeViewKeyBoardNumeric,
     procesoAutomatico,
+    mensajesAlertas,
+    mensajeAlerta,
     activeProceso,
     renderData,
     botonAtras,

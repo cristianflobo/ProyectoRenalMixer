@@ -50,7 +50,7 @@ function App(): JSX.Element {
           </button>
 
         </div>
-        <div>
+        <div style={{marginBottom:"50px"}}>
         <button onClick={() => { setActivarMensajesModal((prev)=> ({...prev, activar:true}))
           setActiveProceso({ activar: true, proceso: '' })
           }}>

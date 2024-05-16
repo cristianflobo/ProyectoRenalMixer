@@ -68,16 +68,16 @@ const useApp = () => {
                 eviarProcesoPines(['valvula 5', 'bomba 4'])
                 cancelarSetimeout.push(setTimeout(
                   () => {
-                    if(numeroCicloLavados === 1) {
-                      contadorEntradaCicloLavado = 0
-                      reiniciarFlujometros()
-                      eviarProcesoPines(['valvula 1'])
-                      setNumeroCicloLavados(0)
-                   }else {
+                  //   if(numeroCicloLavados === 1) {
+                  //     contadorEntradaCicloLavado = 0
+                  //     reiniciarFlujometros()
+                  //     eviarProcesoPines(['valvula 1'])
+                  //     setNumeroCicloLavados(0)
+                  //  }else {
                     contadorEntradaCicloLavado = 0
                     eviarProcesoPines([])
                     setlavadoTerminado(true)
-                   }
+                  //  }
                   },
                   tiempoDrenadoLavado.dato * 1000
                 ))

@@ -12,7 +12,7 @@
 .cont-btn-manual {
   display: grid;
   width: 70%;
-  height: 80%;
+  height: 54%;
   grid-template-columns: repeat(4, 1fr);
   gap: 0px;
 }
