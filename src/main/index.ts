@@ -102,6 +102,7 @@ app.whenReady().then(() => {
       const listenerPortRender = `dataSerial${serialPortArray.length}`
       parser.on('data', function (data: string) {
         event.reply(`${listenerPortRender}`, data)
+        console.log(`${listenerPortRender}`, data)
       })
     } catch (error: unknown) {
       if (error instanceof Error) {
