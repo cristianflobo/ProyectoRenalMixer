@@ -327,7 +327,7 @@ const useApp = () => {
             </div>
           </div>
         )
-      },
+      }
   }
 
   const cambiarPosicionFujometros = ():void => {
