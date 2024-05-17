@@ -14,6 +14,7 @@
 .boton-abajo{
     position: absolute;
     bottom: 17px;
+    z-index: 1;
 }
 .cont-proceso-auto{
     position: absolute;

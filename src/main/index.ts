@@ -73,7 +73,6 @@ app.whenReady().then(() => {
   ipcMain.on('conectarSerial', async (event, puerto) => {
     let serialPort2:(typeof SerialPort);
     const bucarPuertoFlujometro = await SerialPort.list()
-    console.log(bucarPuertoFlujometro)
     bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
         if(item.serialNumber === puerto){
           serialPort2 = new SerialPort({

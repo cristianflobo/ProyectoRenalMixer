@@ -132,7 +132,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
-        }, 5000)
+        }, 2000)
         cancelarTodosSetimeout.push(cancelarSetimeout)
         break
 
