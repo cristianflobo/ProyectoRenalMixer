@@ -27,6 +27,7 @@
     "node-cron": "^3.0.3",
     "node-wifi": "^2.0.16",
     "onoff": "^6.0.3",
+    "precision-timeout-interval": "^4.3.0",
     "react-router-dom": "^6.22.0",
     "react-simple-keyboard": "^3.7.97",
     "serialport": "^12.0.0",

@@ -9,6 +9,11 @@ import icon from '../../resources/icon.png?asset'
 import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 import { Twifi } from '../renderer/src/utils/interfaceMain'
 
+type TconexionSerial = {
+  puerto:string,
+  nombre:string
+}
+
 /*/---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
     if (error) {
@@ -29,7 +34,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-    fullscreen:true,
+    fullscreen:false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -70,47 +75,60 @@ app.whenReady().then(() => {
   })
 
   //---------------------------------------------------------------------Componente serial Conexion serial
-  ipcMain.on('conectarSerial', async (event, puerto) => {
-    let serialPort2:(typeof SerialPort);
-    const bucarPuertoFlujometro = await SerialPort.list()
-    bucarPuertoFlujometro.forEach((item:(typeof SerialPort)) => {
-        if(item.serialNumber === puerto){
+  ipcMain.on('conectarSerial', (event, puertos) => {
+    //const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
+    //const serialNumberFlujometros:string[] = ['24238313136351706120', '55832343538351F02131']
+    async function connectSerialPort(element: TconexionSerial):Promise<void> {
+      let serialPort2: typeof SerialPort;
+      const bucarPuertoFlujometro = await SerialPort.list();
+      const index = puertos.indexOf(element.puerto);
+      if (index !== -1) {
+        puertos.splice(index, 1); // Remove the port from the array
+      }
+    
+      bucarPuertoFlujometro.forEach((item: typeof SerialPort) => {
+        if (item.serialNumber === element.puerto) {
           serialPort2 = new SerialPort({
             path: item.path,
             baudRate: 9600,
             autoOpen: false
-          })
+          });
         }
-    });
-
-    try {
-      await new Promise<void>((resolve, reject) => {
-        serialPort2.open((error: Error | null) => {
-          if (error) {
-            console.error(`Error al abrir el puerto ${puerto}:`, error.message)
-            event.reply('menssageFromMain', error.message)
-
-            reject(error)
-          } else {
-            console.log(`El puerto ${puerto} se ha abierto correctamente.`)
-            resolve()
-          }
-        })
-      })
-      serialPortArray.push(serialPort2)
-      const parser = serialPort2.pipe(new ReadlineParser({ delimiter: '\n' }))
-      const listenerPortRender = `dataSerial${serialPortArray.length}`
-      parser.on('data', function (data: string) {
-        event.reply(`${listenerPortRender}`, data)
-        console.log(`${listenerPortRender}`, data)
-      })
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log('Error capturado:', error.message)
-      } else {
-        console.log('Error desconocido capturado:', error)
+      });
+    
+      try {
+        await new Promise<void>((resolve, reject) => {
+          serialPort2.open((error: Error | null) => {
+            if (error) {
+              console.error(`Error al abrir el puerto ${element.puerto}:`, error.message);
+              event.reply('menssageFromMain', error.message);
+              reject(error);
+            } else {
+              console.log(`El puerto ${element.puerto} se ha abierto correctamente.`);
+              resolve();
+            }
+          });
+        });
+        serialPortArray.push(serialPort2);
+        const parser = serialPort2.pipe(new ReadlineParser({ delimiter: '\n' }));
+        const listenerPortRender = element.nombre;
+        parser.on('data', function (data: string) {
+          event.reply(`${listenerPortRender}`, data);
+          console.log(`${listenerPortRender}`, data);
+        });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.log('Error capturado:', error.message);
+        } else {
+          console.log('Error desconocido capturado:', error);
+        }
       }
     }
+    
+    puertos.forEach(async (element: TconexionSerial) => {
+      await connectSerialPort(element);
+    });
+   
   })
   ipcMain.on('desconectarSerial', async () => {
     serialPortArray.forEach(element => {

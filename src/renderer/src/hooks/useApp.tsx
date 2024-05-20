@@ -2,10 +2,11 @@ import { MenssageGeneralContext } from '@renderer/utils/MessageGeneralContext'
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
+import { prcTimeout } from 'precision-timeout-interval';
 
 const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-const serialNumberFlujometros:string[] = ['24238313136351902161', '24238313136351F04182']
-//const serialNumberFlujometros:string[] = ['24238313136351706120', '55832343538351F02131']
+const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351902161', nombre:"dataSerial1"}, {puerto:'24238313136351F04182', nombre:"dataSerial2"}]
+//const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351706120', nombre:"dataSerial1"}, {puerto:'55832343538351F02131' , nombre:"dataSerial2"}]
 let contadorEntradaCicloLavado = 0
 let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
@@ -98,8 +99,7 @@ const useApp = () => {
     }else {
       setlistrosMaximoAlmacenado("0")
     }
-    window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
-    window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
+    window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
     window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {  
@@ -301,9 +301,10 @@ const useApp = () => {
               style={{ marginTop: '50px' }}
               onClick={() => {
                 eviarProcesoPines(['valvula 1'])
-                setTimeout(() => {
-                  resetProcesos()
-                }, 3000);
+                // setTimeout(() => {
+                //   resetProcesos()
+                // }, 3000);
+                prcTimeout(3000, () => resetProcesos())
                 setActiveProceso({ activar: false, proceso: '' })
               }}
             >
@@ -334,14 +335,8 @@ const useApp = () => {
     window.electron.ipcRenderer.send('desconectarSerial')
     serialNumberFlujometros[0], serialNumberFlujometros[1] =
     serialNumberFlujometros[1], serialNumberFlujometros[0]
-    setTimeout(() => {
-      setTimeout(() => {
-        window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[0])
-      }, 500);
-      setTimeout(() => {
-        window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros[1])
-      }, 500);
-    }, 500);
+
+        window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
 
   }
 

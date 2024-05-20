@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
+import { prcTimeout } from 'precision-timeout-interval';
 
 let contadorMezcladoLavado = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>;
 let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[] = []
-let cicloAnterior = -1
+
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
   const [posicionDataConfig, setposicionDataConfig] = useState(0)
@@ -159,9 +160,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 4:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        cancelarSetimeout = setTimeout(() => {
-          eviarProcesoPines([])
-        }, 5000)
+        // cancelarSetimeout = setTimeout(() => {
+        //   eviarProcesoPines([])
+        // }, 5000)
+        prcTimeout(3000, () => eviarProcesoPines([]) );
         cancelarTodosSetimeout.push(cancelarSetimeout)
 
         break

@@ -63,3 +63,7 @@ dato:number
 time:boolean
 title:string
 }
+type TconexionSerial = {
+  puerto:string,
+  nombre:string
+}
