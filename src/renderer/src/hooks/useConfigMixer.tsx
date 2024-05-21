@@ -19,9 +19,62 @@ const useConfigMixer = () => {
   }
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
-    const buscar = JSON.parse(configDatos!).find(item => item.title === "TIEMPO DE MEZCLADO (MIN)")
-    if (configDatos && buscar) {
-      setDatosConfig(JSON.parse(configDatos))
+    if(configDatos){
+      const buscar = JSON.parse(configDatos!).find(item => item.title === "TIEMPO DE MEZCLADO (MIN)")
+      if ( buscar) {
+        setDatosConfig(JSON.parse(configDatos))
+      } else {
+        localStorage.setItem(
+          'configDatos',
+          JSON.stringify([
+            {
+              title: 'TIEMPO DE MEZCLADO (MIN)',
+              dato: 0,
+              time: false
+            },
+            {
+              title: 'HORA INICIO DISTRIBUCIÓN',
+              hora1: 0,
+              minu2: 0,
+              time: true
+            },
+            {
+              title: 'HORA FINAL DISTRIBUCIÓN',
+              hora1: 0,
+              minu2: 0,
+              time: true
+            },
+            {
+              title: 'FACTOR DE CALIBRACION',
+              dato: 0,
+              time: false
+            },
+            {
+              title: 'TIEMPO LAVADO (MIN)',
+              dato: 0,
+              time: false
+            },
+            {
+              title: 'CANTIDAD DE AGUA LAVADO (L)',
+              dato: 0,
+              time: false
+            },
+            {
+              title: 'TIEMPO DRENADO PRELIMINAR (SEG)',
+              dato: 0,
+              time: false
+            }
+            ,
+            {
+              title: 'TIEMPO DRENADO EN LAVADO (SEG)',
+              dato: 0,
+              time: false
+            }
+          ])
+        )
+        const data = localStorage.getItem('configDatos')
+        setDatosConfig(JSON.parse(data!))
+      }
     } else {
       localStorage.setItem(
         'configDatos',
@@ -33,13 +86,13 @@ const useConfigMixer = () => {
           },
           {
             title: 'HORA INICIO DISTRIBUCIÓN',
-            hora1: 0, 
+            hora1: 0,
             minu2: 0,
             time: true
           },
           {
             title: 'HORA FINAL DISTRIBUCIÓN',
-            hora1: 0, 
+            hora1: 0,
             minu2: 0,
             time: true
           },
@@ -82,7 +135,7 @@ const useConfigMixer = () => {
     if (onOnchangeViewKeyBoardNumeric.data !== '' && !onOnchangeViewKeyBoardNumeric.view) {
       configDatos = JSON.parse(localStorage.getItem('configDatos')!)
       const dataKeyTermporal = configDatos?.map((item: TdataConfig, i: number) => {
-        if(configDatos[posicionDataConfig].title === 'FACTOR DE CALIBRACION') 
+        if(configDatos[posicionDataConfig].title === 'FACTOR DE CALIBRACION')
           {window.electron.ipcRenderer.send('enviarFactorK', onOnchangeViewKeyBoardNumeric.data)}
         if (i === posicionDataConfig) return { ...item, dato: onOnchangeViewKeyBoardNumeric.data }
         return item

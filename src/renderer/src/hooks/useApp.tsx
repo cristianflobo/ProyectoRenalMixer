@@ -32,7 +32,11 @@ const useApp = () => {
   const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
 
   useEffect(() => {
-    if (activeProceso.proceso === 'transferirLitros' ) { 
+    let cantidadAguaLvado: Tdrenado | undefined
+    let tiempoLavado: Tdrenado | undefined
+    let tiempoDrenadoLavado: Tdrenado | undefined
+
+    if (activeProceso.proceso === 'transferirLitros' ) {
       if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
         if(contadorEntradaTransferirLitros === 0){
           const resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
@@ -41,26 +45,27 @@ const useApp = () => {
           contadorEntradaTransferirLitros = 1
           reiniciarFlujometros()
         }
-       
+
         eviarProcesoPines([])
-        
+
       }
     }
-    const cantidadAguaLvado: Tdrenado | undefined = configDatos.find(
-      (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
-    )
-    const tiempoLavado: Tdrenado | undefined = configDatos.find(
-      (item: TdataConfig) => item.title === 'TIEMPO LAVADO (MIN)'
-    )
-    const tiempoDrenadoLavado: Tdrenado | undefined = configDatos.find(
-      (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
-    )
-
+    if(configDatos){
+      cantidadAguaLvado  = configDatos.find(
+        (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
+      )
+      tiempoLavado = configDatos.find(
+        (item: TdataConfig) => item.title === 'TIEMPO LAVADO (MIN)'
+      )
+      tiempoDrenadoLavado = configDatos.find(
+        (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
+      )
+    }
     if (activeProceso.proceso === 'lavado') {
       if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
-        
+
         if (cantidadAguaLvado.dato.toString() <= datosSerial.dataSerial1 && contadorEntradaCicloLavado === 0) {
-          
+
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
             eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
@@ -102,7 +107,7 @@ const useApp = () => {
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
-    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {  
+    window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {
       setCantidadFlujometro(data)
       setActivarMensajesModal((prev)=> ({...prev, activar:true}))
     })
@@ -118,7 +123,7 @@ const useApp = () => {
       window.electron.ipcRenderer.removeAllListeners('verificarConexionSensoresRender')
     }
   }, [])
-  
+
   useEffect(() => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
    // if(litrosAlmacenados) {
@@ -126,14 +131,14 @@ const useApp = () => {
     //}
     return ():void => {    }
   }, [activeProceso])
-  
+
   useEffect(() => {
     if(onOnchangeViewKeyBoardNumeric.data > listrosMaximoAlmacenado){
       setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, data: listrosMaximoAlmacenado})
     }
     return ():void => {    }
   }, [onOnchangeViewKeyBoardNumeric])
-  
+
 
   useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
@@ -255,12 +260,12 @@ const useApp = () => {
         <div className="conte-procesos">
           <strong>Litros a transferir maximo {listrosMaximoAlmacenado}</strong>
           <div>Digite cantidad</div>
-          <div style={{height:"40px", width:"80px", border:"1px solid white", borderRadius:"7px", fontSize:"22px"}} 
+          <div style={{height:"40px", width:"80px", border:"1px solid white", borderRadius:"7px", fontSize:"22px"}}
           onClick={()=> setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })}>
             {onOnchangeViewKeyBoardNumeric.data}
           </div>
           <div>{datosSerial.dataSerial2} L</div>
-          <div>    
+          <div>
             <button disabled = {parseFloat(listrosMaximoAlmacenado) < parseFloat("1")? true:false}
             style={{ marginTop: '50px' }}
             onClick={() => {
