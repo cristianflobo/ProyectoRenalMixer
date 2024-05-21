@@ -6,7 +6,7 @@ const cron = require('node-cron')
 const wifi = require('node-wifi')
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
-import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
+//import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 import { Twifi } from '../renderer/src/utils/interfaceMain'
 
 type TconexionSerial = {
@@ -85,7 +85,7 @@ app.whenReady().then(() => {
       if (index !== -1) {
         puertos.splice(index, 1); // Remove the port from the array
       }
-    
+
       bucarPuertoFlujometro.forEach((item: typeof SerialPort) => {
         if (item.serialNumber === element.puerto) {
           serialPort2 = new SerialPort({
@@ -95,7 +95,7 @@ app.whenReady().then(() => {
           });
         }
       });
-    
+
       try {
         await new Promise<void>((resolve, reject) => {
           serialPort2.open((error: Error | null) => {
@@ -124,11 +124,11 @@ app.whenReady().then(() => {
         }
       }
     }
-    
+
     puertos.forEach(async (element: TconexionSerial) => {
       await connectSerialPort(element);
     });
-   
+
   })
   ipcMain.on('desconectarSerial', async () => {
     serialPortArray.forEach(element => {
@@ -226,7 +226,7 @@ app.whenReady().then(() => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
     if (data.id === 1) {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
-          procesoActualPines([{nombre:'bomba 3', estado:1}])
+        //  procesoActualPines([{nombre:'bomba 3', estado:1}])
           console.log('tarea inicio bomba')
       }, {
         scheduled: true,
@@ -235,7 +235,7 @@ app.whenReady().then(() => {
 
     }else {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
-        procesoActualPines([{nombre:'bomba 3', estado:0}])
+        //procesoActualPines([{nombre:'bomba 3', estado:0}])
          console.log('tarea final bomba')
       }, {
       scheduled: true,
@@ -255,12 +255,12 @@ app.whenReady().then(() => {
   //---------------------------------------------------------------------LLamado proceso pines
   //#region  proceso pines
   ipcMain.on('procesoPinesSalida', async (_event, message) => {
-     procesoActualPines(message)
+    // procesoActualPines(message)
     console.log(message)
   })
-  ipcMain.on('leerPinesSalidaMain', async (event, _message) => {
-   leerProcesoActualPines()
-   event.reply('leerPinesSalidaRender', leerProcesoActualPines())
+  ipcMain.on('leerPinesSalidaMain', async (_event, _message) => {
+  // leerProcesoActualPines()
+   //event.reply('leerPinesSalidaRender', leerProcesoActualPines())
   })
   //#endregion
   createWindow()

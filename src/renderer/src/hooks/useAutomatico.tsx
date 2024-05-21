@@ -29,10 +29,29 @@ const useAutomatico = (datosSerial, closeWindows) => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     setconfigDatos(JSON.parse(configDatos!))
     const datosAutomatico = localStorage.getItem('datosAutomatico')
-    const buscar = JSON.parse(datosAutomatico!).find(item => item.title === 'CANTIDAD DE AGUA FINAL')
-    if (datosAutomatico && buscar) {
-      setrenderData(JSON.parse(datosAutomatico))
-    } else {
+
+    if(datosAutomatico){
+      const buscar = JSON.parse(datosAutomatico!).find(item => item.title === 'CANTIDAD DE AGUA FINAL')
+      if ( buscar) {
+        setrenderData(JSON.parse(datosAutomatico))
+      } else {
+        localStorage.setItem(
+          'datosAutomatico',
+          JSON.stringify([
+            {
+              title: 'CANTIDAD DE AGUA FINAL',
+              dato: 0
+            },
+            {
+              title: 'CANTIDAD DE AGUA PARA AGREGAR POLVO',
+              dato: 0
+            }
+          ])
+        )
+        const data = localStorage.getItem('datosAutomatico')
+        setrenderData(JSON.parse(data!))
+      }
+    }else {
       localStorage.setItem(
         'datosAutomatico',
         JSON.stringify([
@@ -73,7 +92,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
     if (ciclo === 0 && renderData[1].dato <= datosSerial.dataSerial1) setCiclo(1)
     if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
     if (ciclo === 6 && renderData[0].dato  < datosSerial.dataSerial2)
-     { 
+     {
       localStorage.setItem('litrosAlmacenados', "0")
       eviarProcesoPines([])
       setCiclo(10)
@@ -112,7 +131,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
             tiempoLavado.dato * 1000 * 60
           ))
         }
-      
+
       }
     }
 
@@ -219,7 +238,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
           cancelarTodosSetimeout.push(setTimeout(() => {
             eviarProcesoPines([])
           }, 5000))
-  
+
         break
 
       default:
@@ -280,7 +299,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
               Inicio
             </button>
             <button onClick={() => {
-              setCiclo(5) 
+              setCiclo(5)
               eviarProcesoPines([])
               clearTimeout(cancelarSetimeout)
                }}>Transferir a tanque distribución</button>
@@ -296,7 +315,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <div style={{ display: 'flex' }}>
             <button onClick={() => setCiclo(6)}>Tranferir completo</button>
-            <button onClick={() =>{ 
+            <button onClick={() =>{
               closeWindows({ manual: false, config: false, auto: false })
               localStorage.setItem('litrosAlmacenados', renderData[0].dato.toString())
               }}>
@@ -376,9 +395,9 @@ const useAutomatico = (datosSerial, closeWindows) => {
       procesoGpio: ['buzzer']
     },
   ]
-   
+
   const mensajesAlertas = [
-    { 
+    {
       id: 0,
       display: '',
       html: (

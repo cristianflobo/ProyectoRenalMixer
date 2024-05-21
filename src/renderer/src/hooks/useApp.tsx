@@ -27,7 +27,6 @@ const useApp = () => {
     view: false,
     data: ''
   })
-  const [numeroCicloLavados, setNumeroCicloLavados] = useState(0)
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
   const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
 
@@ -85,7 +84,7 @@ const useApp = () => {
                     setlavadoTerminado(true)
                   //  }
                   },
-                  tiempoDrenadoLavado.dato * 1000
+                  tiempoDrenadoLavado!.dato * 1000
                 ))
               },
               tiempoLavado.dato * 1000 * 60
@@ -147,7 +146,6 @@ const useApp = () => {
         eviarProcesoPines(procesos[activeProceso.proceso][ciclo].procesoGpio)
         if (activeProceso.proceso === 'lavado') {
           setlavadoTerminado(false)
-          setNumeroCicloLavados(1)
           const tiempoDrenado = configDatos.find(
             (item: TdataConfig) => item.title === 'TIEMPO DRENADO PRELIMINAR (SEG)'
           )
