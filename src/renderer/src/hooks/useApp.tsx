@@ -96,7 +96,7 @@ const useApp = () => {
     }
   }, [datosSerial])
 
-  useEffect(() => {
+  useEffect(() => { 
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     if(litrosAlmacenados) {
       setlistrosMaximoAlmacenado(litrosAlmacenados)
@@ -106,6 +106,23 @@ const useApp = () => {
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
+    if(configDatos){
+      const arrayDispensacion = []
+      const dispensacionDiariaIni  = configDatos.find(
+        (item: TdataConfig) => item.title === 'HORA INICIO DISTRIBUCIÓN'
+      )
+      arrayDispensacion.push(dispensacionDiariaIni)
+      const dispensacionDiariaFi  = configDatos.find(
+        (item: TdataConfig) => item.title === 'HORA FINAL DISTRIBUCIÓN'
+      )
+      arrayDispensacion.unshift(dispensacionDiariaFi)
+
+      if( dispensacionDiariaIni && dispensacionDiariaFi){
+       for (let i = 0; i < arrayDispensacion.length; i++) {
+        window.electron.ipcRenderer.send('configDistribucionDiaria', {id:i,datos:arrayDispensacion[i]})
+       }  
+      }
+    }
     window.electron.ipcRenderer.on('verificarConexionSensoresRender',(_event, data) => {
       setCantidadFlujometro(data)
       setActivarMensajesModal((prev)=> ({...prev, activar:true}))
