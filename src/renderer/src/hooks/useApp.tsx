@@ -107,11 +107,11 @@ const useApp = () => {
     window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
     if(configDatos){
-      const arrayDispensacion = []
+      
       const dispensacionDiariaIni  = configDatos.find(
         (item: TdataConfig) => item.title === 'HORA INICIO DISTRIBUCIÓN'
       )
-      arrayDispensacion.push(dispensacionDiariaIni)
+      const arrayDispensacion = [dispensacionDiariaIni] 
       const dispensacionDiariaFi  = configDatos.find(
         (item: TdataConfig) => item.title === 'HORA FINAL DISTRIBUCIÓN'
       )
