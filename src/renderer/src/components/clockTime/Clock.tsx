@@ -8,6 +8,6 @@ export function ClockTime(): JSX.Element {
     time =  new Date().toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Bogota' })
     setTime(time)
   }
-  prcInterval(100, () => UpdateTime())
+  prcInterval(1000, () => UpdateTime())
   return <strong className='clock-time'>{ctime}</strong>
 }
