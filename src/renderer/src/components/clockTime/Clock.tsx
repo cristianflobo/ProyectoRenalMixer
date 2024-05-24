@@ -1,13 +1,19 @@
-import { useState } from 'react';
-import { prcInterval } from 'precision-timeout-interval';
+import { useEffect, useRef } from 'react';
 
 export function ClockTime(): JSX.Element {
-  let time  = new Date().toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Bogota' })
-  const [ctime,setTime] = useState(time)
-  const UpdateTime=():void => {
-    time =  new Date().toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Bogota' })
-    setTime(time)
-  }
-  prcInterval(1000, () => UpdateTime())
-  return <strong className='clock-time'>{ctime}</strong>
+  const h1 = useRef<HTMLInputElement>(null);
+  const ti = () => {
+    return new Date().toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Bogota' })
+  };
+  useEffect(() => {
+    const cl = setInterval(() => {
+      if(h1.current){
+      h1.current.innerHTML = `${ti()}`;
+      }
+    }, 1000);
+    console.log("asd");
+    return () => clearInterval(cl);
+  }, []);
+
+  return <strong ref={h1} className='clock-time'>{ti()}</strong>
 }
