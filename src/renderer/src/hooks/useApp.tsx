@@ -216,6 +216,7 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
+            <div>{datosSerial.dataSerial1} L</div>
             <div className="loader"></div>
             <button
               style={{ marginTop: '50px' }}
