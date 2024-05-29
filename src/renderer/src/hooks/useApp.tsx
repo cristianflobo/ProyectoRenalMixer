@@ -336,7 +336,7 @@ const useApp = () => {
               style={{ marginTop: '50px' }}
               onClick={() => cambiarPosicionFujometros()}
             >
-              cambiar
+              reconectar
             </button>
             <button
               style={{ marginTop: '50px' }}
@@ -355,10 +355,7 @@ const useApp = () => {
 
   const cambiarPosicionFujometros = ():void => {
     window.electron.ipcRenderer.send('desconectarSerial')
-    serialNumberFlujometros[0], serialNumberFlujometros[1] =
-    serialNumberFlujometros[1], serialNumberFlujometros[0]
-
-        window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
+    window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
 
   }
 

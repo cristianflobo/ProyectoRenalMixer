@@ -81,7 +81,6 @@ app.whenReady().then(() => {
     async function connectSerialPort(element: TconexionSerial):Promise<void> {
       let serialPort2: typeof SerialPort;
       const bucarPuertoFlujometro = await SerialPort.list();
-      console.log(bucarPuertoFlujometro)
       const index = puertos.indexOf(element.puerto);
       if (index !== -1) {
         puertos.splice(index, 1); // Remove the port from the array
