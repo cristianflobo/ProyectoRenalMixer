@@ -4,7 +4,7 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 import { prcTimeout } from 'precision-timeout-interval';
 
-const configDatos = JSON.parse(localStorage.getItem('configDatos')!)
+let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 //const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351902161', nombre:"dataSerial1"}, {puerto:'24238313136351F04182', nombre:"dataSerial2"}]
 const serialNumberFlujometros:TconexionSerial[] = [{puerto:'242383138353515131F1', nombre:"dataSerial1"}, {puerto:'2423831363535110A251', nombre:"dataSerial2"}]
 
@@ -31,6 +31,7 @@ const useApp = () => {
   })
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
   const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
+  configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 
   useEffect(() => {
     let cantidadAguaLvado: Tdrenado | undefined
