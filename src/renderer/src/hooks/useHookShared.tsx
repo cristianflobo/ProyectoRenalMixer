@@ -46,20 +46,12 @@ const useHookShared = (): TuseHookShared => {
       estado: 0
     },
     {
-      nombre: 'bomba 4',
-      estado: 0
-    },
-    {
-      nombre: 'bomba 5',
-      estado: 0
-    },
-      {
       nombre: 'bomba 3',
       estado: 0
     }
   ]
   const eviarProcesoPines = (procesoIO: string[]): void => {
-    const envioGpioFinal = datosGpio.slice(0, -2).map((item: TioPeripheral) => {
+    const envioGpioFinal = datosGpio.slice(0, -1).map((item: TioPeripheral) => {
       const buscar = procesoIO.find((item2) => item2 === item.nombre)
       if (buscar === undefined) {
         item.estado = 0
@@ -85,6 +77,5 @@ const useHookShared = (): TuseHookShared => {
   }
   return { eviarProcesoPinesConBombaDistribuicion, eviarProcesoPines, datosGpio }
 }
-
 
 export default useHookShared
