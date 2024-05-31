@@ -31,6 +31,7 @@ const useApp = () => {
   })
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
   const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
+  configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 
   useEffect(() => {
     let cantidadAguaLvado: Tdrenado | undefined
