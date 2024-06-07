@@ -34,7 +34,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-    fullscreen:false,
+    fullscreen:true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -225,7 +225,7 @@ app.whenReady().then(() => {
   //const tareasProgramadas = () => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
     if (data.id === 1) {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
           procesoActualPines([{nombre:'bomba 3', estado:1}])
           console.log('tarea inicio bomba')
       }, {
@@ -233,7 +233,7 @@ app.whenReady().then(() => {
         timezone: "America/Bogota"
       });
     }else {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * *`, () => {
+      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
         procesoActualPines([{nombre:'bomba 3', estado:0}])
          console.log('tarea final bomba')
       }, {
