@@ -5,8 +5,8 @@ import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodos
 import { prcTimeout } from 'precision-timeout-interval';
 
 let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-//const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351902161', nombre:"dataSerial1"}, {puerto:'24238313136351F04182', nombre:"dataSerial2"}]
-const serialNumberFlujometros:TconexionSerial[] = [{puerto:'242383138353515131F1', nombre:"dataSerial1"}, {puerto:'2423831363535110A251', nombre:"dataSerial2"}]
+const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351902161', nombre:"dataSerial1"}, {puerto:'24238313136351F04182', nombre:"dataSerial2"}]
+//const serialNumberFlujometros:TconexionSerial[] = [{puerto:'242383138353515131F1', nombre:"dataSerial1"}, {puerto:'2423831363535110A251', nombre:"dataSerial2"}]
 
 //const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351706120', nombre:"dataSerial1"}, {puerto:'55832343538351F02131' , nombre:"dataSerial2"}]
 let contadorEntradaCicloLavado = 0
