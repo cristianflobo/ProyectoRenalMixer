@@ -70,7 +70,7 @@ const useApp = () => {
 
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
-            eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
+            eviarProcesoPines(['bomba 1', 'valvula 3'])
             cancelarSetimeout.push(setTimeout(
               () => {
                 eviarProcesoPines(['valvula 5', 'bomba 4'])
@@ -82,7 +82,7 @@ const useApp = () => {
                   //     eviarProcesoPines(['valvula 1'])
                   //     setNumeroCicloLavados(0)
                   //  }else {
-                    contadorEntradaCicloLavado = 0
+                    contadorEntradaCicloLavado = 1
                     eviarProcesoPines([])
                     setlavadoTerminado(true)
                   //  }
@@ -223,6 +223,7 @@ const useApp = () => {
               style={{ marginTop: '50px' }}
               onClick={() => {
                 resetProcesos()
+                contadorEntradaCicloLavado = 0
               }}
             >
               Parar
