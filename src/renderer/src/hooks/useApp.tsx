@@ -218,7 +218,7 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
-            <div>{datosSerial.dataSerial1 > litrosFinalLavado.toString()?litrosFinalLavado:datosSerial.dataSerial1} L</div>
+            <div>{datosSerial.dataSerial1 > litrosFinalLavado.toString()?datosSerial.dataSerial1:litrosFinalLavado} L</div>
             <div className="loader"></div>
             <button
               style={{ marginTop: '50px' }}
