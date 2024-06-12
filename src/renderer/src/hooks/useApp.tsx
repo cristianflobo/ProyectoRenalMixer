@@ -19,6 +19,7 @@ const useApp = () => {
   const [activarMensajesModal, setActivarMensajesModal] = useState({activar:false,ventana:"mesnsajeSensores"})
   const [datosSerial, setDatosSerial] = useState({ dataSerial1: '0', dataSerial2: '0' })
   const [ciclo, setCiclo] = useState(-1)
+  const [litrosFinalLvado, setlitrosFinalLvado] = useState(0)
   const [selectScreen, setSelectScreen] = useState<TselectScreen>({
     manual: false,
     config: false,
@@ -67,7 +68,7 @@ const useApp = () => {
       if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
 
         if (cantidadAguaLvado.dato <= parseFloat(datosSerial.dataSerial1) && contadorEntradaCicloLavado === 0) {
-
+          setlitrosFinalLvado(cantidadAguaLvado.dato)
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
             eviarProcesoPines(['bomba 1', 'valvula 3'])
@@ -217,7 +218,7 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
-            <div>{datosSerial.dataSerial1} L</div>
+            <div>{datosSerial.dataSerial1 > litrosFinalLvado.toString()?litrosFinalLvado:datosSerial.dataSerial1} L</div>
             <div className="loader"></div>
             <button
               style={{ marginTop: '50px' }}
