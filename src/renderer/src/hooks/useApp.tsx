@@ -237,7 +237,7 @@ const useApp = () => {
           </button>
         </div>
       ),
-      procesoGpio: ['valvula 2', 'valvula 3', 'bomba 1']
+      procesoGpio: ['valvula 2', 'bomba 1']
     }],
     transferir:
    [ { //BOTON TRANSFERIR
