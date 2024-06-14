@@ -19,9 +19,11 @@ const useConfigMixer = () => {
   }
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
-    if(configDatos){
-      const buscar = JSON.parse(configDatos!).find(item => item.title === "TIEMPO DE MEZCLADO (MIN)")
-      if ( buscar) {
+    if (configDatos) {
+      const buscar = JSON.parse(configDatos!).find(
+        (item) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
+      )
+      if (buscar) {
         setDatosConfig(JSON.parse(configDatos))
       } else {
         localStorage.setItem(
@@ -45,7 +47,12 @@ const useConfigMixer = () => {
               time: true
             },
             {
-              title: 'FACTOR DE CALIBRACION',
+              title: 'FACTOR DE CALIBRACION S1',
+              dato: 0,
+              time: false
+            },
+            {
+              title: 'FACTOR DE CALIBRACION S2',
               dato: 0,
               time: false
             },
@@ -63,8 +70,7 @@ const useConfigMixer = () => {
               title: 'TIEMPO DRENADO PRELIMINAR (SEG)',
               dato: 0,
               time: false
-            }
-            ,
+            },
             {
               title: 'TIEMPO DRENADO EN LAVADO (SEG)',
               dato: 0,
@@ -97,7 +103,12 @@ const useConfigMixer = () => {
             time: true
           },
           {
-            title: 'FACTOR DE CALIBRACION',
+            title: 'FACTOR DE CALIBRACION S1',
+            dato: 0,
+            time: false
+          },
+          {
+            title: 'FACTOR DE CALIBRACION S2',
             dato: 0,
             time: false
           },
@@ -115,8 +126,7 @@ const useConfigMixer = () => {
             title: 'TIEMPO DRENADO PRELIMINAR (SEG)',
             dato: 0,
             time: false
-          }
-          ,
+          },
           {
             title: 'TIEMPO DRENADO EN LAVADO (SEG)',
             dato: 0,
@@ -127,7 +137,7 @@ const useConfigMixer = () => {
       const data = localStorage.getItem('configDatos')
       setDatosConfig(JSON.parse(data!))
     }
-    return ():void => {}
+    return (): void => {}
   }, [])
 
   useEffect(() => {
@@ -135,8 +145,6 @@ const useConfigMixer = () => {
     if (onOnchangeViewKeyBoardNumeric.data !== '' && !onOnchangeViewKeyBoardNumeric.view) {
       configDatos = JSON.parse(localStorage.getItem('configDatos')!)
       const dataKeyTermporal = configDatos?.map((item: TdataConfig, i: number) => {
-        if(configDatos[posicionDataConfig].title === 'FACTOR DE CALIBRACION')
-          {window.electron.ipcRenderer.send('enviarFactorK', onOnchangeViewKeyBoardNumeric.data)}
         if (i === posicionDataConfig) return { ...item, dato: onOnchangeViewKeyBoardNumeric.data }
         return item
       })
@@ -146,14 +154,26 @@ const useConfigMixer = () => {
     } else {
       setDatosConfig(configDatos)
     }
-    return ():void => {}
+
+    if (configDatos[posicionDataConfig].title.includes('FACTOR DE CALIBRACION')) {
+      window.electron.ipcRenderer.send('enviarFactorK', {
+        data: onOnchangeViewKeyBoardNumeric.data,
+        serial: configDatos[posicionDataConfig].title.includes('S1') ? 0 : 1
+      })
+    }
+
+    return (): void => {}
   }, [onOnchangeViewKeyBoardNumeric.view])
 
-  const activeKeyBoardNumeric = (posicion: number) => {
+  const activeKeyBoardNumeric = (posicion: number):void => {
     setposicionDataConfig(posicion)
     setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })
   }
-  const selectChange = (event: ChangeEvent<HTMLSelectElement>, id: number, fieldName: string):void => {
+  const selectChange = (
+    event: ChangeEvent<HTMLSelectElement>,
+    id: number,
+    fieldName: string
+  ): void => {
     console.log(id)
     const { value } = event.target
     const changeValue = datosConfig?.map((item, i) => {
@@ -162,12 +182,9 @@ const useConfigMixer = () => {
       }
       return item
     })
-    localStorage.setItem(
-      'configDatos',
-      JSON.stringify(changeValue)
-    )
+    localStorage.setItem('configDatos', JSON.stringify(changeValue))
     setDatosConfig(changeValue)
-    window.electron.ipcRenderer.send('configDistribucionDiaria', {id,datos:changeValue![id]})
+    window.electron.ipcRenderer.send('configDistribucionDiaria', { id, datos: changeValue![id] })
   }
 
   const menuWifiConfig = (): void => {
