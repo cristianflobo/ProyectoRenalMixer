@@ -8,7 +8,6 @@ import { reiniciarFlujometros } from './utils/metodosCompartidos/metodosComparti
 function App(): JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
-    setActivarMensajesModal,
     setmensajeGeneral,
     setActiveProceso,
     setSelectScreen,
@@ -51,7 +50,8 @@ function App(): JSX.Element {
 
         </div>
         <div style={{marginBottom:"50px"}}>
-        <button onClick={() => { setActivarMensajesModal((prev)=> ({...prev, activar:true}))
+        <button onClick={() => {  
+          window.electron.ipcRenderer.send('verificarConexionSensoresMain')
           setActiveProceso({ activar: true, proceso: '' })
           }}>
             PROBAR SENSORES

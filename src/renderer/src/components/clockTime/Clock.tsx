@@ -11,7 +11,6 @@ export function ClockTime(): JSX.Element {
       h1.current.innerHTML = `${ti()}`;
       }
     }, 1000);
-    console.log("asd");
     return () => clearInterval(cl);
   }, []);
 

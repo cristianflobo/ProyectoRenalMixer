@@ -2,13 +2,12 @@ import { MenssageGeneralContext } from '@renderer/utils/MessageGeneralContext'
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
-import { prcTimeout } from 'precision-timeout-interval';
+import infoSerialSensores from '@renderer/utils/infoSerialSensores'
+
 
 let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
-//const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351902161', nombre:"dataSerial1"}, {puerto:'24238313136351F04182', nombre:"dataSerial2"}]
-const serialNumberFlujometros:TconexionSerial[] = [{puerto:'242383138353515131F1', nombre:"dataSerial1"}, {puerto:'2423831363535110A251', nombre:"dataSerial2"}]
-
-//const serialNumberFlujometros:TconexionSerial[] = [{puerto:'24238313136351706120', nombre:"dataSerial1"}, {puerto:'55832343538351F02131' , nombre:"dataSerial2"}]
+let litrosFinalLavado = 0
+const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["cali"]
 let contadorEntradaCicloLavado = 0
 let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
@@ -33,72 +32,6 @@ const useApp = () => {
   const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
   configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 
-  useEffect(() => {
-    let cantidadAguaLvado: Tdrenado | undefined
-    let tiempoLavado: Tdrenado | undefined
-    let tiempoDrenadoLavado: Tdrenado | undefined
-
-    if (activeProceso.proceso === 'transferirLitros' ) {
-      if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
-        if(contadorEntradaTransferirLitros === 0){
-          const resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
-          localStorage.setItem('litrosAlmacenados', resta.toString())
-          setlistrosMaximoAlmacenado(resta.toString())
-          contadorEntradaTransferirLitros = 1
-          reiniciarFlujometros()
-        }
-
-        eviarProcesoPines([])
-
-      }
-    }
-    if(configDatos){
-      cantidadAguaLvado  = configDatos.find(
-        (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
-      )
-      tiempoLavado = configDatos.find(
-        (item: TdataConfig) => item.title === 'TIEMPO LAVADO (MIN)'
-      )
-      tiempoDrenadoLavado = configDatos.find(
-        (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
-      )
-    }
-    if (activeProceso.proceso === 'lavado') {
-      if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
-
-        if (cantidadAguaLvado.dato <= parseFloat(datosSerial.dataSerial1) && contadorEntradaCicloLavado === 0) {
-
-            contadorEntradaCicloLavado = 1
-            reiniciarFlujometros()
-            eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
-            cancelarSetimeout.push(setTimeout(
-              () => {
-                eviarProcesoPines(['valvula 5', 'bomba 4'])
-                cancelarSetimeout.push(setTimeout(
-                  () => {
-                  //   if(numeroCicloLavados === 1) {
-                  //     contadorEntradaCicloLavado = 0
-                  //     reiniciarFlujometros()
-                  //     eviarProcesoPines(['valvula 1'])
-                  //     setNumeroCicloLavados(0)
-                  //  }else {
-                    contadorEntradaCicloLavado = 0
-                    eviarProcesoPines([])
-                    setlavadoTerminado(true)
-                  //  }
-                  },
-                  tiempoDrenadoLavado!.dato * 1000
-                ))
-              },
-              tiempoLavado.dato * 1000 * 60
-            ))
-          }
-        }
-    }
-    return ():void => {
-    }
-  }, [datosSerial])
-
   useEffect(() => { 
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     if(litrosAlmacenados) {
@@ -107,7 +40,6 @@ const useApp = () => {
       setlistrosMaximoAlmacenado("0")
     }
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
-    window.electron.ipcRenderer.send('reiniciarFlujometros')
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
     if(configDatos){
       
@@ -144,10 +76,65 @@ const useApp = () => {
   }, [])
 
   useEffect(() => {
+    let cantidadAguaLvado: Tdrenado | undefined
+    let tiempoLavado: Tdrenado | undefined
+    let tiempoDrenadoLavado: Tdrenado | undefined
+
+    if (activeProceso.proceso === 'transferirLitros' ) {
+      if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
+        if(contadorEntradaTransferirLitros === 0){
+          const resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
+          localStorage.setItem('litrosAlmacenados', resta.toString())
+          setlistrosMaximoAlmacenado(resta.toString())
+          contadorEntradaTransferirLitros = 1
+          reiniciarFlujometros()
+        }
+        eviarProcesoPines([])
+      }
+    }
+    if(configDatos){
+      cantidadAguaLvado  = configDatos.find(
+        (item: TdataConfig) => item.title === 'CANTIDAD DE AGUA LAVADO (L)'
+      )
+      litrosFinalLavado = cantidadAguaLvado!.dato
+      tiempoLavado = configDatos.find(
+        (item: TdataConfig) => item.title === 'TIEMPO LAVADO (MIN)'
+      )
+      tiempoDrenadoLavado = configDatos.find(
+        (item: TdataConfig) => item.title === 'TIEMPO DRENADO EN LAVADO (SEG)'
+      )
+    }
+    if (activeProceso.proceso === 'lavado') {
+      if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
+
+        if (cantidadAguaLvado.dato <= parseFloat(datosSerial.dataSerial1) && contadorEntradaCicloLavado === 0) {
+            contadorEntradaCicloLavado = 1
+            reiniciarFlujometros()
+            eviarProcesoPines(['bomba 1', 'valvula 3'])
+            cancelarSetimeout.push(setTimeout(
+              () => {
+                eviarProcesoPines(['valvula 5', 'bomba 4'])
+                cancelarSetimeout.push(setTimeout(
+                  () => {
+                    contadorEntradaCicloLavado = 1
+                    eviarProcesoPines([])
+                    setlavadoTerminado(true)
+                  },
+                  tiempoDrenadoLavado!.dato * 1000
+                ))
+              },
+              tiempoLavado.dato * 1000 * 60
+            ))
+          }
+        }
+    }
+    return ():void => {
+    }
+  }, [datosSerial])
+
+  useEffect(() => {
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-   // if(litrosAlmacenados) {
       setlistrosMaximoAlmacenado(litrosAlmacenados!)
-    //}
     return ():void => {    }
   }, [activeProceso])
 
@@ -157,7 +144,6 @@ const useApp = () => {
     }
     return ():void => {    }
   }, [onOnchangeViewKeyBoardNumeric])
-
 
   useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
@@ -217,12 +203,13 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
-            <div>{datosSerial.dataSerial1} L</div>
+            <div>{datosSerial.dataSerial1 < litrosFinalLavado.toString()?datosSerial.dataSerial1:litrosFinalLavado} L</div>
             <div className="loader"></div>
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
                 resetProcesos()
+                contadorEntradaCicloLavado = 0
               }}
             >
               Parar
@@ -315,30 +302,35 @@ const useApp = () => {
         id: 0,
         html: (
           <div className="conte-procesos">
-            <strong>Conexion flujometros, {cantidadFlujometro} sensor</strong>
-            <div>
-            <strong style={{marginRight:"20px"}}>s1 {datosSerial.dataSerial1} L </strong>
-            <strong>s2 {datosSerial.dataSerial2} L </strong>
+            <strong style={{marginBottom:"20px"}}>Conexion flujometros, {cantidadFlujometro} sensor</strong>
+            <div style={{display:'flex'}}>
+              <div 
+              style={{
+                marginRight:"20px", 
+                display:'flex', 
+                flexDirection:'column',
+                backgroundColor:datosSerial.dataSerial1 === "0"?"red":"green", 
+                padding:"5px", 
+                borderRadius:"7px"}}>
+                <strong >FACTOR K S1 </strong>
+                <strong> {datosSerial.dataSerial1}</strong>
+              </div>
+              <div style={{
+                display:'flex', 
+                flexDirection:'column',
+                backgroundColor:datosSerial.dataSerial2 === "0"?"red":"green", 
+                padding:"5px", 
+                borderRadius:"7px"}}>
+                <strong >FACTOR K S2 </strong>
+                <strong> {datosSerial.dataSerial2}</strong>
+              </div>
             </div>
             <div  style={{display:"flex"}}>
             <button
               style={{ marginTop: '50px' }}
-              onClick={() => {
-                eviarProcesoPines(['valvula 1'])
-                // setTimeout(() => {
-                //   resetProcesos()
-                // }, 3000);
-                prcTimeout(3000, () => resetProcesos())
-                setActiveProceso({ activar: false, proceso: '' })
-              }}
-            >
-              Probar S1
-            </button>
-            <button
-              style={{ marginTop: '50px' }}
               onClick={() => cambiarPosicionFujometros()}
             >
-              reconectar
+              Reconectar
             </button>
             <button
               style={{ marginTop: '50px' }}
