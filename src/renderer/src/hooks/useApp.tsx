@@ -4,10 +4,9 @@ import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 import infoSerialSensores from '@renderer/utils/infoSerialSensores'
 
-
 let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
 let litrosFinalLavado = 0
-const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["cali"]
+const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["reionegro"]
 let contadorEntradaCicloLavado = 0
 let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
