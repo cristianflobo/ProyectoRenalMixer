@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
 import infoSerialSensores from '@renderer/utils/infoSerialSensores'
+import { getConfig } from '@renderer/utils/setConfig'
 
-let configDatos = JSON.parse(localStorage.getItem('configDatos')!)
+let configDatos:any = []
 let litrosFinalLavado = 0
 const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["reionegro"]
 let contadorEntradaCicloLavado = 0
@@ -29,7 +30,7 @@ const useApp = () => {
   })
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
   const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
-  configDatos = JSON.parse(localStorage.getItem('configDatos')!)
+  configDatos = getConfig();
 
   useEffect(() => { 
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
@@ -40,8 +41,7 @@ const useApp = () => {
     }
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
-    if(configDatos){
-      
+    if(configDatos){   
       const dispensacionDiariaIni  = configDatos.find(
         (item: TdataConfig) => item.title === 'HORA INICIO DISTRIBUCIÓN'
       )
