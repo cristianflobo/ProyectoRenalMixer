@@ -139,7 +139,7 @@ app.whenReady().then(() => {
       console.log(error)
     }
   })
-  ipcMain.on('enviarFactorK', async (_event, data) => { 
+  ipcMain.on('enviarDataSwichArduino', async (_event, data) => { 
     if(data.data !== ''){
       console.log("---------", data)
       try {

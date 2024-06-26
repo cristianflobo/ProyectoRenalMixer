@@ -150,6 +150,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
         break
       case 1:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        window.electron.ipcRenderer.send('enviarDataSwichArduino', {
+          data: "d",
+          serial: 0
+        })
         cancelarSetimeout = setTimeout(() => {
           eviarProcesoPines(['bomba 1', 'valvula 2'])
         }, 2000)
@@ -158,6 +162,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 2:
         clearTimeout(cancelarSetimeout)
+        window.electron.ipcRenderer.send('enviarDataSwichArduino', {
+          data: "a",
+          serial: 0
+        })
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         break
 
