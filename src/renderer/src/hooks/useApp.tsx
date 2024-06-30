@@ -99,7 +99,7 @@ const useApp = () => {
         if (cantidadAguaLvado.dato <= parseFloat(datosSerial.dataSerial1) && contadorEntradaCicloLavado === 0) {
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
-            eviarProcesoPines(['bomba 1', 'valvula 3'])
+            eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
             cancelarSetimeout.push(setTimeout(
               () => {
                 eviarProcesoPines(['valvula 5', 'bomba 4'])
@@ -182,7 +182,9 @@ const useApp = () => {
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
             <div>{datosSerial.dataSerial1 < litrosFinalLavado.toString()?datosSerial.dataSerial1:litrosFinalLavado} L</div>
-            <div className="loader"></div>
+            {!lavadoTerminado?
+              <div className="loader"></div>:null
+            }
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
