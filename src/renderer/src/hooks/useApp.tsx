@@ -250,7 +250,11 @@ const useApp = () => {
           onClick={()=> setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })}>
             {onOnchangeViewKeyBoardNumeric.data}
           </div>
-          <div>{datosSerial.dataSerial2} L</div>
+          <div>
+            {datosSerial.dataSerial2 >= onOnchangeViewKeyBoardNumeric.data?
+              onOnchangeViewKeyBoardNumeric.data:datosSerial.dataSerial2
+            } L
+          </div>
           <div>
             <button 
             style={{ marginTop: '50px' }}
