@@ -29,6 +29,7 @@ const useApp = () => {
     data: ''
   })
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
+  const [transferenciaLitroFinalizada, setTransferenciaLitroFinalizada] = useState(false)
   configDatos = getConfig();
 
   useEffect(() => { 
@@ -76,6 +77,7 @@ const useApp = () => {
       if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
         if(contadorEntradaTransferirLitros === 0){
           contadorEntradaTransferirLitros = 1
+          setTransferenciaLitroFinalizada(true)
           reiniciarFlujometros()
         }
         eviarProcesoPines([])
@@ -251,7 +253,7 @@ const useApp = () => {
             {onOnchangeViewKeyBoardNumeric.data}
           </div>
           <div>
-            {datosSerial.dataSerial2 >= onOnchangeViewKeyBoardNumeric.data?
+            {transferenciaLitroFinalizada?
               onOnchangeViewKeyBoardNumeric.data:datosSerial.dataSerial2
             } L
           </div>
@@ -268,6 +270,7 @@ const useApp = () => {
           <button
             style={{ marginTop: '50px' }}
             onClick={() => {
+              setTransferenciaLitroFinalizada(false)
               resetProcesos()
             }}
           >
