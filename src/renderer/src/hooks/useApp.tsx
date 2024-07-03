@@ -7,7 +7,7 @@ import { getConfig } from '@renderer/utils/setConfig'
 
 let configDatos:any = []
 let litrosFinalLavado = 0
-const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["chia"]
+const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["rionegro"]
 let contadorEntradaCicloLavado = 0
 let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []

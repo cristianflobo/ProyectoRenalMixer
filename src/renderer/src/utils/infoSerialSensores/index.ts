@@ -4,7 +4,7 @@ const infoSerialSensores = {
     { puerto: '24238313136351F04182', nombre: 'dataSerial2' }
   ],
 
-  reionegro: [
+  rionegro: [
     { puerto: '242383138353515131F1', nombre: 'dataSerial1' },
     { puerto: '2423831363535110A251', nombre: 'dataSerial2' }
   ],
