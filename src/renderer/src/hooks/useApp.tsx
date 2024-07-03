@@ -183,7 +183,7 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
-            <div>{datosSerial.dataSerial1 < litrosFinalLavado.toString()?datosSerial.dataSerial1:litrosFinalLavado} L</div>
+            <div>{parseFloat(datosSerial.dataSerial1) < litrosFinalLavado?datosSerial.dataSerial1:litrosFinalLavado} L</div>
             {!lavadoTerminado?
               <div className="loader"></div>:null
             }
