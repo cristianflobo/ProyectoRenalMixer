@@ -247,7 +247,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
           <div style={{ display: 'flex' }}>
             <button onClick={() => {
               closeWindows({ manual: false, config: false, auto: false })
-              localStorage.setItem('litrosAlmacenados', renderData[0].dato.toString())
               eviarProcesoPines([])
                clearTimeout(cancelarSetimeout)
               }}>
@@ -272,7 +271,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
             <button onClick={() => setCiclo(6)}>Tranferir completo</button>
             <button onClick={() =>{
               closeWindows({ manual: false, config: false, auto: false })
-              localStorage.setItem('litrosAlmacenados', renderData[0].dato.toString())
               }}>
               Inicio
             </button>

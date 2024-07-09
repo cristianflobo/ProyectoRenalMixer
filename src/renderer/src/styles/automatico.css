@@ -6,105 +6,106 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color:white;
+  background-color: white;
 }
 .calc-auto {
-    height: 142px;
+  height: 142px;
 }
-.boton-abajo{
-    position: absolute;
-    bottom: 17px;
-    z-index: 1;
+.boton-abajo {
+  position: absolute;
+  bottom: 17px;
+  z-index: 1;
 }
-.cont-proceso-auto{
-    position: absolute;
-    height: 60%;
-    width: 60%;
-    background-color: #9aabf3;
-    border-radius: 7px;
-    top: 59%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.cont-proceso-auto {
+  position: absolute;
+  height: 60%;
+  width: 60%;
+  background-color: #9aabf3;
+  border-radius: 7px;
+  top: 59%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .conte-procesos {
-    height: 90%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
+  height: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
 }
 .conte-procesos > strong {
-    font-size: 25px;
+  font-size: 25px;
 }
 /* HTML: <div class="loader"></div> */
 .loader {
-    width: 50px;
-    --b: 8px; 
-    aspect-ratio: 1;
-    border-radius: 50%;
-    padding: 1px;
-    background: conic-gradient(#0000 10%,#f03355) content-box;
-    -webkit-mask:
-      repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
-      radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
-    -webkit-mask-composite: destination-in;
-            mask-composite: intersect;
-    animation:l4 1s infinite steps(10);
+  width: 50px;
+  --b: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(#0000 10%, #f03355) content-box;
+  -webkit-mask: repeating-conic-gradient(#0000 0deg, #000 1deg 20deg, #0000 21deg 36deg),
+    radial-gradient(farthest-side, #0000 calc(100% - var(--b) - 1px), #000 calc(100% - var(--b)));
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+  animation: l4 1s infinite steps(10);
+}
+@keyframes l4 {
+  to {
+    transform: rotate(1turn);
   }
-  @keyframes l4 {to{transform: rotate(1turn)}}
+}
 
-  .padre-auto{
-    display: flex;
-    width: 91%;
-    height: 80%;
-  }
-  .padre-auto > div{
-    display: flex;
-   justify-content: center;
-  }
-  .padre-auto > div:first-child{
-    width: 18%;
-    height: 100%;
-  }
-   .padre-auto > div:nth-child(2){
-    width: 14%;
-    height: 100%;
-  }
-  .padre-auto > div:nth-child(3){
-    
-    width: 35%;
-    height: 94%;
-  }
-  .padre-auto > div:nth-child(4){
-
-    width: 33%;
-    height: 100%;
-  }
-  .litros-tanque > div {
-    position: relative;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    height: 280px;
-    width: 100%;
-    margin-top: 10px;
-    border: 5px solid silver;
-  }
-  .litros-tanque > div > span{
-    position: absolute;
-    top: 0;
-  }
-  .datos-cajas {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start !important;
-  }
-  .datos-cajas > div:first-child > select {
-    height: 30px;
-    font-size: 25px;
-    background-color: white;
-    color: #000;
-    margin-top: 7px;
-  }
+.padre-auto {
+  display: flex;
+  width: 91%;
+  height: 80%;
+}
+.padre-auto > div {
+  display: flex;
+  justify-content: center;
+}
+.padre-auto > div:first-child {
+  width: 18%;
+  height: 100%;
+}
+.padre-auto > div:nth-child(2) {
+  width: 14%;
+  height: 100%;
+}
+.padre-auto > div:nth-child(3) {
+  width: 35%;
+  height: 94%;
+}
+.padre-auto > div:nth-child(4) {
+  width: 33%;
+  height: 100%;
+}
+.litros-tanque > div {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  height: 280px;
+  width: 100%;
+  margin-top: 10px;
+  border: 5px solid silver;
+}
+.litros-tanque > div > span {
+  position: absolute;
+  top: 0;
+}
+.datos-cajas {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start !important;
+}
+.datos-cajas > div:first-child > select {
+  height: 30px;
+  font-size: 25px;
+  background-color: white;
+  color: #000;
+  margin-top: 7px;
+}
