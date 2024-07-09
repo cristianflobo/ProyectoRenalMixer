@@ -67,3 +67,8 @@ type TconexionSerial = {
   puerto:string,
   nombre:string
 }
+type Tcajas = {
+  title: string,
+  aguaFinal: number,
+  aguaPolvo: number
+}

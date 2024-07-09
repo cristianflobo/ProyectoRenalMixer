@@ -1,15 +1,13 @@
-import { KeyBoardNumeric } from '@renderer/components/keyBoardNumeric/KeyBoardNumeric'
 import useAutomatico from '@renderer/hooks/useAutomatico'
 import '../../styles/automatico.css'
 import { NavBa, VisuaizarGpioAccion } from '@renderer/components'
 
 export function Automatico({ datosSerial, closeWindows }): JSX.Element {
   const {
-    setOnOnchangeViewKeyBoardNumeric,
-    activeKeyBoardNumeric,
     setActiveProceso,
+    seleccionCaja,
     setCiclo,
-    onOnchangeViewKeyBoardNumeric,
+    seleccionCajaState,
     procesoAutomatico,
     mensajesAlertas,
     mensajeAlerta,
@@ -52,19 +50,25 @@ export function Automatico({ datosSerial, closeWindows }): JSX.Element {
             <VisuaizarGpioAccion gpioActivos={procesoAutomatico[ciclo].procesoGpio} />
           ) : null}
         </div>
-        <div>
+        <div className='datos-cajas'>
           <div>
-            {renderData.map((item, i: number) => (
-              <div className="div-map" key={i} onClick={() => activeKeyBoardNumeric(i)}>
-                <span style={{ fontSize: '17px' }}>{item.title}</span>
-                <span>{item.dato}</span>
-              </div>
-            ))}
+            <select disabled={activeProceso} onChange={(e)=>seleccionCaja(e)}>
+              {renderData.map((item, i: number) => (
+                <option key={i}>{item.title}</option>
+              ))}
+            </select>
           </div>
-          <div className="calc-auto">
-            {onOnchangeViewKeyBoardNumeric.view ? (
-              <KeyBoardNumeric setKey={setOnOnchangeViewKeyBoardNumeric} />
-            ) : null}
+          <div>
+          {/* seleccionCajaState */}
+              <div className="div-map">
+                <span style={{ fontSize: '17px' }}>CANTIDAD DE AGUA FINAL {seleccionCajaState?.aguaFinal}L</span>
+                {/* <span>{seleccionCajaState.}</span> */}
+              </div>
+              <div className="div-map">
+                <span style={{ fontSize: '17px' }}>CANTIDAD DE AGUA PARA AGREGAR POLVO {seleccionCajaState?.aguaPolvo}L</span>
+                {/* <span>{seleccionCajaState.}</span> */}
+              </div>
+              
           </div>
         </div>
       </div>

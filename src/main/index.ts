@@ -6,7 +6,7 @@ const cron = require('node-cron')
 const wifi = require('node-wifi')
 import icon from '../../resources/icon.png?asset'
 //const { exec } = require('child_process');
-import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
+//import { procesoActualPines, leerProcesoActualPines } from '../renderer/src/utils/metodosGpio/metodosGpio';
 import { Twifi } from './Interfaces/interfaceMain'
 
 type TconexionSerial = {
@@ -34,7 +34,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-    fullscreen:true,
+    fullscreen:false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {icon}),
     webPreferences: {
@@ -202,7 +202,7 @@ app.whenReady().then(() => {
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
     if (data.id === 1) {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
-        procesoActualPines([{nombre:'bomba 3', estado:1}])
+        //procesoActualPines([{nombre:'bomba 3', estado:1}])
         console.log('tarea inicio bomba')
       }, {
         scheduled: true,
@@ -210,7 +210,7 @@ app.whenReady().then(() => {
       });
     }else {
       cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
-        procesoActualPines([{nombre:'bomba 3', estado:0}])
+       // procesoActualPines([{nombre:'bomba 3', estado:0}])
         console.log('tarea final bomba')
       }, {
       scheduled: true,
@@ -222,12 +222,12 @@ app.whenReady().then(() => {
 
   //#region  proceso pines
   ipcMain.on('procesoPinesSalida', async (_event, message) => {
-    procesoActualPines(message)
+   // procesoActualPines(message)
     console.log(message)
   })
   ipcMain.on('leerPinesSalidaMain', async (event) => {
-    leerProcesoActualPines()
-    event.reply('leerPinesSalidaRender', leerProcesoActualPines())
+   // leerProcesoActualPines()
+    //event.reply('leerPinesSalidaRender', leerProcesoActualPines())
   })
   //#endregion
   createWindow()

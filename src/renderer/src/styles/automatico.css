@@ -96,3 +96,15 @@
     position: absolute;
     top: 0;
   }
+  .datos-cajas {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important;
+  }
+  .datos-cajas > div:first-child > select {
+    height: 30px;
+    font-size: 25px;
+    background-color: white;
+    color: #000;
+    margin-top: 7px;
+  }

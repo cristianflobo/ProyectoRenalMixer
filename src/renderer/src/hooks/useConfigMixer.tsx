@@ -9,6 +9,7 @@ const useConfigMixer = () => {
     view: false,
     data: ''
   })
+  const [dosificacionCajas, setDosificacionCajas] = useState(false)
   const hora: number[] = []
   for (let i = 0; i < 24; i++) {
     hora.push(i)
@@ -74,14 +75,17 @@ const useConfigMixer = () => {
     setActivarMenuWifi((pre) => !pre)
   }
 
+
   return {
     setOnOnchangeViewKeyBoardNumeric,
     setNombreWifiConectada,
     activeKeyBoardNumeric,
+    setDosificacionCajas,
     menuWifiConfig,
     selectChange,
     onOnchangeViewKeyBoardNumeric,
     nombreWifiConectada,
+    dosificacionCajas,
     activarMenuWifi,
     datosConfig,
     minutos,

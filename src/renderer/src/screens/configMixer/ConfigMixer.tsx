@@ -3,16 +3,19 @@ import '../../styles/configMixer.css'
 import { KeyBoardNumeric } from '@renderer/components/keyBoardNumeric/KeyBoardNumeric'
 import { MenuWifi, NavBa } from '@renderer/components'
 import wifi from '../../images/wifi.svg'
+import DosificacionCajas from '@renderer/components/dosificacionCajas/DosificacionCajas'
 
 export function ConfigMixer({ closeWindows }):JSX.Element {
   const {
     setOnOnchangeViewKeyBoardNumeric,
     setNombreWifiConectada,
     activeKeyBoardNumeric,
+    setDosificacionCajas,
     menuWifiConfig,
     selectChange,
     onOnchangeViewKeyBoardNumeric,
     nombreWifiConectada,
+    dosificacionCajas,
     activarMenuWifi,
     datosConfig,
     minutos,
@@ -61,6 +64,13 @@ export function ConfigMixer({ closeWindows }):JSX.Element {
               </div>
             )
           })}
+          <div className="div-map" onClick={() => setDosificacionCajas(true)}>
+                <span style={{fontSize:"20px"}}>DOSIFICACION CAJAS</span>
+  
+              </div>
+          {
+            dosificacionCajas?<DosificacionCajas cerrar ={setDosificacionCajas}/>:null
+          }
         </div>
         {activarMenuWifi ? <MenuWifi nombreWifiConect={setNombreWifiConectada} /> : null}
       <div className="img-wifi">

@@ -9,16 +9,13 @@ let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[] = []
 
 const useAutomatico = (datosSerial, closeWindows) => {
   const { eviarProcesoPines } = useHookShared()
-  const [posicionDataConfig, setposicionDataConfig] = useState(0)
+  const [seleccionCajaState, seTseleccionCajaState] = useState<Tcajas>()
   const [configDatos, setconfigDatos] = useState<TdataConfig[]>([])
   const [onOnchangeViewKeyBoardNumeric, setOnOnchangeViewKeyBoardNumeric] = useState({
     view: false,
     data: ''
   })
-  const [renderData, setrenderData] = useState<TdataRenderAuto[]>([
-    { title: '', dato: 0 },
-    { title: '', dato: 0 }
-  ])
+  const [renderData, setrenderData] = useState<Tcajas[]>([])
   const [activeProceso, setActiveProceso] = useState(false)
   const [ciclo, setCiclo] = useState(-1)
   const [numeroCicloLavados, setNumeroCicloLavados] = useState(1)
@@ -28,46 +25,9 @@ const useAutomatico = (datosSerial, closeWindows) => {
     const configDatos = localStorage.getItem('configDatos')
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     setconfigDatos(JSON.parse(configDatos!))
-    const datosAutomatico = localStorage.getItem('datosAutomatico')
-
-    if(datosAutomatico){
-      const buscar = JSON.parse(datosAutomatico!).find(item => item.title === 'CANTIDAD DE AGUA FINAL')
-      if ( buscar) {
-        setrenderData(JSON.parse(datosAutomatico))
-      } else {
-        localStorage.setItem(
-          'datosAutomatico',
-          JSON.stringify([
-            {
-              title: 'CANTIDAD DE AGUA FINAL',
-              dato: 0
-            },
-            {
-              title: 'CANTIDAD DE AGUA PARA AGREGAR POLVO',
-              dato: 0
-            }
-          ])
-        )
-        const data = localStorage.getItem('datosAutomatico')
-        setrenderData(JSON.parse(data!))
-      }
-    }else {
-      localStorage.setItem(
-        'datosAutomatico',
-        JSON.stringify([
-          {
-            title: 'CANTIDAD DE AGUA FINAL',
-            dato: 0
-          },
-          {
-            title: 'CANTIDAD DE AGUA PARA AGREGAR POLVO',
-            dato: 0
-          }
-        ])
-      )
-      const data = localStorage.getItem('datosAutomatico')
-      setrenderData(JSON.parse(data!))
-    }
+    const cajas = JSON.parse(localStorage.getItem("datosCajas") || "[]")
+    seTseleccionCajaState(cajas[0])
+      setrenderData(cajas)
     if(!litrosAlmacenados){
       localStorage.setItem('litrosAlmacenados', "0")
     }
@@ -75,23 +35,11 @@ const useAutomatico = (datosSerial, closeWindows) => {
     return (): void => {}
   }, [])
 
-  useEffect(() => {
-    if (onOnchangeViewKeyBoardNumeric.data !== '' && !onOnchangeViewKeyBoardNumeric.view) {
-      const dataKeyTermporal = renderData?.map((item: TdataRenderAuto, i: number) => {
-        if (i === posicionDataConfig)
-          return { ...item, dato: parseFloat(onOnchangeViewKeyBoardNumeric.data) }
-        return item
-      })
-      setrenderData(dataKeyTermporal)
-      localStorage.setItem('datosAutomatico', JSON.stringify(dataKeyTermporal))
-    }
-    return (): void => {}
-  }, [onOnchangeViewKeyBoardNumeric.view])
 
   useEffect(() => {
-    if (ciclo === 0 && renderData[1].dato <= datosSerial.dataSerial1) setCiclo(1)
-    if (ciclo === 2 && renderData[0].dato <= datosSerial.dataSerial1) setCiclo(3)
-    if (ciclo === 6 && renderData[0].dato  < datosSerial.dataSerial2)
+    if (ciclo === 0 && !seleccionCajaState?.aguaPolvo <= datosSerial.dataSerial1) setCiclo(1)
+    if (ciclo === 2 && !seleccionCajaState?.aguaFinal <= datosSerial.dataSerial1) setCiclo(3)
+    if (ciclo === 6 && !seleccionCajaState?.aguaFinal  < datosSerial.dataSerial2)
      {
       localStorage.setItem('litrosAlmacenados', "0")
       eviarProcesoPines([])
@@ -136,7 +84,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
     }
 
     return (): void => {
-      renderData[0].dato
     }
   }, [datosSerial])
 
@@ -428,10 +375,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
       ),
     }
   ]
-  const activeKeyBoardNumeric = (posicion: number): void => {
-    setposicionDataConfig(posicion)
-    setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })
-  }
 
   const botonAtras = (): void => {
     if(ciclo !== -1) {
@@ -449,11 +392,17 @@ const useAutomatico = (datosSerial, closeWindows) => {
     eviarProcesoPines([])
     reiniciarFlujometros()
   }
+
+  const seleccionCaja = (e) =>{
+    let cajasStore = JSON.parse(localStorage.getItem("datosCajas") || "")
+    seTseleccionCajaState(cajasStore.find((item:Tcajas) => item.title === e.target.value))
+  }
   return {
     setOnOnchangeViewKeyBoardNumeric,
-    activeKeyBoardNumeric,
     setActiveProceso,
+    seleccionCaja,
     onOnchangeViewKeyBoardNumeric,
+    seleccionCajaState,
     procesoAutomatico,
     mensajesAlertas,
     mensajeAlerta,
