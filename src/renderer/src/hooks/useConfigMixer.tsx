@@ -39,7 +39,7 @@ const useConfigMixer = () => {
     }
 
     if (configDatos[posicionDataConfig].title.includes('FACTOR DE CALIBRACION')) {
-      window.electron.ipcRenderer.send('enviarFactorK', {
+      window.electron.ipcRenderer.send('enviarDataSwichArduino', {
         data: onOnchangeViewKeyBoardNumeric.data,
         serial: configDatos[posicionDataConfig].title.includes('S1') ? 0 : 1
       })
