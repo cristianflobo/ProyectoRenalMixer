@@ -7,7 +7,7 @@ import { getConfig } from '@renderer/utils/setConfig'
 
 let configDatos:any = []
 let litrosFinalLavado = 0
-const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["cali"]
+const serialNumberFlujometros:TconexionSerial[] = infoSerialSensores["chia"]
 let contadorEntradaCicloLavado = 0
 let contadorEntradaTransferirLitros = 0
 let cancelarSetimeout:ReturnType<typeof setTimeout>[] = []
@@ -29,20 +29,13 @@ const useApp = () => {
     data: ''
   })
   const [lavadoTerminado, setlavadoTerminado] = useState(false)
-  const [listrosMaximoAlmacenado, setlistrosMaximoAlmacenado] = useState("0")
+  const [transferenciaLitroFinalizada, setTransferenciaLitroFinalizada] = useState(false)
   configDatos = getConfig();
 
   useEffect(() => { 
-    const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-    if(litrosAlmacenados) {
-      setlistrosMaximoAlmacenado(litrosAlmacenados)
-    }else {
-      setlistrosMaximoAlmacenado("0")
-    }
     window.electron.ipcRenderer.send('conectarSerial', serialNumberFlujometros)
     window.electron.ipcRenderer.send('verificarConexionSensoresMain')
-    if(configDatos){
-      
+    if(configDatos){   
       const dispensacionDiariaIni  = configDatos.find(
         (item: TdataConfig) => item.title === 'HORA INICIO DISTRIBUCIÓN'
       )
@@ -83,10 +76,8 @@ const useApp = () => {
     if (activeProceso.proceso === 'transferirLitros' ) {
       if(onOnchangeViewKeyBoardNumeric.data <= datosSerial.dataSerial2){
         if(contadorEntradaTransferirLitros === 0){
-          const resta = parseFloat(listrosMaximoAlmacenado) - parseFloat(onOnchangeViewKeyBoardNumeric.data)
-          localStorage.setItem('litrosAlmacenados', resta.toString())
-          setlistrosMaximoAlmacenado(resta.toString())
           contadorEntradaTransferirLitros = 1
+          setTransferenciaLitroFinalizada(true)
           reiniciarFlujometros()
         }
         eviarProcesoPines([])
@@ -110,7 +101,7 @@ const useApp = () => {
         if (cantidadAguaLvado.dato <= parseFloat(datosSerial.dataSerial1) && contadorEntradaCicloLavado === 0) {
             contadorEntradaCicloLavado = 1
             reiniciarFlujometros()
-            eviarProcesoPines(['bomba 1', 'valvula 3'])
+            eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
             cancelarSetimeout.push(setTimeout(
               () => {
                 eviarProcesoPines(['valvula 5', 'bomba 4'])
@@ -132,18 +123,7 @@ const useApp = () => {
     }
   }, [datosSerial])
 
-  useEffect(() => {
-    const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
-      setlistrosMaximoAlmacenado(litrosAlmacenados!)
-    return ():void => {    }
-  }, [activeProceso])
-
-  useEffect(() => {
-    if(onOnchangeViewKeyBoardNumeric.data > listrosMaximoAlmacenado){
-      setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, data: listrosMaximoAlmacenado})
-    }
-    return ():void => {    }
-  }, [onOnchangeViewKeyBoardNumeric])
+ 
 
   useEffect(() => {
     let tiempoMezclado: TdataConfig | undefined
@@ -203,8 +183,10 @@ const useApp = () => {
         html: (
           <div className="conte-procesos">
             <strong>{lavadoTerminado?"Lavado terminado":"Lavando"}</strong>
-            <div>{datosSerial.dataSerial1 < litrosFinalLavado.toString()?datosSerial.dataSerial1:litrosFinalLavado} L</div>
-            <div className="loader"></div>
+            <div>{parseFloat(datosSerial.dataSerial1) < litrosFinalLavado?datosSerial.dataSerial1:litrosFinalLavado} L</div>           
+            {!lavadoTerminado?
+              <div className="loader"></div>:null
+            }
             <button
               style={{ marginTop: '50px' }}
               onClick={() => {
@@ -264,15 +246,19 @@ const useApp = () => {
       id: 0,
       html: (
         <div className="conte-procesos">
-          <strong>Litros a transferir maximo {listrosMaximoAlmacenado}</strong>
+          <strong>Litros a transferir</strong>
           <div>Digite cantidad</div>
           <div style={{height:"40px", width:"80px", border:"1px solid white", borderRadius:"7px", fontSize:"22px"}}
           onClick={()=> setOnOnchangeViewKeyBoardNumeric({ ...onOnchangeViewKeyBoardNumeric, view: true })}>
             {onOnchangeViewKeyBoardNumeric.data}
           </div>
-          <div>{datosSerial.dataSerial2} L</div>
           <div>
-            <button disabled = {parseFloat(listrosMaximoAlmacenado) < parseFloat("1")? true:false}
+            {transferenciaLitroFinalizada?
+              onOnchangeViewKeyBoardNumeric.data:datosSerial.dataSerial2
+            } L
+          </div>
+          <div>
+            <button 
             style={{ marginTop: '50px' }}
             onClick={() => {
               contadorEntradaTransferirLitros = 0
@@ -284,6 +270,7 @@ const useApp = () => {
           <button
             style={{ marginTop: '50px' }}
             onClick={() => {
+              setTransferenciaLitroFinalizada(false)
               resetProcesos()
             }}
           >

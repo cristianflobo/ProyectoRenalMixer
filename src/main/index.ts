@@ -34,7 +34,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-    fullscreen:false,
+    fullscreen:true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {icon}),
     webPreferences: {
@@ -139,7 +139,7 @@ app.whenReady().then(() => {
       console.log(error)
     }
   })
-  ipcMain.on('enviarFactorK', async (_event, data) => { 
+  ipcMain.on('enviarDataSwichArduino', async (_event, data) => { 
     if(data.data !== ''){
       console.log("---------", data)
       try {
@@ -241,4 +241,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
