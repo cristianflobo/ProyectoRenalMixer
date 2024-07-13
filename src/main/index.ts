@@ -13,6 +13,11 @@ type TconexionSerial = {
   puerto:string,
   nombre:string
 }
+interface Icron {
+  inicio:(typeof cron),
+  final:(typeof cron)
+}
+let taskId:Icron = {inicio:"", final:""}
 
 /*/---------------------------------------------------------
 exec('sudo hwclock -s -f /dev/rtc1', (error, stdout, stderr) => {
@@ -34,7 +39,7 @@ function createWindow(): void {
     width: 900,
     height: 500,
     show: false,
-    fullscreen:true,
+    fullscreen:false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {icon}),
     webPreferences: {
@@ -199,9 +204,14 @@ app.whenReady().then(() => {
   //#endregion
 
   //#region Tareas programadas cron
+
   ipcMain.on('configDistribucionDiaria', (_event, data) => {
-    if (data.id === 1) {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
+    if (data.id === 1) {    
+      if (taskId.inicio !== "") {
+        taskId.inicio.stop()
+        taskId.inicio = ""
+      }  
+      taskId.inicio = cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
         procesoActualPines([{nombre:'bomba 3', estado:1}])
         console.log('tarea inicio bomba')
       }, {
@@ -209,13 +219,17 @@ app.whenReady().then(() => {
         timezone: "America/Bogota"
       });
     }else {
-      cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
+      if (taskId.final !== "") {
+        taskId.final.stop()
+        taskId.final = ""
+      }  
+      taskId.final = cron.schedule(`${data.datos.minu2} ${data.datos.hora1} * * 1-6`, () => {
         procesoActualPines([{nombre:'bomba 3', estado:0}])
         console.log('tarea final bomba')
       }, {
       scheduled: true,
       timezone: "America/Bogota"
-      });
+      });    
     }
   })
   //#endregion
