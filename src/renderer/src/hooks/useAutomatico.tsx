@@ -173,6 +173,10 @@ const useAutomatico = (datosSerial, closeWindows) => {
         tiempoMezclado = configDatos.find(
           (item: TdataConfig) => item.title === 'TIEMPO DE MEZCLADO (MIN)'
         )
+        window.electron.ipcRenderer.send('enviarDataSwichArduino', {
+          data: "d",
+          serial: 0
+        })
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoMezclado) {
           cancelarTodosSetimeout.push(setTimeout(
@@ -187,12 +191,12 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 4:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        // cancelarSetimeout = setTimeout(() => {
-        //   eviarProcesoPines([])
-        // }, 5000)
         prcTimeout(3000, () => eviarProcesoPines([]) );
+        window.electron.ipcRenderer.send('enviarDataSwichArduino', {
+          data: "a",
+          serial: 0
+        })
         cancelarTodosSetimeout.push(cancelarSetimeout)
-
         break
 
       case 5:
