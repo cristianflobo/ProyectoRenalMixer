@@ -67,7 +67,7 @@ function App(): JSX.Element {
         {selectScreen.config ? <ConfigMixer closeWindows={setSelectScreen} /> : null}
         {selectScreen.manual ? <Manual closeWindows={setSelectScreen} /> : null}
         {selectScreen.auto ? (
-          <Automatico datosSerial={datosSerial} closeWindows={setSelectScreen} />
+          <Automatico datosSerial={datosSerial} closeWindows={setSelectScreen} tranferirPorLitros={{tranferir:setActiveProceso({ activar: true, proceso: 'transferir' }), setearCicloApp: setCiclo(0)} } />
         ) : null}
         {onOnchangeViewKeyBoardNumeric.view ? (
           <KeyBoardNumeric setKey={setOnOnchangeViewKeyBoardNumeric} />

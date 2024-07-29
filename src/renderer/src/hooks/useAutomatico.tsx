@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import useHookShared from './useHookShared'
 import { reiniciarFlujometros } from '@renderer/utils/metodosCompartidos/metodosCompartidos'
-import { prcTimeout } from 'precision-timeout-interval';
+import { prcTimeout } from 'precision-timeout-interval'
 
 let contadorMezcladoLavado = 0
-let cancelarSetimeout:ReturnType<typeof setTimeout>;
-let cancelarTodosSetimeout:ReturnType<typeof setTimeout>[] = []
+let cancelarSetimeout: ReturnType<typeof setTimeout>
+let cancelarTodosSetimeout: ReturnType<typeof setTimeout>[] = []
 
-const useAutomatico = (datosSerial, closeWindows) => {
+const useAutomatico = (datosSerial, closeWindows, tranferirPorLitros) => {
   const { eviarProcesoPines } = useHookShared()
   const [seleccionCajaState, seTseleccionCajaState] = useState<Tcajas>()
   const [configDatos, setconfigDatos] = useState<TdataConfig[]>([])
@@ -25,23 +25,21 @@ const useAutomatico = (datosSerial, closeWindows) => {
     const configDatos = localStorage.getItem('configDatos')
     const litrosAlmacenados = localStorage.getItem('litrosAlmacenados')
     setconfigDatos(JSON.parse(configDatos!))
-    const cajas = JSON.parse(localStorage.getItem("datosCajas") || "[]")
+    const cajas = JSON.parse(localStorage.getItem('datosCajas') || '[]')
     seTseleccionCajaState(cajas[0])
-      setrenderData(cajas)
-    if(!litrosAlmacenados){
-      localStorage.setItem('litrosAlmacenados', "0")
+    setrenderData(cajas)
+    if (!litrosAlmacenados) {
+      localStorage.setItem('litrosAlmacenados', '0')
     }
 
     return (): void => {}
   }, [])
 
-
   useEffect(() => {
     if (ciclo === 0 && !seleccionCajaState?.aguaPolvo <= datosSerial.dataSerial1) setCiclo(1)
     if (ciclo === 2 && !seleccionCajaState?.aguaFinal <= datosSerial.dataSerial1) setCiclo(3)
-    if (ciclo === 6 && !seleccionCajaState?.aguaFinal  < datosSerial.dataSerial2)
-     {
-      localStorage.setItem('litrosAlmacenados', "0")
+    if (ciclo === 6 && !seleccionCajaState?.aguaFinal < datosSerial.dataSerial2) {
+      localStorage.setItem('litrosAlmacenados', '0')
       eviarProcesoPines([])
       setCiclo(10)
     }
@@ -57,34 +55,32 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
     if (cantidadAguaLvado && tiempoLavado && tiempoDrenadoLavado) {
       if ((ciclo === 7 || ciclo === 8) && cantidadAguaLvado.dato <= datosSerial.dataSerial1) {
-        if(contadorMezcladoLavado === 1) {
+        if (contadorMezcladoLavado === 1) {
           eviarProcesoPines(['bomba 1', 'valvula 2', 'valvula 3'])
           contadorMezcladoLavado = 0
           cancelarTodosSetimeout.push(
             setTimeout(
-            () => {
-              eviarProcesoPines(['valvula 5', 'bomba 4'])
-              cancelarTodosSetimeout.push(setTimeout(
-                () => {
-                  if (numeroCicloLavados === 1) {
-                    setCiclo(8)
-                    setNumeroCicloLavados(2)
-                  } else {
-                    setCiclo(9)
-                  }
-                },
-                tiempoDrenadoLavado.dato * 1000
-              ))
-            },
-            tiempoLavado.dato * 1000 * 60
-          ))
+              () => {
+                eviarProcesoPines(['valvula 5', 'bomba 4'])
+                cancelarTodosSetimeout.push(
+                  setTimeout(() => {
+                    if (numeroCicloLavados === 1) {
+                      setCiclo(8)
+                      setNumeroCicloLavados(2)
+                    } else {
+                      setCiclo(9)
+                    }
+                  }, tiempoDrenadoLavado.dato * 1000)
+                )
+              },
+              tiempoLavado.dato * 1000 * 60
+            )
+          )
         }
-
       }
     }
 
-    return (): void => {
-    }
+    return (): void => {}
   }, [datosSerial])
 
   useEffect(() => {
@@ -98,7 +94,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       case 1:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         window.electron.ipcRenderer.send('enviarDataSwichArduino', {
-          data: "d",
+          data: 'd',
           serial: 0
         })
         cancelarSetimeout = setTimeout(() => {
@@ -110,7 +106,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       case 2:
         clearTimeout(cancelarSetimeout)
         window.electron.ipcRenderer.send('enviarDataSwichArduino', {
-          data: "a",
+          data: 'a',
           serial: 0
         })
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
@@ -122,12 +118,14 @@ const useAutomatico = (datosSerial, closeWindows) => {
         )
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoMezclado) {
-          cancelarTodosSetimeout.push(setTimeout(
-            () => {
-              setCiclo(4)
-            },
-            tiempoMezclado?.dato * 1000 * 60
-          ))
+          cancelarTodosSetimeout.push(
+            setTimeout(
+              () => {
+                setCiclo(4)
+              },
+              tiempoMezclado?.dato * 1000 * 60
+            )
+          )
         }
 
         break
@@ -137,7 +135,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
         // cancelarSetimeout = setTimeout(() => {
         //   eviarProcesoPines([])
         // }, 5000)
-        prcTimeout(3000, () => eviarProcesoPines([]) );
+        prcTimeout(3000, () => eviarProcesoPines([]))
         cancelarTodosSetimeout.push(cancelarSetimeout)
 
         break
@@ -159,10 +157,12 @@ const useAutomatico = (datosSerial, closeWindows) => {
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         setNumeroCicloLavados(1)
         if (tiempoDrenado) {
-          cancelarTodosSetimeout.push(setTimeout(() => {
-            reiniciarFlujometros()
-            eviarProcesoPines(['valvula 1'])
-          }, tiempoDrenado.dato * 1000))
+          cancelarTodosSetimeout.push(
+            setTimeout(() => {
+              reiniciarFlujometros()
+              eviarProcesoPines(['valvula 1'])
+            }, tiempoDrenado.dato * 1000)
+          )
         }
         break
 
@@ -173,26 +173,32 @@ const useAutomatico = (datosSerial, closeWindows) => {
         contadorMezcladoLavado = 1
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         if (tiempoDrenado) {
-          cancelarTodosSetimeout.push(setTimeout(() => {
-            reiniciarFlujometros()
-            eviarProcesoPines(['valvula 1'])
-          }, tiempoDrenado.dato * 1000))
+          cancelarTodosSetimeout.push(
+            setTimeout(() => {
+              reiniciarFlujometros()
+              eviarProcesoPines(['valvula 1'])
+            }, tiempoDrenado.dato * 1000)
+          )
         }
         break
 
       case 9: //termina lavado
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
         contadorMezcladoLavado = 0
-        cancelarTodosSetimeout.push(setTimeout(() => {
-          eviarProcesoPines([])
-        }, 5000))
+        cancelarTodosSetimeout.push(
+          setTimeout(() => {
+            eviarProcesoPines([])
+          }, 5000)
+        )
         break
 
       case 10:
-          eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-          cancelarTodosSetimeout.push(setTimeout(() => {
+        eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
+        cancelarTodosSetimeout.push(
+          setTimeout(() => {
             eviarProcesoPines([])
-          }, 5000))
+          }, 5000)
+        )
 
         break
 
@@ -245,18 +251,24 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <strong>Mezcla lista, tome muestra para comprobar calidad</strong>
           <div style={{ display: 'flex' }}>
-            <button onClick={() => {
-              closeWindows({ manual: false, config: false, auto: false })
-              eviarProcesoPines([])
-               clearTimeout(cancelarSetimeout)
-              }}>
+            <button
+              onClick={() => {
+                closeWindows({ manual: false, config: false, auto: false })
+                eviarProcesoPines([])
+                clearTimeout(cancelarSetimeout)
+              }}
+            >
               Inicio
             </button>
-            <button onClick={() => {
-              setCiclo(5)
-              eviarProcesoPines([])
-              clearTimeout(cancelarSetimeout)
-               }}>Transferir a tanque distribución</button>
+            <button
+              onClick={() => {
+                setCiclo(5)
+                eviarProcesoPines([])
+                clearTimeout(cancelarSetimeout)
+              }}
+            >
+              Transferir a tanque distribución
+            </button>
           </div>
         </div>
       ),
@@ -268,10 +280,16 @@ const useAutomatico = (datosSerial, closeWindows) => {
       html: (
         <div className="conte-procesos">
           <div style={{ display: 'flex' }}>
-            <button onClick={() => setCiclo(6)}>Tranferir completo</button>
-            <button onClick={() =>{
+            <button onClick={() =>  {
               closeWindows({ manual: false, config: false, auto: false })
-              }}>
+              tranferirPorLitros.tranferir
+              tranferirPorLitros.setearCicloApp
+            }}>Tranferir por litros</button>
+            <button
+              onClick={() => {
+                closeWindows({ manual: false, config: false, auto: false })
+              }}
+            >
               Inicio
             </button>
           </div>
@@ -315,7 +333,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
       procesoGpio: ['valvula 5', 'bomba 4']
     },
     {
-      id: 9,  //se termina lavado
+      id: 9, //se termina lavado
       display: '',
       html: (
         <div className="conte-procesos">
@@ -337,16 +355,18 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <strong>Transferencia completa</strong>
           <strong>Verifique que el tanque de mezclado este vacio y presione inicio</strong>
-            <button onClick={() => {
+          <button
+            onClick={() => {
               closeWindows({ manual: false, config: false, auto: false })
               resetProcesos()
-              }}>
-                Inicio
-            </button>
+            }}
+          >
+            Inicio
+          </button>
         </div>
       ),
       procesoGpio: ['buzzer']
-    },
+    }
   ]
 
   const mensajesAlertas = [
@@ -357,43 +377,47 @@ const useAutomatico = (datosSerial, closeWindows) => {
         <div className="conte-procesos">
           <strong>Desea salir al inicio</strong>
           <div>
-            <button onClick={() => {
-              closeWindows({ manual: false, config: false, auto: false })
-              resetProcesos()
-              }}>
-                Ok
+            <button
+              onClick={() => {
+                closeWindows({ manual: false, config: false, auto: false })
+                resetProcesos()
+              }}
+            >
+              Ok
             </button>
-            <button onClick={() => {
-              setMensajeAlerta(-1)
-              }}>
+            <button
+              onClick={() => {
+                setMensajeAlerta(-1)
+              }}
+            >
               Cancelar
             </button>
           </div>
         </div>
-      ),
+      )
     }
   ]
 
   const botonAtras = (): void => {
-    if(ciclo !== -1) {
+    if (ciclo !== -1) {
       setMensajeAlerta(0)
-    }else {
+    } else {
       closeWindows({ manual: false, config: false, auto: false })
     }
   }
-  const resetProcesos = ():void => {
-    cancelarTodosSetimeout.forEach(element => {
+  const resetProcesos = (): void => {
+    cancelarTodosSetimeout.forEach((element) => {
       clearTimeout(element)
-    });
+    })
     cancelarTodosSetimeout = []
     setCiclo(-1)
     eviarProcesoPines([])
     reiniciarFlujometros()
   }
 
-  const seleccionCaja = (e) =>{
-    let cajasStore = JSON.parse(localStorage.getItem("datosCajas") || "")
-    seTseleccionCajaState(cajasStore.find((item:Tcajas) => item.title === e.target.value))
+  const seleccionCaja = (e) => {
+    let cajasStore = JSON.parse(localStorage.getItem('datosCajas') || '')
+    seTseleccionCajaState(cajasStore.find((item: Tcajas) => item.title === e.target.value))
   }
   return {
     setOnOnchangeViewKeyBoardNumeric,

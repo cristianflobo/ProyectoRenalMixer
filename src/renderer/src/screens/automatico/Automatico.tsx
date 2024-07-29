@@ -2,7 +2,7 @@ import useAutomatico from '@renderer/hooks/useAutomatico'
 import '../../styles/automatico.css'
 import { NavBa, VisuaizarGpioAccion } from '@renderer/components'
 
-export function Automatico({ datosSerial, closeWindows }): JSX.Element {
+export function Automatico({ datosSerial, closeWindows, tranferirPorLitros }): JSX.Element {
   const {
     setActiveProceso,
     seleccionCaja,
@@ -15,7 +15,7 @@ export function Automatico({ datosSerial, closeWindows }): JSX.Element {
     botonAtras,
     renderData,
     ciclo
-  } = useAutomatico(datosSerial, closeWindows)
+  } = useAutomatico(datosSerial, closeWindows, tranferirPorLitros)
 
   return (
     <div className="cont-automatico">
