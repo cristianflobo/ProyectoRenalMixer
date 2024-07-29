@@ -296,7 +296,7 @@ const useApp = () => {
                 marginRight:"20px", 
                 display:'flex', 
                 flexDirection:'column',
-                backgroundColor:datosSerial.dataSerial1 === "0"?"red":"green", 
+                backgroundColor:datosSerial.dataSerial1 === "0"?"red":"greenyellow", 
                 padding:"5px", 
                 borderRadius:"7px"}}>
                 <strong >FACTOR K S1 </strong>
@@ -305,7 +305,7 @@ const useApp = () => {
               <div style={{
                 display:'flex', 
                 flexDirection:'column',
-                backgroundColor:datosSerial.dataSerial2 === "0"?"red":"green", 
+                backgroundColor:datosSerial.dataSerial2 === "0"?"red":"greenyellow", 
                 padding:"5px", 
                 borderRadius:"7px"}}>
                 <strong >FACTOR K S2 </strong>
