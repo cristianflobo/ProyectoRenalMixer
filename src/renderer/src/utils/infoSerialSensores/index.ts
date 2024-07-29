@@ -12,6 +12,10 @@ const infoSerialSensores = {
     { puerto: '142353038353513012E0', nombre: 'dataSerial1' },  
     { puerto: '24238313136351706120', nombre: 'dataSerial2' }   
   ],
+  bucaramanga: [
+    { puerto: '2017-2-25', nombre: 'dataSerial1' },
+    { puerto: '9503230363735151F071', nombre: 'dataSerial2' }
+  ],
   prueba: [
     { puerto: '55832343538351F02131', nombre: 'dataSerial1' },
     { puerto: '24238313136351706120', nombre: 'dataSerial2' }
