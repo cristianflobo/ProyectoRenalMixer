@@ -36,9 +36,9 @@ const useAutomatico = (datosSerial, closeWindows, tranferirPorLitros) => {
   }, [])
 
   useEffect(() => {
-    if (ciclo === 0 && seleccionCajaState.aguaPolvo <= datosSerial.dataSerial1) setCiclo(1)
-    if (ciclo === 2 && seleccionCajaState.aguaFinal <= datosSerial.dataSerial1) setCiclo(3)
-    if (ciclo === 6 && seleccionCajaState.aguaFinal < datosSerial.dataSerial2) {
+    if (ciclo === 0 && seleccionCajaState.aguaPolvo <= parseFloat(datosSerial.dataSerial1)) setCiclo(1)
+    if (ciclo === 2 && seleccionCajaState.aguaFinal <= parseFloat(datosSerial.dataSerial1)) setCiclo(3)
+    if (ciclo === 6 && seleccionCajaState.aguaFinal < parseFloat(datosSerial.dataSerial2)) {
       localStorage.setItem('litrosAlmacenados', '0')
       eviarProcesoPines([])
       setCiclo(10)
@@ -282,8 +282,8 @@ const useAutomatico = (datosSerial, closeWindows, tranferirPorLitros) => {
           <div style={{ display: 'flex' }}>
             <button onClick={() =>  {
               closeWindows({ manual: false, config: false, auto: false })
-              tranferirPorLitros.tranferir
-              tranferirPorLitros.setearCicloApp
+              tranferirPorLitros.tranferir()
+              tranferirPorLitros.setearCicloApp()
             }}>Tranferir por litros</button>
             <button
               onClick={() => {
