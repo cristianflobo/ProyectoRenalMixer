@@ -9,7 +9,7 @@ let cancelarTodosSetimeout: ReturnType<typeof setTimeout>[] = []
 
 const useAutomatico = (datosSerial, closeWindows, tranferirPorLitros) => {
   const { eviarProcesoPines } = useHookShared()
-  const [seleccionCajaState, seTseleccionCajaState] = useState<Tcajas>()
+  const [seleccionCajaState, seTseleccionCajaState] = useState<Tcajas>({title:"",aguaFinal:0,aguaPolvo:0})
   const [configDatos, setconfigDatos] = useState<TdataConfig[]>([])
   const [onOnchangeViewKeyBoardNumeric, setOnOnchangeViewKeyBoardNumeric] = useState({
     view: false,
@@ -36,9 +36,9 @@ const useAutomatico = (datosSerial, closeWindows, tranferirPorLitros) => {
   }, [])
 
   useEffect(() => {
-    if (ciclo === 0 && !seleccionCajaState?.aguaPolvo <= datosSerial.dataSerial1) setCiclo(1)
-    if (ciclo === 2 && !seleccionCajaState?.aguaFinal <= datosSerial.dataSerial1) setCiclo(3)
-    if (ciclo === 6 && !seleccionCajaState?.aguaFinal < datosSerial.dataSerial2) {
+    if (ciclo === 0 && seleccionCajaState.aguaPolvo <= datosSerial.dataSerial1) setCiclo(1)
+    if (ciclo === 2 && seleccionCajaState.aguaFinal <= datosSerial.dataSerial1) setCiclo(3)
+    if (ciclo === 6 && seleccionCajaState.aguaFinal < datosSerial.dataSerial2) {
       localStorage.setItem('litrosAlmacenados', '0')
       eviarProcesoPines([])
       setCiclo(10)
