@@ -23,6 +23,7 @@ const useAutomatico = (datosSerial, closeWindows) => {
   const [ciclo, setCiclo] = useState(-1)
   const [numeroCicloLavados, setNumeroCicloLavados] = useState(1)
   const [mensajeAlerta, setMensajeAlerta] = useState(-1)
+  const [inicioMezclado, setInicioMezclado] = useState(true)
 
   useEffect(() => {
     const configDatos = localStorage.getItem('configDatos')
@@ -187,9 +188,6 @@ const useAutomatico = (datosSerial, closeWindows) => {
 
       case 4:
         eviarProcesoPines(procesoAutomatico[ciclo].procesoGpio)
-        // cancelarSetimeout = setTimeout(() => {
-        //   eviarProcesoPines([])
-        // }, 5000)
         prcTimeout(3000, () => eviarProcesoPines([]) );
         cancelarTodosSetimeout.push(cancelarSetimeout)
 
@@ -267,11 +265,26 @@ const useAutomatico = (datosSerial, closeWindows) => {
       display: 'flex',
       html: (
         <div className="conte-procesos">
-          <strong>Agregue el polvo al tanque y luego presione el botón continuar</strong>
-          <button onClick={() => setCiclo(2)}>Continuar</button>
+          {inicioMezclado?
+            <>
+              <strong>Mezclado antes de agregar polvo</strong>
+              <button onClick={() => {
+                setInicioMezclado(false)
+                eviarProcesoPines(['bomba 1', 'valvula 2'])
+              }}>Continuar</button>
+            </>:
+            <>
+              <strong>Agregue el polvo al tanque y luego presione el botón continuar</strong>
+              <button onClick={() => {
+                setCiclo(2)
+                setInicioMezclado(true)
+                }}>Continuar</button>
+            </>
+          }      
         </div>
       ),
-      procesoGpio: ['buzzer', 'bomba 1', 'valvula 2']
+     // procesoGpio: ['buzzer', 'bomba 1', 'valvula 2']
+     procesoGpio: []
     },
     {
       //espera sensor 1 segundo llenado
